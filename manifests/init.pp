@@ -5,6 +5,7 @@ class openondemand (
     $repo_baseurl_prefix = 'https://yum.osc.edu/ondemand',
   Variant[Stdlib::HTTPSUrl, Stdlib::HTTPUrl, Stdlib::Absolutepath]
     $repo_gpgkey = 'https://yum.osc.edu/ondemand/RPM-GPG-KEY-ondemand',
+  Boolean $manage_scl = true,
 
   String $ondemand_package_ensure                 = 'present',
   String $ood_auth_discovery_ensure               = 'present',
