@@ -1,14 +1,12 @@
 require 'spec_helper'
 
 describe 'openondemand::app::usr' do
-  on_supported_os({
-    :supported_os => [
-      {
-        "operatingsystem" => "RedHat",
-        "operatingsystemrelease" => ["6"],
-      }
-    ]
-  }).each do |os, facts|
+  on_supported_os(supported_os: [
+                    {
+                      'operatingsystem' => 'RedHat',
+                      'operatingsystemrelease' => ['6'],
+                    },
+                  ]).each do |os, facts|
     context "on #{os}" do
       let(:facts) do
         facts
@@ -23,15 +21,11 @@ describe 'openondemand::app::usr' do
       end
 
       it do
-        should contain_file('/var/www/ood/apps/usr/test').with({
-          'ensure'  => 'directory',
-          'owner'   => 'root',
-          'group'   => 'root',
-          'mode'    => '0750',
-        })
+        is_expected.to contain_file('/var/www/ood/apps/usr/test').with('ensure' => 'directory',
+                                                                       'owner'   => 'root',
+                                                                       'group'   => 'root',
+                                                                       'mode'    => '0750')
       end
-
     end
   end
 end
-

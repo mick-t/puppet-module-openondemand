@@ -4,7 +4,7 @@ Dir["#{dir}/shared_examples/**/*.rb"].sort.each { |f| require f }
 require 'rspec-puppet-facts'
 include RspecPuppetFacts
 
-add_custom_fact :service_provider, ->(os, facts) {
+add_custom_fact :service_provider, ->(_os, facts) {
   case facts[:operatingsystemmajrelease]
   when '6'
     'redhat'
