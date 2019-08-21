@@ -1,3 +1,12 @@
+# @summary Manage Open OnDemand app
+#
+# @param ensure
+# @param package
+# @param manage_package
+# @param path
+# @param owner
+# @param group
+# @param mode
 #
 define openondemand::install::app (
   String $ensure = 'present',

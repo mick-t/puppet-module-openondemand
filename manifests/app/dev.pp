@@ -1,3 +1,12 @@
+# @summary Manage Open OnDemand dev app
+#
+#
+# @param ensure
+# @param mode
+# @param owner
+# @param group
+# @param home_subdir
+# @param gateway_src
 #
 define openondemand::app::dev (
   Enum['present','absent'] $ensure = 'present',
