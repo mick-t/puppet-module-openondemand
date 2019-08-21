@@ -19,7 +19,7 @@ describe 'openondemand::app::usr' do
       end
 
       let :params do
-        {}
+        { gateway_src: '/home/test/ondemand' }
       end
 
       it do
@@ -28,15 +28,6 @@ describe 'openondemand::app::usr' do
           'owner'   => 'root',
           'group'   => 'root',
           'mode'    => '0750',
-        })
-      end
-
-      it do
-        is_expected.to contain_exec('openondemand::app::usr-link-gateway-test').with({
-            :path       => '/usr/bin:/bin:/usr/sbin:/sbin',
-            :command    => 'ln -s ~test/ood/share /var/www/ood/apps/usr/test/gateway',
-            :unless     => 'test -L /var/www/ood/apps/usr/test/gateway',
-            :require    => 'File[/var/www/ood/apps/usr/test]',
         })
       end
 
