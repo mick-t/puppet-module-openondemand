@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "author": "osc",
   "summary": "openondemand Puppet module",
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "source": "git://github.com/osc/puppet-module-openondemand.git",
   "project_page": "https://github.com/osc/puppet-module-openondemand",
   "issues_url": "https://github.com/osc/puppet-module-openondemand/issues",
