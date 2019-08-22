@@ -25,9 +25,9 @@ class openondemand::apache {
       package_name => 'httpd24-mod_ssl',
     }
     class { '::apache::mod::php':
-      package_name => 'rh-php72-php',
-      template     => 'openondemand/apache/rh-php72-php.conf.erb',
-      path         => 'modules/librh-php72-php7.so',
+      package_name => 'rh-php70-php',
+      template     => 'openondemand/apache/rh-php70-php.conf.erb',
+      path         => 'modules/librh-php70-php7.so',
       php_version  => '7',
     }
     #class { '::apache::mod::passenger':
