@@ -32,8 +32,7 @@ class openondemand::install {
   }
 
   file { "${openondemand::_web_directory}/apps/sys":
-    ensure => $openondemand::_sys_ensure,
-    target => $openondemand::_sys_target,
+    ensure => 'directory',
     owner  => 'root',
     group  => 'root',
     mode   => '0755',
@@ -66,38 +65,26 @@ class openondemand::install {
     ensure => 'directory',
   }
 
-  if ! $openondemand::_develop_mode {
-    package { 'ondemand':
-      ensure => $openondemand::ondemand_package_ensure
-    }
-    Package['ondemand'] ~> Exec['ood-portal-generator-generate']
+  package { 'ondemand':
+    ensure => $openondemand::ondemand_package_ensure,
+    notify => Exec['ood-portal-generator-generate'],
+  }
+
+  package { 'ondemand-selinux':
+    ensure => $openondemand::selinux_package_ensure,
   }
 
   if $openondemand::oidc_discover_uri {
-    if $openondemand::_develop_mode {
-      file { $openondemand::oidc_discover_root:
-        ensure => 'link',
-        target => $openondemand::_discover_target,
-      }
-    } else {
-      package { 'ondemand-discover':
-        ensure  => $openondemand::ood_auth_discovery_ensure,
-        require => Package['ondemand'],
-      }
+    package { 'ondemand-discover':
+      ensure  => $openondemand::ood_auth_discovery_ensure,
+      require => Package['ondemand'],
     }
   }
 
   if $openondemand::register_uri {
-    if $openondemand::_develop_mode {
-      file { $openondemand::register_root:
-        ensure => 'link',
-        target => $openondemand::_register_target,
-      }
-    } else {
-      package { 'ondemand-register':
-        ensure  => $openondemand::ood_auth_registration_ensure,
-        require => Package['ondemand'],
-      }
+    package { 'ondemand-register':
+      ensure  => $openondemand::ood_auth_registration_ensure,
+      require => Package['ondemand'],
     }
   }
 
