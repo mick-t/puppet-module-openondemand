@@ -10,14 +10,16 @@ class openondemand::apache {
       scl_php_version   => '7.0',
     }
     class { '::apache':
-      default_vhost  => false,
+      default_vhost => false,
     }
   } else {
     include ::apache
   }
 
   include ::apache::mod::ssl
-  include ::apache::mod::php
+  if $openondemand::oidc_discover_uri or $openondemand::register_uri {
+    include ::apache::mod::php
+  }
   ::apache::mod { 'session':
     package => 'httpd24-mod_session',
     #loadfile_name => '01-session.conf',
@@ -46,13 +48,8 @@ class openondemand::apache {
   include ::apache::mod::proxy_http
   include ::apache::mod::proxy_connect
   include ::apache::mod::proxy_wstunnel
-  # define resources normally done by apache::mod::authnz_ldap and apache::mod::ldap
-  ::apache::mod { 'ldap':
-    package => 'httpd24-mod_ldap',
-  }
-  ::apache::mod { 'authnz_ldap':
-    package => 'httpd24-mod_ldap',
-  }
+  include ::apache::mod::authnz_ldap
+  include ::apache::mod::ldap
   ::apache::mod { 'lua': }
   include ::apache::mod::headers
 
