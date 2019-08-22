@@ -30,14 +30,10 @@ class openondemand::apache {
       path         => 'modules/librh-php70-php7.so',
       php_version  => '7',
     }
-    #class { '::apache::mod::passenger':
-    #  mod_package => 'rh-passenger40-mod_passenger',
-    #}
   } else {
     include ::apache
     include ::apache::mod::ssl
     include ::apache::mod::php
-    #include ::apache::mod::passenger
   }
 
   ::apache::mod { 'session':
@@ -67,9 +63,7 @@ class openondemand::apache {
   include ::apache::mod::proxy
   include ::apache::mod::proxy_http
   include ::apache::mod::proxy_connect
-  # proxy_wstunnel not yet released
-  #include ::apache::mod::proxy_wstunnel
-  ::apache::mod { 'proxy_wstunnel': }
+  include ::apache::mod::proxy_wstunnel
   # define resources normally done by apache::mod::authnz_ldap and apache::mod::ldap
   ::apache::mod { 'ldap':
     package => 'httpd24-mod_ldap',
