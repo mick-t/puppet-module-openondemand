@@ -5,41 +5,21 @@ class openondemand::apache {
   }
 
   if $openondemand::declare_apache {
+    class { '::apache::version':
+      scl_httpd_version => '2.4',
+      scl_php_version   => '7.0',
+    }
     class { '::apache':
-      default_vhost  => false,
-      apache_name    => 'httpd24',
-      dev_packages   => $openondemand::params::apache_dev_packages,
-      service_name   => 'httpd24-httpd',
-      apache_version => '2.4',
-      httpd_dir      => '/opt/rh/httpd24/root/etc/httpd',
-      server_root    => '/opt/rh/httpd24/root/etc/httpd',
-      conf_dir       => '/opt/rh/httpd24/root/etc/httpd/conf',
-      confd_dir      => '/opt/rh/httpd24/root/etc/httpd/conf.d',
-      vhost_dir      => '/opt/rh/httpd24/root/etc/httpd/conf.d',
-      mod_dir        => '/opt/rh/httpd24/root/etc/httpd/conf.modules.d',
-      ports_file     => '/opt/rh/httpd24/root/etc/httpd/conf/ports.conf',
-      ssl_file       => '/opt/rh/httpd24/root/etc/httpd/conf.d/ssl.conf',
-      logroot        => '/var/log/httpd24',
+      default_vhost => false,
     }
-    class { '::apache::mod::ssl':
-      package_name => 'httpd24-mod_ssl',
-    }
-    class { '::apache::mod::php':
-      package_name => 'rh-php70-php',
-      template     => 'openondemand/apache/rh-php70-php.conf.erb',
-      path         => 'modules/librh-php70-php7.so',
-      php_version  => '7',
-    }
-    #class { '::apache::mod::passenger':
-    #  mod_package => 'rh-passenger40-mod_passenger',
-    #}
   } else {
     include ::apache
-    include ::apache::mod::ssl
-    include ::apache::mod::php
-    #include ::apache::mod::passenger
   }
 
+  include ::apache::mod::ssl
+  if $openondemand::oidc_discover_uri or $openondemand::register_uri {
+    include ::apache::mod::php
+  }
   ::apache::mod { 'session':
     package => 'httpd24-mod_session',
     #loadfile_name => '01-session.conf',
@@ -67,16 +47,9 @@ class openondemand::apache {
   include ::apache::mod::proxy
   include ::apache::mod::proxy_http
   include ::apache::mod::proxy_connect
-  # proxy_wstunnel not yet released
-  #include ::apache::mod::proxy_wstunnel
-  ::apache::mod { 'proxy_wstunnel': }
-  # define resources normally done by apache::mod::authnz_ldap and apache::mod::ldap
-  ::apache::mod { 'ldap':
-    package => 'httpd24-mod_ldap',
-  }
-  ::apache::mod { 'authnz_ldap':
-    package => 'httpd24-mod_ldap',
-  }
+  include ::apache::mod::proxy_wstunnel
+  include ::apache::mod::authnz_ldap
+  include ::apache::mod::ldap
   ::apache::mod { 'lua': }
   include ::apache::mod::headers
 
@@ -184,7 +157,10 @@ class openondemand::apache {
       'mechanism' => 'basic',
       'require'   => Package['httpd'],
     }
-    create_resources('httpauth', $openondemand::basic_auth_users, $_basic_auth_users_defaults)
+    $openondemand::basic_auth_users.each |$name, $user| {
+      $parameters = $_basic_auth_users_defaults + $user
+      httpauth { $name: * => $parameters }
+    }
   }
 
 }

@@ -5,6 +5,7 @@
 # @param repo_gpgkey
 # @param manage_scl
 # @param manage_epel
+# @param selinux
 # @param ondemand_package_ensure
 # @param ood_auth_discovery_ensure
 # @param ood_auth_registration_ensure
@@ -57,8 +58,7 @@
 # @param nginx_stage_scl_env
 # @param nginx_stage_app_request_regex
 # @param clusters
-# @param clusters_hiera_hash
-# @param develop_root_dir
+# @param clusters_hiera_merge
 # @param usr_apps
 # @param usr_app_defaults
 # @param dev_apps
@@ -70,7 +70,6 @@
 # @param apps_config_repo_path
 # @param locales_config_repo_path
 # @param apps_config_source
-# @param apps_config_target
 # @param public_files_repo_paths
 #
 class openondemand (
@@ -81,6 +80,7 @@ class openondemand (
     $repo_gpgkey = 'https://yum.osc.edu/ondemand/RPM-GPG-KEY-ondemand',
   Boolean $manage_scl = true,
   Boolean $manage_epel = true,
+  Boolean $selinux = false,
 
   String $ondemand_package_ensure                 = 'present',
   String $ood_auth_discovery_ensure               = 'present',
@@ -151,9 +151,8 @@ class openondemand (
   Optional[Openondemand::Nginx_stage_namespace_config] $nginx_stage_app_request_regex = undef,
 
   Hash $clusters = {},
-  Boolean $clusters_hiera_hash = true,
+  Boolean $clusters_hiera_merge = true,
 
-  Optional[String] $develop_root_dir = undef,
   Variant[Array, Hash] $usr_apps  = {},
   Hash $usr_app_defaults = {},
   Hash $dev_apps = {},
@@ -166,11 +165,18 @@ class openondemand (
   String $apps_config_repo_path = '',
   String $locales_config_repo_path = '',
   Optional[String] $apps_config_source = undef,
-  Optional[Stdlib::Absolutepath] $apps_config_target = undef,
   Optional[Array] $public_files_repo_paths = undef,
 ) inherits openondemand::params {
 
   $_web_directory = dirname($public_root)
+
+  if $selinux {
+    $selinux_package_ensure = $ondemand_package_ensure
+  } else {
+    $selinux_package_ensure = 'absent'
+  }
+
+  $repo_baseurl = "${repo_baseurl_prefix}/${repo_release}/web/el${facts['os']['release']['major']}/\$basearch"
 
   if $ssl {
     $port = '443'
@@ -196,28 +202,10 @@ class openondemand (
     }
   }
 
-  if $clusters_hiera_hash {
+  if $clusters_hiera_merge {
     $_clusters = lookup('openondemand::clusters', Hash, 'deep', {})
   } else {
     $_clusters = $clusters
-  }
-
-  if $develop_root_dir {
-    $_develop_mode = true
-    $_sys_ensure = 'link'
-    $_sys_target = "${develop_root_dir}/sys"
-    $_public_ensure = 'link'
-    $_public_target = "${develop_root_dir}/public"
-    $_discover_target = "${develop_root_dir}/discover"
-    $_register_target = "${develop_root_dir}/register"
-  } else {
-    $_develop_mode = false
-    $_sys_ensure = 'directory'
-    $_sys_target = undef
-    $_public_ensure = 'directory'
-    $_public_target = undef
-    $_discover_target = undef
-    $_register_target = undef
   }
 
   $ood_portal_config = delete_undef_values({
@@ -265,26 +253,35 @@ class openondemand (
   ->Class['openondemand::config']
   ->Class['openondemand::service']
 
-  create_resources('openondemand::cluster', $_clusters)
-
-  if is_array($usr_apps) {
-    ensure_resource('openondemand::app::usr', $usr_apps, $usr_app_defaults)
-  } elsif is_hash($usr_apps) {
-    create_resources('openondemand::app::usr', $usr_apps, $usr_app_defaults)
-  } else {
-    fail("${module_name}: usr_apps must be an array or hash.")
+  $_clusters.each |$name, $cluster| {
+    openondemand::cluster { $name: * => $cluster }
   }
 
-  create_resources('openondemand::app::dev', $dev_apps, $dev_app_defaults)
+  if $usr_apps =~ Array {
+    $usr_apps.each |$usr_app| {
+      openondemand::app::usr { $usr_app: * => $usr_app_defaults }
+    }
+  } else {
+    $usr_apps.each |$name, $usr_app| {
+      $parameters = $usr_app_defaults + $usr_app
+      openondemand::app::usr { $name: * => $parameters }
+    }
+  }
+
+  $dev_apps.each |$name, $dev_app| {
+    $parameters = $dev_app_defaults + $dev_app
+    openondemand::app::dev { $name: * => $parameters }
+  }
+
   $dev_app_users.each |$user| {
     openondemand::app::dev { $user:
       * => $dev_app_defaults,
     }
   }
 
-  if ! $_develop_mode {
-    $apps = deep_merge($openondemand::params::base_apps, $install_apps)
-    create_resources('openondemand::install::app', $apps)
+  $apps = deep_merge($openondemand::params::base_apps, $install_apps)
+  $apps.each |$name, $app| {
+    openondemand::install::app { $name: * => $app }
   }
 
 }
