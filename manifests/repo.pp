@@ -25,6 +25,9 @@ class openondemand::repo {
           ensure => 'installed',
         }
       }
+      default: {
+        # Do nothing
+      }
     }
   }
 
