@@ -5,37 +5,19 @@ class openondemand::apache {
   }
 
   if $openondemand::declare_apache {
+    class { '::apache::version':
+      scl_httpd_version => '2.4',
+      scl_php_version   => '7.0',
+    }
     class { '::apache':
       default_vhost  => false,
-      apache_name    => 'httpd24',
-      dev_packages   => $openondemand::params::apache_dev_packages,
-      service_name   => 'httpd24-httpd',
-      apache_version => '2.4',
-      httpd_dir      => '/opt/rh/httpd24/root/etc/httpd',
-      server_root    => '/opt/rh/httpd24/root/etc/httpd',
-      conf_dir       => '/opt/rh/httpd24/root/etc/httpd/conf',
-      confd_dir      => '/opt/rh/httpd24/root/etc/httpd/conf.d',
-      vhost_dir      => '/opt/rh/httpd24/root/etc/httpd/conf.d',
-      mod_dir        => '/opt/rh/httpd24/root/etc/httpd/conf.modules.d',
-      ports_file     => '/opt/rh/httpd24/root/etc/httpd/conf/ports.conf',
-      ssl_file       => '/opt/rh/httpd24/root/etc/httpd/conf.d/ssl.conf',
-      logroot        => '/var/log/httpd24',
-    }
-    class { '::apache::mod::ssl':
-      package_name => 'httpd24-mod_ssl',
-    }
-    class { '::apache::mod::php':
-      package_name => 'rh-php70-php',
-      template     => 'openondemand/apache/rh-php70-php.conf.erb',
-      path         => 'modules/librh-php70-php7.so',
-      php_version  => '7',
     }
   } else {
     include ::apache
-    include ::apache::mod::ssl
-    include ::apache::mod::php
   }
 
+  include ::apache::mod::ssl
+  include ::apache::mod::php
   ::apache::mod { 'session':
     package => 'httpd24-mod_session',
     #loadfile_name => '01-session.conf',
