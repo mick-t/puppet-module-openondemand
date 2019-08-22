@@ -184,7 +184,10 @@ class openondemand::apache {
       'mechanism' => 'basic',
       'require'   => Package['httpd'],
     }
-    create_resources('httpauth', $openondemand::basic_auth_users, $_basic_auth_users_defaults)
+    $openondemand::basic_auth_users.each |$name, $user| {
+      $parameters = $_basic_auth_users_defaults + $user
+      httpauth { $name: * => $parameters }
+    }
   }
 
 }

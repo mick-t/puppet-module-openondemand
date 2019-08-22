@@ -18,13 +18,7 @@ class openondemand::config {
     mode   => '0755',
   }
 
-  if $openondemand::apps_config_target {
-    file { '/etc/ood/config/apps':
-      ensure => 'link',
-      target => $openondemand::apps_config_target,
-      force  => true,
-    }
-  } elsif $openondemand::manage_apps_config and $openondemand::apps_config_repo {
+  if $openondemand::manage_apps_config and $openondemand::apps_config_repo {
     vcsrepo { '/opt/ood-apps-config':
       ensure   => 'latest',
       provider => 'git',
@@ -66,7 +60,7 @@ class openondemand::config {
     }
   }
 
-  if ! $openondemand::develop_root_dir and $openondemand::apps_config_repo and $openondemand::public_files_repo_paths {
+  if $openondemand::apps_config_repo and $openondemand::public_files_repo_paths {
     $openondemand::public_files_repo_paths.each |$path| {
       $basename = basename($path)
       file { "${openondemand::public_root}/${basename}":
@@ -112,16 +106,6 @@ class openondemand::config {
     verify_command => '/opt/rh/httpd24/root/usr/sbin/apachectl -t',
   }
 
-  #Yaml_setting <| tag == 'nginx_stage' |> {
-  #  target =>
-  #}
-
-  #yaml_setting { 'nginx_stage-app_root':
-  #  target => '/opt/ood/nginx_stage/config/nginx_stage.yml',
-  #  key    => 'app_root',
-  #  value  => $openondemand::nginx_stage_app_root,
-  #}
-
   file { '/etc/ood/config/nginx_stage.yml':
     ensure  => 'file',
     owner   => 'root',
@@ -143,8 +127,7 @@ class openondemand::config {
   }
 
   file { $openondemand::public_root:
-    ensure => $openondemand::_public_ensure,
-    target => $openondemand::_public_target,
+    ensure => 'directory',
     owner  => 'root',
     group  => 'root',
     mode   => '0755',
