@@ -1,16 +1,16 @@
 {
   "name": "osc-openondemand",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "author": "osc",
-  "summary": "openondemand Puppet module",
+  "summary": "Open OnDemand Puppet module",
   "license": "Apache-2.0",
-  "source": "git://github.com/osc/puppet-module-openondemand.git",
+  "source": "https://github.com/osc/puppet-module-openondemand",
   "project_page": "https://github.com/osc/puppet-module-openondemand",
   "issues_url": "https://github.com/osc/puppet-module-openondemand/issues",
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
-      "version_requirement": ">= 4.20.0 < 6.0.0"
+      "version_requirement": ">= 4.25.0 < 6.0.0"
     },
     {
       "name": "puppetlabs/apache",
@@ -49,52 +49,36 @@
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
+        "6",
         "7"
       ]
     },
     {
       "operatingsystem": "OracleLinux",
       "operatingsystemrelease": [
+        "6",
         "7"
       ]
     },
     {
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
+        "6",
         "7"
       ]
     },
     {
       "operatingsystem": "Scientific",
       "operatingsystemrelease": [
+        "6",
         "7"
-      ]
-    },
-    {
-      "operatingsystem": "Debian",
-      "operatingsystemrelease": [
-        "8"
-      ]
-    },
-    {
-      "operatingsystem": "Ubuntu",
-      "operatingsystemrelease": [
-        "16.04"
-      ]
-    },
-    {
-      "operatingsystem": "windows",
-      "operatingsystemrelease": [
-        "2008 R2",
-        "2012 R2",
-        "10"
       ]
     }
   ],
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 4.10.0 < 7.0.0"
+      "version_requirement": ">= 5.0.0 < 7.0.0"
     }
   ],
   "pdk-version": "1.10.0",

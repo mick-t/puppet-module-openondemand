@@ -1,12 +1,7 @@
 require 'spec_helper'
 
 describe 'openondemand::cluster' do
-  on_supported_os(supported_os: [
-                    {
-                      'operatingsystem' => 'RedHat',
-                      'operatingsystemrelease' => ['6'],
-                    },
-                  ]).each do |os, facts|
+  on_supported_os.each do |os, facts|
     context "on #{os}" do
       let(:facts) do
         facts
@@ -32,11 +27,13 @@ describe 'openondemand::cluster' do
               'type' => 'blacklist',
             },
           ],
-          login_server: 'login.test',
-          resource_mgr_host: 'batch.test',
-          resource_mgr_lib: '/opt/torque/lib64',
-          resource_mgr_bin: '/opt/torque/bin',
-          resource_mgr_version: '6.0.2',
+          login_host: 'login.test',
+          job_adapter: 'torque',
+          job_host: 'batch.test',
+          job_lib: '/opt/torque/lib64',
+          job_bin: '/opt/torque/bin',
+          job_version: '6.0.2',
+          scheduler_type: 'moab',
           scheduler_host: 'batch.test',
           scheduler_bin: '/opt/moab/bin',
           scheduler_version: '9.0.1',
