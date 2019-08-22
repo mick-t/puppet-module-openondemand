@@ -1,3 +1,11 @@
+# @summary Manage Open OnDemand user app
+#
+#
+# @param gateway_src
+# @param ensure
+# @param mode
+# @param owner
+# @param group
 #
 define openondemand::app::usr (
   $gateway_src,
@@ -30,8 +38,8 @@ define openondemand::app::usr (
   if $ensure == 'absent' {
     file { $gateway:
       ensure => 'absent'
-    } ->
-    file { $web_dir:
+    }
+    -> file { $web_dir:
       ensure => 'absent',
       force  => true,
     }

@@ -15,4 +15,22 @@ class openondemand::repo {
     metadata_expire => '1'
   }
 
+  if $openondemand::manage_scl {
+    if $facts['os']['family'] == 'RedHat' {
+      if $facts['os']['name'] == 'RedHat' {
+        rhsm_repo { "rhel-server-rhscl-${facts['os']['release']['major']}-rpms":
+          ensure => 'present',
+        }
+      } else {
+        package { 'centos-release-scl':
+          ensure => 'installed',
+        }
+      }
+    }
+  }
+
+  if $openondemand::manage_epel and $facts['os']['family'] == 'RedHat' {
+    include ::epel
+  }
+
 }

@@ -1,20 +1,89 @@
 ---
 language: ruby
+cache: bundler
+before_install:
+  - bundle -v
+  - rm -f Gemfile.lock
+  - gem update --system $RUBYGEMS_VERSION
+  - gem --version
+  - bundle -v
+script:
+  - 'bundle exec rake $CHECK'
 bundler_args: --without system_tests
-before_install: rm Gemfile.lock || true
-script: bundle exec rake test
+rvm:
+  - 2.5.3
+stages:
+  - static
+  - spec
+  - acceptance
+  -
+    if: tag =~ ^v\d
+    name: deploy
 matrix:
   fast_finish: true
   include:
-    - rvm: 2.0.0
-      env: PUPPET_GEM_VERSION="~> 3.0" FUTURE_PARSER="yes"
-    - rvm: 2.1.6
-      env: PUPPET_GEM_VERSION="~> 4.0" STRICT_VARIABLES="yes"
-    - rvm: 2.1.6
-      sudo: required
+    -
+      bundler_args: --with system_tests
+      dist: trusty
+      env: PUPPET_INSTALL_TYPE=agent BEAKER_debug=true BEAKER_PUPPET_COLLECTION=puppet5 BEAKER_set=centos-7 BEAKER_TESTMODE=apply
+      rvm: 2.5.3
+      script: bundle exec rake beaker
       services: docker
-      env: BEAKER_set="centos-6-x64-docker" PUPPET_INSTALL_VERSION=3.8.6 PUPPET_INSTALL_TYPE=foss
-      bundler_args:
-      script: sudo service docker restart ; sleep 10 ; travis_wait 60 bundle exec rake beaker
+      stage: acceptance
+      sudo: required
+    -
+      bundler_args: --with system_tests
+      dist: trusty
+      env: PUPPET_INSTALL_TYPE=agent BEAKER_debug=true BEAKER_PUPPET_COLLECTION=puppet6 BEAKER_set=centos-7 BEAKER_TESTMODE=apply
+      rvm: 2.5.3
+      script: bundle exec rake beaker
+      services: docker
+      stage: acceptance
+      sudo: required
+    -
+      bundler_args: --with system_tests
+      dist: trusty
+      env: PUPPET_INSTALL_TYPE=agent BEAKER_debug=true BEAKER_PUPPET_COLLECTION=puppet5 BEAKER_set=centos-6 BEAKER_TESTMODE=apply
+      rvm: 2.5.3
+      script: bundle exec rake beaker
+      services: docker
+      stage: acceptance
+      sudo: required
+    -
+      bundler_args: --with system_tests
+      dist: trusty
+      env: PUPPET_INSTALL_TYPE=agent BEAKER_debug=true BEAKER_PUPPET_COLLECTION=puppet6 BEAKER_set=centos-6 BEAKER_TESTMODE=apply
+      rvm: 2.5.3
+      script: bundle exec rake beaker
+      services: docker
+      stage: acceptance
+      sudo: required
+    -
+      env: CHECK="check:symlinks check:git_ignore check:dot_underscore check:test_file rubocop syntax lint metadata_lint"
+      stage: static
+    -
+      env: PUPPET_GEM_VERSION="~> 5.0" CHECK=parallel_spec
+      rvm: 2.4.5
+      stage: spec
+    -
+      env: PUPPET_GEM_VERSION="~> 6.0" CHECK=parallel_spec
+      rvm: 2.5.3
+      stage: spec
+    -
+      env: DEPLOY_TO_FORGE=yes
+      stage: deploy
+branches:
+  only:
+    - master
+    - /^v\d/
 notifications:
-  email: false
+  email: treydock@gmail.com
+deploy:
+  provider: puppetforge
+  user: treydock
+  password:
+    secure: "K9RN7UJifVoI/4pxQwRz790Owtt2jnLXa8gtEx5RHqYxoMhBaKjYdDFXiYiWrSXpJcPkfMVWfuvC+72sOa76FNaT+RJiWY3CKt8xB1OcLVq/ZBJDDBz22P6mz+w0o2RyIyBQnYKvjwiw5/jgFkoW2XEbDn7+P2u4TrbX0iK9F0BUJNTQIbo7D5/2obpD90tuO/YnZOOmpTjk6R9TJML+n64Vz5tX4Qx9bmE9fitMa7r/cyc54d/iuu/zkkO6c2XiG13ftbh4/PapVGFT/krRjxQhvihfa9/sM1gRIUSBaRd6X09S+5A9rpRMl/Jxhbx+ZvB0JR8ofyj8nKeyH1ECXD1RSBO95Wse+heu5tCKaPZsAek6XhF45nFT7pM/uBXep2vr43Qv2QDTuCbr1+mWFDvUgY+xf/SRneGDmBVGTAQ4QjVC7Y2M0hRb7iwNrhqd0Fg5Y/dA9/xnvQdiz7W9GiQG2eGBYSqrz7hJLLoxuiKLMPPzWE3uo0MrhmBb2/hwUFXXjqDnZBtvYc9oP7QalZbcAyLRaROSiciBb7KUOU1Up4FdYuJ5GkGjPfLBLc1CohWNRivbOcqrmjTshevAygHrlixLP9mlTOJP7Ped+yakdiGuEge1Mix/xuIMG6SQZUavKjx/NgqB0IQ7Nr9EJA6++W6zf9jZ2C4B990HriQ="
+  on:
+    tags: true
+    all_branches: true
+    condition: "$DEPLOY_TO_FORGE = yes"

@@ -1,3 +1,29 @@
+# @summary Manage Open OnDemand cluster definition
+#
+#
+# @param cluster_title
+# @param url
+# @param hpc_cluster
+# @param acls
+# @param login_server
+# @param resource_mgr_type
+# @param resource_mgr_host
+# @param resource_mgr_lib
+# @param resource_mgr_bin
+# @param resource_mgr_version
+# @param scheduler_type
+# @param scheduler_host
+# @param scheduler_bin
+# @param scheduler_version
+# @param scheduler_params
+# @param rsv_query_acls
+# @param ganglia_host
+# @param ganglia_scheme
+# @param ganglia_segments
+# @param ganglia_req_query
+# @param ganglia_opt_query
+# @param ganglia_version
+# @param batch_connect
 #
 define openondemand::cluster (
   $cluster_title = $name,
