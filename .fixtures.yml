@@ -27,5 +27,7 @@ fixtures:
       repo: https://github.com/camptocamp/puppet-systemd.git
     logrotate:
       repo: https://github.com/voxpupuli/puppet-logrotate.git
+    epel:
+      repo: https://github.com/stahnma/puppet-module-epel.git
   symlinks:
     openondemand: "#{source_dir}"

@@ -4,6 +4,7 @@
 # @param repo_baseurl_prefix
 # @param repo_gpgkey
 # @param manage_scl
+# @param manage_epel
 # @param ondemand_package_ensure
 # @param ood_auth_discovery_ensure
 # @param ood_auth_registration_ensure
@@ -79,6 +80,7 @@ class openondemand (
   Variant[Stdlib::HTTPSUrl, Stdlib::HTTPUrl, Stdlib::Absolutepath]
     $repo_gpgkey = 'https://yum.osc.edu/ondemand/RPM-GPG-KEY-ondemand',
   Boolean $manage_scl = true,
+  Boolean $manage_epel = true,
 
   String $ondemand_package_ensure                 = 'present',
   String $ood_auth_discovery_ensure               = 'present',
