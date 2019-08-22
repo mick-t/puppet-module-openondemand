@@ -122,10 +122,6 @@ class openondemand::config {
     content => template('openondemand/profile.erb'),
   }
 
-  file { '/opt/ood/nginx_stage/config/nginx_stage.yml':
-    ensure => 'absent',
-  }
-
   file { $openondemand::public_root:
     ensure => 'directory',
     owner  => 'root',
