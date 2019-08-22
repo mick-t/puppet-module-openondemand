@@ -3,14 +3,24 @@
 #
 # @param cluster_title
 # @param url
-# @param hpc_cluster
+# @param hidden
 # @param acls
-# @param login_server
-# @param resource_mgr_type
-# @param resource_mgr_host
-# @param resource_mgr_lib
-# @param resource_mgr_bin
-# @param resource_mgr_version
+# @param login_host
+# @param job_adapter
+# @param job_cluster
+# @param job_host
+# @param job_lib
+# @param job_libdir
+# @param job_bin
+# @param job_bindir
+# @param job_conf
+# @param job_envdir
+# @param job_serverdir
+# @param job_exec
+# @param sge_root
+# @param libdrmaa_path
+# @param job_version
+# @param job_bin_overrides
 # @param scheduler_type
 # @param scheduler_host
 # @param scheduler_bin
@@ -26,50 +36,42 @@
 # @param batch_connect
 #
 define openondemand::cluster (
-  $cluster_title = $name,
-  $url = "http://${::domain}",
-  $hpc_cluster = true,
+  String $cluster_title = $name,
+  Variant[Stdlib::HTTPSUrl, Stdlib::HTTPUrl] $url = "http://${::domain}",
+  Boolean $hidden = false,
   Array[Openondemand::Acl] $acls = [],
-  $login_server = undef,
-  $resource_mgr_type = 'torque',
-  $resource_mgr_host = undef,
-  $resource_mgr_lib = undef,
-  $resource_mgr_bin = undef,
-  $resource_mgr_version = undef,
-  $scheduler_type = 'moab',
-  $scheduler_host = undef,
-  $scheduler_bin = undef,
-  $scheduler_version = undef,
-  $scheduler_params = {},
+  Optional[Stdlib::Host] $login_host = undef,
+  Optional[Enum['torque','slurm','lsf','pbspro','sge']] $job_adapter = undef,
+  Optional[String] $job_cluster = undef,
+  Optional[Stdlib::Host] $job_host = undef,
+  Optional[Stdlib::Absolutepath] $job_lib = undef,
+  Optional[Stdlib::Absolutepath] $job_libdir = undef,
+  Optional[Stdlib::Absolutepath] $job_bin = undef,
+  Optional[Stdlib::Absolutepath] $job_bindir = undef,
+  Optional[Stdlib::Absolutepath] $job_conf = undef,
+  Optional[Stdlib::Absolutepath] $job_envdir = undef,
+  Optional[Stdlib::Absolutepath] $job_serverdir = undef,
+  Optional[Stdlib::Absolutepath] $job_exec = undef,
+  Optional[Stdlib::Absolutepath] $sge_root = undef,
+  Optional[Stdlib::Absolutepath] $libdrmaa_path = undef,
+  Optional[String] $job_version = undef,
+  Hash[String, Stdlib::Absolutepath] $job_bin_overrides = {},
+  Optional[Enum['moab']] $scheduler_type = undef,
+  Optional[Stdlib::Host] $scheduler_host = undef,
+  Optional[Stdlib::Absolutepath] $scheduler_bin = undef,
+  Optional[String] $scheduler_version = undef,
+  Hash $scheduler_params = {},
   Array[Openondemand::Acl] $rsv_query_acls = [],
-  $ganglia_host = undef,
-  $ganglia_scheme = 'https://',
-  $ganglia_segments = ['gweb', 'graph.php'],
-  $ganglia_req_query = {'c' => $name},
-  $ganglia_opt_query = {'h' => "%{h}.${::domain}"},
-  $ganglia_version = '3',
+  Optional[Stdlib::Host] $ganglia_host = undef,
+  String $ganglia_scheme = 'https://',
+  Array $ganglia_segments = ['gweb', 'graph.php'],
+  Hash $ganglia_req_query = {'c' => $name},
+  Hash $ganglia_opt_query = {'h' => "%{h}.${::domain}"},
+  String $ganglia_version = '3',
   Hash[String, Openondemand::Batch_connect] $batch_connect = {},
 ) {
 
   include openondemand
-
-  case $resource_mgr_type {
-    'torque': {
-      $_resource_mgr_type = 'OodCluster::Servers::Torque'
-    }
-    default: {
-      fail("openondemand::cluster: unsupported resource manager type '${resource_mgr_type}', only torque is supported")
-    }
-  }
-
-  case $scheduler_type {
-    'moab': {
-      $_scheduler_type = 'OodCluster::Servers::Moab'
-    }
-    default: {
-      fail("openondemand::cluster: unsupported scheduler type '${scheduler_type}', only moab is supported")
-    }
-  }
 
   file { "/etc/ood/config/clusters.d/${name}.yml":
     ensure  => 'file',
