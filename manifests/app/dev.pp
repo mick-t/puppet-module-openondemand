@@ -1,20 +1,27 @@
 # @summary Manage Open OnDemand dev app
 #
+# @example
+#   openondemand::app::dev { 'user1': }
 #
 # @param ensure
 # @param mode
+#   File mode of dev app
 # @param owner
+#   Owner of dev app
 # @param group
+#   Group owning dev app
 # @param home_subdir
+#   The subdirectory under user's home for dev app
+#   Not used if `gateway_src` is defined
 # @param gateway_src
-#
+#   The path to dev app, overrides `home_subdir`
 define openondemand::app::dev (
   Enum['present','absent'] $ensure = 'present',
-  $mode = '0755',
-  $owner = 'root',
-  $group = 'root',
-  $home_subdir = 'ondemand/dev',
-  $gateway_src = undef,
+  Stdlib::Filemode $mode = '0755',
+  String $owner = 'root',
+  String $group = 'root',
+  String $home_subdir = 'ondemand/dev',
+  Optional[Stdlib::Absolutepath] $gateway_src = undef,
 ) {
 
   include openondemand

@@ -1,8 +1,7 @@
-#
+# @summary Manage Open OnDemand repos
+# @api private
 class openondemand::repo {
-  if $caller_module_name != $module_name {
-    fail("Use of private class ${name} by ${caller_module_name}")
-  }
+  assert_private()
 
   yumrepo { 'ondemand-web':
     descr           => 'Open OnDemand Web Repo',

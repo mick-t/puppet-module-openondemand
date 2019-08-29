@@ -1,8 +1,7 @@
-# Private class.
+# @summary Manage Open OnDemand Apache
+# @api private
 class openondemand::apache {
-  if $caller_module_name != $module_name {
-    fail("Use of private class ${name} by ${caller_module_name}")
-  }
+  assert_private()
 
   if $openondemand::declare_apache {
     class { '::apache::version':

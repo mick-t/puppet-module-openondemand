@@ -1,18 +1,26 @@
 # @summary Manage Open OnDemand user app
 #
+# @example
+#   openondemand::app::usr { 'user1':
+#     gateway_src => '/home/user1/ondemand/usr',
+#   }
 #
 # @param gateway_src
+#   Path to source of user's apps
 # @param ensure
 # @param mode
+#   The file mode for shared apps
 # @param owner
+#   The file owner of shared apps
 # @param group
+#   The file group owner of shared apps
 #
 define openondemand::app::usr (
-  $gateway_src,
+  Stdlib::Absolutepath $gateway_src,
   Enum['present','absent'] $ensure = 'present',
-  $mode = '0750',
-  $owner = 'root',
-  $group = 'root',
+  Stdlib::Filemode $mode = '0750',
+  String $owner = 'root',
+  String $group = 'root',
 ) {
 
   include openondemand

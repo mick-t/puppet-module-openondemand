@@ -1,12 +1,24 @@
 # @summary Manage Open OnDemand app
 #
+# @example
+#   openondemand::install::app { 'bc_osc_foo':
+#     ensure => '0.1.0-1.el7',
+#   }
+#
 # @param ensure
+#   Package ensure property if installing from a package
 # @param package
+#   Package name for the app
 # @param manage_package
+#   Should package be managed
 # @param path
+#   Path to app, defaults to `/var/www/ood/apps/sys/$name`
 # @param owner
+#   File owner of app
 # @param group
+#   File group owner of app
 # @param mode
+#   File mode for app
 #
 define openondemand::install::app (
   String $ensure = 'present',

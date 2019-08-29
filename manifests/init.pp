@@ -1,78 +1,149 @@
 # @summary Manage Open OnDemand
 #
 # @param repo_release
+#   The release of OnDemand repo
 # @param repo_baseurl_prefix
+#   The baseurl prefix for OnDemand repo
 # @param repo_gpgkey
+#   The URL for OnDemand repo GPG key
 # @param manage_scl
+#   Boolean that determines if managing SCL
 # @param manage_epel
+#   Boolean that determines if managing EPEL
 # @param selinux
+#   Boolean that determines if adding SELinux support
 # @param ondemand_package_ensure
+#   ondemand package ensure
 # @param ood_auth_discovery_ensure
 # @param ood_auth_registration_ensure
 # @param mod_auth_openidc_ensure
+#   mod_auth_openidc package ensure
 # @param install_apps
+#   Hash of apps to install, passed to ondemand::install::app
 # @param declare_apache
+#   Boolean that determines if apache is declared or included
 # @param cilogon_client_id
+#   CILogon client_id
 # @param cilogon_client_secret
+#   CILogon client_secret
 # @param oidc_crypto_passphrase
+#   OIDC crypto passphrase
 # @param listen_addr_port
+#   ood_portal.yml listen_addr_port
 # @param servername
+#   ood_portal.yml servername
 # @param ssl
+#   ood_portal.yml ssl
 # @param logroot
+#   ood_portal.yml logroot
 # @param lua_root
+#   ood_portal.yml lua_root
 # @param lua_log_level
+#   ood_portal.yml lua_log_level
 # @param user_map_cmd
+#   ood_portal.yml user_map_cmd
 # @param user_env
+#   ood_portal.yml user_env
 # @param map_fail_uri
+#   ood_portal.yml map_fail_uri
 # @param auth_type
+#   ood_portal.yml auth_type
 # @param auth_configs
+#   ood_portal.yml auth_configs
 # @param root_uri
+#   ood_portal.yml root_uri
 # @param analytics
+#   ood_portal.yml analytics
 # @param public_uri
+#   ood_portal.yml public_uri
 # @param public_root
+#   ood_portal.yml public_root
 # @param logout_uri
+#   ood_portal.yml logout_uri
 # @param logout_redirect
+#   ood_portal.yml logout_redirect
 # @param host_regex
+#   ood_portal.yml host_regex
 # @param node_uri
+#   ood_portal.yml node_uri
 # @param rnode_uri
+#   ood_portal.yml rnode_uri
 # @param nginx_uri
+#   ood_portal.yml nginx_uri
 # @param pun_uri
+#   ood_portal.yml pun_uri
 # @param pun_socket_root
+#   ood_portal.yml pun_socket_root
 # @param pun_max_retries
+#   ood_portal.yml pun_max_retries
 # @param nginx_log_group
+#   ood_portal.yml nginx_log_group
 # @param oidc_uri
+#   ood_portal.yml oidc_uri
 # @param oidc_discover_uri
+#   ood_portal.yml oidc_discover_uri
 # @param oidc_discover_root
+#   ood_portal.yml oidc_discover_root
 # @param oidc_provider
+#   OIDC provider
 # @param oidc_provider_token_endpoint_auth
+#   OIDC provider token_endpoint_auth
 # @param oidc_provider_scope
+#   OIDC provider scope
 # @param oidc_provider_client_id
+#   OIDC provider client_id
 # @param oidc_provider_client_secret
+#   OIDC provider client_secret
 # @param oidc_remote_user_claim
+#   OIDC provider remote_user claim
 # @param register_uri
+#   ood_portal.yml register_uri
 # @param register_root
+#   ood_portal.yml register_root
 # @param basic_auth_users
+#   Hash of resources to pass to httpauth for defining basic auth users
+#   Only used with basic auth
 # @param nginx_stage_ondemand_portal
+#   nginx_stage.yml ondemand_portal
 # @param nginx_stage_ondemand_title
+#   nginx_stage.yml ondemand_title
 # @param nginx_stage_app_root
+#   nginx_stage.yml app_root
 # @param nginx_stage_scl_env
+#   nginx_stage.yml scl_env
 # @param nginx_stage_app_request_regex
+#   nginx_stage.yml app_request_regex
 # @param clusters
+#   Hash of resources to apss to openondemand::cluster
 # @param clusters_hiera_merge
+#   Boolean that determines if clusters should be merged via lookup function
 # @param usr_apps
+#   Resources passed to openondemand::app::usr
 # @param usr_app_defaults
+#   Defaults for `usr_apps` resources
 # @param dev_apps
+#   Resources passed to openondemand::app::dev
 # @param dev_app_users
+#   Users to define as having dev apps, passed to openondemand::app::dev
 # @param dev_app_defaults
-# @param manage_apps_config
+#   Defaults for `dev_apps` and `dev_app_users`
 # @param apps_config_repo
+#   Git repo URL for apps config
 # @param apps_config_revision
+#   Revision for apps config Git repo
 # @param apps_config_repo_path
+#   Path in apps config Git repo for app configs
 # @param locales_config_repo_path
+#   Path in apps config Git repo for locales configs
 # @param apps_config_source
+#   Source for apps config, not used if `apps_config_repo` is defined
+# @param locales_config_source
+#   Source for locales config, not used if `apps_config_repo` is defined
 # @param public_files_repo_paths
+#   Path to public files in apps config Git repo
 #
 class openondemand (
+  # repos
   String $repo_release = 'latest',
   Variant[Stdlib::HTTPSUrl, Stdlib::HTTPUrl]
     $repo_baseurl_prefix = 'https://yum.osc.edu/ondemand',
@@ -80,8 +151,9 @@ class openondemand (
     $repo_gpgkey = 'https://yum.osc.edu/ondemand/RPM-GPG-KEY-ondemand',
   Boolean $manage_scl = true,
   Boolean $manage_epel = true,
-  Boolean $selinux = false,
 
+  # packages
+  Boolean $selinux = false,
   String $ondemand_package_ensure                 = 'present',
   String $ood_auth_discovery_ensure               = 'present',
   String $ood_auth_registration_ensure            = 'present',
@@ -91,11 +163,12 @@ class openondemand (
   # Apache
   Boolean $declare_apache = true,
 
+  # cilogon/oidc
   String $cilogon_client_id      = '',
   String $cilogon_client_secret  = '',
   String $oidc_crypto_passphrase  = 'CHANGEME',
 
-  #
+  # ood_portal.yml
   Variant[Array, String, Undef] $listen_addr_port = undef,
   Optional[String] $servername = undef,
   Optional[Array] $ssl = undef,
@@ -107,31 +180,26 @@ class openondemand (
   Optional[String] $map_fail_uri = undef,
   Enum['cilogon', 'openid-connect', 'shibboleth', 'ldap', 'basic'] $auth_type = 'basic',
   Optional[Array] $auth_configs = $openondemand::params::auth_configs,
-
   String $root_uri = '/pun/sys/dashboard',
-
   Optional[Struct[{url => String, id => String}]] $analytics = undef,
-
   String $public_uri = '/public',
   String $public_root = '/var/www/ood/public',
-
   String $logout_uri = '/logout',
   String $logout_redirect = '/pun/sys/dashboard/logout',
-
   String $host_regex = '[^/]+',
   Optional[String] $node_uri = undef,
   Optional[String] $rnode_uri = undef,
-
   String $nginx_uri = '/nginx',
   String $pun_uri = '/pun',
   String $pun_socket_root = '/var/run/ondemand-nginx',
   Integer $pun_max_retries = 5,
-
-  String $nginx_log_group = 'ondemand-nginx',
-
-  Optional[String] $oidc_uri = undef,
   Optional[String] $oidc_discover_uri = undef,
   Optional[String] $oidc_discover_root = undef,
+  Optional[String] $register_uri = undef,
+  Optional[String] $register_root = undef,
+
+  # OIDC configs
+  Optional[String] $oidc_uri = undef,
   Optional[String] $oidc_provider = undef,
   Optional[String] $oidc_provider_token_endpoint_auth = undef,
   String $oidc_provider_scope = 'openid email',
@@ -139,32 +207,35 @@ class openondemand (
   String $oidc_provider_client_secret = '',
   Optional[String] $oidc_remote_user_claim = undef,
 
-  Optional[String] $register_uri = undef,
-  Optional[String] $register_root = undef,
-
+  # Misc configs
   Hash $basic_auth_users  = $openondemand::params::basic_auth_users,
+  String $nginx_log_group = 'ondemand-nginx',
 
+  # nginx_stage configs
   String $nginx_stage_ondemand_portal = 'ondemand',
   String $nginx_stage_ondemand_title  = 'Open OnDemand',
   Openondemand::Nginx_stage_namespace_config $nginx_stage_app_root  = $openondemand::params::nginx_stage_app_root,
   String $nginx_stage_scl_env = 'ondemand',
   Optional[Openondemand::Nginx_stage_namespace_config] $nginx_stage_app_request_regex = undef,
 
+  # clusters
   Hash $clusters = {},
   Boolean $clusters_hiera_merge = true,
 
+  # usr/dev apps
   Variant[Array, Hash] $usr_apps  = {},
   Hash $usr_app_defaults = {},
   Hash $dev_apps = {},
   Array $dev_app_users = [],
   Hash $dev_app_defaults = {},
 
-  Boolean $manage_apps_config = true,
+  # apps/locales/public configs
   Optional[String] $apps_config_repo = undef,
   Optional[String] $apps_config_revision = undef,
   String $apps_config_repo_path = '',
-  String $locales_config_repo_path = '',
+  Optional[String] $locales_config_repo_path = undef,
   Optional[String] $apps_config_source = undef,
+  Optional[String] $locales_config_source = undef,
   Optional[Array] $public_files_repo_paths = undef,
 ) inherits openondemand::params {
 

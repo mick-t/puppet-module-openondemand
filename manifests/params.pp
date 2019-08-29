@@ -1,4 +1,5 @@
-# Private class.
+# @summary Manage Open OnDemand parameters
+# @api private
 class openondemand::params {
 
   $nginx_stage_app_root = {
