@@ -17,9 +17,6 @@ class openondemand::apache {
   }
 
   include ::apache::mod::ssl
-  if $openondemand::oidc_discover_uri or $openondemand::register_uri {
-    include ::apache::mod::php
-  }
   ::apache::mod { 'session':
     package => 'httpd24-mod_session',
     #loadfile_name => '01-session.conf',
