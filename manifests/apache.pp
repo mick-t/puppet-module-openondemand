@@ -39,8 +39,10 @@ class openondemand::apache {
   include ::apache::mod::proxy_http
   include ::apache::mod::proxy_connect
   include ::apache::mod::proxy_wstunnel
-  include ::apache::mod::authnz_ldap
-  include ::apache::mod::ldap
+  if $openondemand::auth_type == 'ldap' {
+    include ::apache::mod::authnz_ldap
+    include ::apache::mod::ldap
+  }
   ::apache::mod { 'lua': }
   include ::apache::mod::headers
 
