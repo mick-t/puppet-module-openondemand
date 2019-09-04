@@ -3,6 +3,72 @@
 class openondemand::config {
   assert_private()
 
+  # Assumes /var/www - must create since httpd24 does not
+  $web_directory_parent = dirname($openondemand::web_directory)
+  if ! defined(File[$web_directory_parent]) {
+    file { '/var/www':
+      ensure => 'directory',
+      path   => $web_directory_parent,
+      owner  => 'root',
+      group  => 'root',
+      mode   => '0755',
+    }
+  }
+
+  file { '/var/www/ood':
+    ensure => 'directory',
+    path   => $openondemand::web_directory,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+  }
+
+  file { '/var/www/ood/apps':
+    ensure => 'directory',
+    path   => "${openondemand::web_directory}/apps",
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+  }
+
+  file { '/var/www/ood/apps/sys':
+    ensure => 'directory',
+    path   => "${openondemand::web_directory}/apps/sys",
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+  }
+
+  file { '/var/www/ood/apps/usr':
+    ensure  => 'directory',
+    path    => "${openondemand::web_directory}/apps/usr",
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0755',
+    recurse => true,
+    purge   => true,
+    force   => true,
+  }
+
+  file { '/var/www/ood/apps/dev':
+    ensure  => 'directory',
+    path    => "${openondemand::web_directory}/apps/dev",
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0755',
+    recurse => true,
+    purge   => true,
+    force   => true,
+  }
+
+  file { '/var/www/ood/public':
+    ensure => 'directory',
+    path   => $openondemand::public_root,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+  }
+
   file { '/etc/ood':
     ensure => 'directory',
     owner  => 'root',
@@ -24,60 +90,40 @@ class openondemand::config {
       source   => $openondemand::apps_config_repo,
       revision => $openondemand::apps_config_revision,
       user     => 'root',
-      before   => File['/etc/ood/config/apps'],
+      before   => [
+        File['/etc/ood/config/apps'],
+        File['/etc/ood/config/locales'],
+      ],
     }
-    file { '/etc/ood/config/apps':
-      ensure  => 'directory',
+  }
+  file { '/etc/ood/config/apps':
+    ensure  => 'directory',
+    owner   => 'root',
+    group   => 'root',
+    source  => $openondemand::_apps_config_source,
+    recurse => true,
+    purge   => true,
+    force   => true,
+  }
+  file { '/etc/ood/config/locales':
+    ensure  => 'directory',
+    owner   => 'root',
+    group   => 'root',
+    source  => $openondemand::_locales_config_source,
+    recurse => true,
+    purge   => true,
+    force   => true,
+  }
+
+  $openondemand::public_files_repo_paths.each |$path| {
+    $basename = basename($path)
+    file { "${openondemand::public_root}/${basename}":
+      ensure  => 'file',
       owner   => 'root',
       group   => 'root',
-      source  => "/opt/ood-apps-config/${openondemand::apps_config_repo_path}",
-      recurse => true,
-      purge   => true,
-      force   => true,
-    }
-    if $openondemand::locales_config_repo_path {
-      file { '/etc/ood/config/locales':
-        ensure  => 'directory',
-        owner   => 'root',
-        group   => 'root',
-        source  => "/opt/ood-apps-config/${openondemand::locales_config_repo_path}",
-        recurse => true,
-        purge   => true,
-        force   => true,
-        require => Vcsrepo['/opt/ood-apps-config'],
-      }
-    }
-    if $openondemand::public_files_repo_paths {
-      $openondemand::public_files_repo_paths.each |$path| {
-        $basename = basename($path)
-        file { "${openondemand::public_root}/${basename}":
-          ensure  => 'file',
-          owner   => 'root',
-          group   => 'root',
-          mode    => '0644',
-          source  => "/opt/ood-apps-config/${path}",
-          require => Vcsrepo['/opt/ood-apps-config'],
-        }
-      }
-    }
-  } else {
-    file { '/etc/ood/config/apps':
-      ensure  => 'directory',
-      owner   => 'root',
-      group   => 'root',
-      source  => $openondemand::apps_config_source,
-      recurse => true,
-      purge   => true,
-      force   => true,
-    }
-    file { '/etc/ood/config/locales':
-      ensure  => 'directory',
-      owner   => 'root',
-      group   => 'root',
-      source  => $openondemand::locales_config_source,
-      recurse => true,
-      purge   => true,
-      force   => true,
+      mode    => '0644',
+      source  => "/opt/ood-apps-config/${path}",
+      require => $openondemand::_public_files_require,
     }
   }
 
@@ -91,13 +137,12 @@ class openondemand::config {
     notify  => Class['openondemand::service'],
   }
 
-  $ood_portal_yaml = to_yaml($openondemand::ood_portal_config)
   file { '/etc/ood/config/ood_portal.yml':
     ensure  => 'file',
     owner   => 'root',
     group   => 'root',
     mode    => '0644',
-    content => "# File managed by Puppet - do not edit!\n${ood_portal_yaml}",
+    content => "# File managed by Puppet - do not edit!\n${openondemand::ood_portal_yaml}",
     notify  => Exec['ood-portal-generator-generate'],
   }
 
@@ -127,13 +172,6 @@ class openondemand::config {
     group   => 'root',
     mode    => '0644',
     content => template('openondemand/profile.erb'),
-  }
-
-  file { $openondemand::public_root:
-    ensure => 'directory',
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0755',
   }
 
   sudo::conf { 'ood':

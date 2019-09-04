@@ -18,19 +18,15 @@ class openondemand::apache {
   include ::apache::mod::ssl
   ::apache::mod { 'session':
     package => 'httpd24-mod_session',
-    #loadfile_name => '01-session.conf',
   }
   ::apache::mod { 'session_cookie':
     package => 'httpd24-mod_session',
-    #loadfile_name => '01-session-cookie.conf',
   }
   ::apache::mod { 'session_dbd':
     package => 'httpd24-mod_session',
-    #loadfile_name => '01-session-dbd.conf',
   }
   ::apache::mod { 'auth_form':
     package => 'httpd24-mod_session',
-    #loadfile_name => '01-auth_form.conf',
   }
   # mod_request needed by mod_auth_form - should probably be a default module.
   ::apache::mod { 'request': }
@@ -38,7 +34,6 @@ class openondemand::apache {
   ::apache::mod { 'xml2enc':}
   ::apache::mod { 'proxy_html':
     package => 'httpd24-mod_proxy_html',
-    #loadfile_name => '00-proxyhtml.conf',
   }
   include ::apache::mod::proxy
   include ::apache::mod::proxy_http
@@ -66,9 +61,8 @@ class openondemand::apache {
     }
 
     ::apache::custom_config { 'auth_openidc':
-      content        => template('openondemand/apache/auth_openidc.conf.erb'),
-      priority       => false,
-      verify_command => '/opt/rh/httpd24/root/usr/sbin/apachectl -t',
+      content  => template('openondemand/apache/auth_openidc.conf.erb'),
+      priority => false,
     }
     # Hack to set mode of auth_openidc.conf
     File <| title == 'apache_auth_openidc' |> {
