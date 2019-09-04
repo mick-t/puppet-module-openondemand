@@ -37,7 +37,7 @@
 #
 define openondemand::cluster (
   String $cluster_title = $name,
-  Variant[Stdlib::HTTPSUrl, Stdlib::HTTPUrl] $url = "http://${::domain}",
+  Optional[Variant[Stdlib::HTTPSUrl, Stdlib::HTTPUrl] ]$url = undef,
   Boolean $hidden = false,
   Array[Openondemand::Acl] $acls = [],
   Optional[Stdlib::Host] $login_host = undef,
