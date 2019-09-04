@@ -76,14 +76,16 @@
 #   ood_portal.yml pun_socket_root
 # @param pun_max_retries
 #   ood_portal.yml pun_max_retries
-# @param nginx_log_group
-#   ood_portal.yml nginx_log_group
 # @param oidc_uri
 #   ood_portal.yml oidc_uri
 # @param oidc_discover_uri
 #   ood_portal.yml oidc_discover_uri
 # @param oidc_discover_root
 #   ood_portal.yml oidc_discover_root
+# @param register_uri
+#   ood_portal.yml register_uri
+# @param register_root
+#   ood_portal.yml register_root
 # @param oidc_provider
 #   OIDC provider
 # @param oidc_provider_token_endpoint_auth
@@ -96,13 +98,13 @@
 #   OIDC provider client_secret
 # @param oidc_remote_user_claim
 #   OIDC provider remote_user claim
-# @param register_uri
-#   ood_portal.yml register_uri
-# @param register_root
-#   ood_portal.yml register_root
+# @param web_directory
+#   Path to main web directory for OnDemand
 # @param basic_auth_users
 #   Hash of resources to pass to httpauth for defining basic auth users
 #   Only used with basic auth
+# @param nginx_log_group
+#   Group to set for /var/log/ondemand-nginx
 # @param nginx_stage_ondemand_portal
 #   nginx_stage.yml ondemand_portal
 # @param nginx_stage_ondemand_title
@@ -193,13 +195,13 @@ class openondemand (
   String $pun_uri = '/pun',
   String $pun_socket_root = '/var/run/ondemand-nginx',
   Integer $pun_max_retries = 5,
+  Optional[String] $oidc_uri = undef,
   Optional[String] $oidc_discover_uri = undef,
   Optional[String] $oidc_discover_root = undef,
   Optional[String] $register_uri = undef,
   Optional[String] $register_root = undef,
 
   # OIDC configs
-  Optional[String] $oidc_uri = undef,
   Optional[String] $oidc_provider = undef,
   Optional[String] $oidc_provider_token_endpoint_auth = undef,
   String $oidc_provider_scope = 'openid email',
@@ -208,6 +210,7 @@ class openondemand (
   Optional[String] $oidc_remote_user_claim = undef,
 
   # Misc configs
+  Stdlib::Absolutepath $web_directory = '/var/www/ood',
   Hash $basic_auth_users  = $openondemand::params::basic_auth_users,
   String $nginx_log_group = 'ondemand-nginx',
 
@@ -236,10 +239,8 @@ class openondemand (
   Optional[String] $locales_config_repo_path = undef,
   Optional[String] $apps_config_source = undef,
   Optional[String] $locales_config_source = undef,
-  Optional[Array] $public_files_repo_paths = undef,
+  Array $public_files_repo_paths = [],
 ) inherits openondemand::params {
-
-  $_web_directory = dirname($public_root)
 
   if $selinux {
     $selinux_package_ensure = $ondemand_package_ensure
@@ -271,6 +272,22 @@ class openondemand (
     default: {
       $auth = ["AuthType ${auth_type}"] + $auth_configs
     }
+  }
+
+  if $apps_config_repo {
+    $_public_files_require = Vcsrepo['/opt/ood-apps-config']
+  }
+
+  if $apps_config_repo and $apps_config_repo_path {
+    $_apps_config_source = "/opt/ood-apps-config/${apps_config_repo_path}"
+  } else {
+    $_apps_config_source = $apps_config_source
+  }
+
+  if $apps_config_repo and $locales_config_repo_path {
+    $_locales_config_source = "/opt/ood-apps-config/${locales_config_repo_path}"
+  } else {
+    $_locales_config_source = $locales_config_source
   }
 
   if $clusters_hiera_merge {
@@ -311,6 +328,7 @@ class openondemand (
     'register_uri'        => $register_uri,
     'register_root'       => $register_root,
   })
+  $ood_portal_yaml = to_yaml($ood_portal_config)
 
   contain openondemand::repo
   contain openondemand::install

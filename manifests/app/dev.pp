@@ -26,7 +26,7 @@ define openondemand::app::dev (
 
   include openondemand
 
-  $base_web_dir = "${openondemand::_web_directory}/apps/dev"
+  $base_web_dir = "${openondemand::web_directory}/apps/dev"
   $web_dir      = "${base_web_dir}/${name}"
   $gateway      = "${web_dir}/gateway"
   $_gateway_src  = pick($gateway_src, "~${name}/${home_subdir}")

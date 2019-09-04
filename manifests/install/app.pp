@@ -32,7 +32,7 @@ define openondemand::install::app (
 
   include openondemand
 
-  $_path = pick($path, "${openondemand::_web_directory}/apps/sys/${name}")
+  $_path = pick($path, "${openondemand::web_directory}/apps/sys/${name}")
 
   if $manage_package {
     ensure_resource('package', $package, {
