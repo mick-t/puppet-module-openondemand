@@ -2,7 +2,9 @@
 v2:
   metadata:
     title: "<%= @cluster_title %>"
+<%- if @url %>
     url: "<%= @url %>"
+<%- end -%>
     hidden: <%= @hidden %>
 <%- if ! @acls.empty? -%>
   acls:
