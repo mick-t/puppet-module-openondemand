@@ -1,8 +1,7 @@
-# Private class.
+# @summary Manage Open OnDemand install
+# @api private
 class openondemand::install {
-  if $caller_module_name != $module_name {
-    fail("Use of private class ${name} by ${caller_module_name}")
-  }
+  assert_private()
 
   # Assumes /var/www - must create since httpd24 does not
   $_web_directory_parent = dirname($openondemand::_web_directory)

@@ -1,8 +1,7 @@
-# Private class.
+# @summary Manage Open OnDemand service
+# @api private
 class openondemand::service {
-  if $caller_module_name != $module_name {
-    fail("Use of private class ${name} by ${caller_module_name}")
-  }
+  assert_private()
 
   exec { 'nginx_stage-app_clean':
     command     => '/opt/ood/nginx_stage/sbin/nginx_stage app_clean',

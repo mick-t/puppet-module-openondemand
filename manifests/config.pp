@@ -1,8 +1,7 @@
-# Private class.
+# @summary Manage Open OnDemand configs
+# @api private
 class openondemand::config {
-  if $caller_module_name != $module_name {
-    fail("Use of private class ${name} by ${caller_module_name}")
-  }
+  assert_private()
 
   file { '/etc/ood':
     ensure => 'directory',
@@ -18,7 +17,7 @@ class openondemand::config {
     mode   => '0755',
   }
 
-  if $openondemand::manage_apps_config and $openondemand::apps_config_repo {
+  if $openondemand::apps_config_repo {
     vcsrepo { '/opt/ood-apps-config':
       ensure   => 'latest',
       provider => 'git',
@@ -36,7 +35,7 @@ class openondemand::config {
       purge   => true,
       force   => true,
     }
-    if $openondemand::locales_config_repo_path != '' {
+    if $openondemand::locales_config_repo_path {
       file { '/etc/ood/config/locales':
         ensure  => 'directory',
         owner   => 'root',
@@ -46,6 +45,19 @@ class openondemand::config {
         purge   => true,
         force   => true,
         require => Vcsrepo['/opt/ood-apps-config'],
+      }
+    }
+    if $openondemand::public_files_repo_paths {
+      $openondemand::public_files_repo_paths.each |$path| {
+        $basename = basename($path)
+        file { "${openondemand::public_root}/${basename}":
+          ensure  => 'file',
+          owner   => 'root',
+          group   => 'root',
+          mode    => '0644',
+          source  => "/opt/ood-apps-config/${path}",
+          require => Vcsrepo['/opt/ood-apps-config'],
+        }
       }
     }
   } else {
@@ -58,19 +70,14 @@ class openondemand::config {
       purge   => true,
       force   => true,
     }
-  }
-
-  if $openondemand::apps_config_repo and $openondemand::public_files_repo_paths {
-    $openondemand::public_files_repo_paths.each |$path| {
-      $basename = basename($path)
-      file { "${openondemand::public_root}/${basename}":
-        ensure  => 'file',
-        owner   => 'root',
-        group   => 'root',
-        mode    => '0644',
-        source  => "/opt/ood-apps-config/${path}",
-        require => Vcsrepo['/opt/ood-apps-config'],
-      }
+    file { '/etc/ood/config/locales':
+      ensure  => 'directory',
+      owner   => 'root',
+      group   => 'root',
+      source  => $openondemand::locales_config_source,
+      recurse => true,
+      purge   => true,
+      force   => true,
     }
   }
 
