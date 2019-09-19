@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>
+  File: README
+  
+    &mdash; Documentation by YARD 0.9.20
+  
+</title>
+
+  <link rel="stylesheet" href="css/style.css" type="text/css" charset="utf-8" />
+
+  <link rel="stylesheet" href="css/common.css" type="text/css" charset="utf-8" />
+
+<script type="text/javascript" charset="utf-8">
+  pathId = "";
+  relpath = '';
+</script>
+
+
+  <script type="text/javascript" charset="utf-8" src="js/jquery.js"></script>
+
+  <script type="text/javascript" charset="utf-8" src="js/app.js"></script>
+
+
+  </head>
+  <body>
+    <div class="nav_wrap">
+      <iframe id="nav" src="file_list.html?1"></iframe>
+      <div id="resizer"></div>
+    </div>
+
+    <div id="main" tabindex="-1">
+      <div id="header">
+        <div id="menu">
+  
+    <a href="_index.html">Index</a> &raquo; 
+    <span class="title">File: README</span>
+  
+</div>
+
+        <div id="search">
+  
+    <a class="full_list_link" id="puppet_class_list_link"
+        href="puppet_class_list.html">
+
+        <svg width="24" height="24">
+          <rect x="0" y="4" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="12" width="24" height="4" rx="1" ry="1"></rect>
+          <rect x="0" y="20" width="24" height="4" rx="1" ry="1"></rect>
+        </svg>
+    </a>
+  
+</div>
+        <div class="clear"></div>
+      </div>
+
+      <div id="content"><div id='filecontents'>
+<h1 id="label-puppet-module-openondemand">puppet-module-openondemand</h1>
+
+<p><a href="https://forge.puppetlabs.com/treydock/openondemand"><img
+src="http://img.shields.io/puppetforge/v/treydock/openondemand.svg"></a> <a
+href="https://travis-ci.org/treydock/puppet-module-openondemand"><img
+src="https://travis-ci.org/treydock/puppet-module-openondemand.png"></a></p>
+
+<h4 id="label-Table+of+Contents">Table of Contents</h4>
+<ol><li>
+<p><a href="#label-Overview">Overview</a></p>
+<ul><li>
+<p><a href="#label-Supported+versions+of+open+ondemand">Supported Versions of Open
+OnDemand</a></p>
+</li></ul>
+</li><li>
+<p><a href="#label-Usage">Usage - Configuration options</a></p>
+</li><li>
+<p><a href="#label-Reference">Reference - Parameter and detailed reference to all
+options</a></p>
+</li><li>
+<p><a href="#label-Limitations">Limitations - OS compatibility, etc.</a></p>
+</li></ol>
+
+<h2 id="label-Overview">Overview</h2>
+
+<p>Manage <a href="http://openondemand.org/">Open OnDemand</a> installation
+and configuration.</p>
+
+<h3 id="label-Supported+Versions+of+Open+OnDemand">Supported Versions of Open OnDemand</h3>
+
+<p>The following are the versions of this module and the supported versions of
+Open OnDemand:</p>
+<ul><li>
+<p>Module 0.x supports Open OnDemand 1.x</p>
+</li></ul>
+
+<h2 id="label-Usage">Usage</h2>
+
+<p>All configuration can be done through the <code>openondemand</code> class.
+Example configurations will be done in Hiera format.</p>
+
+<pre class="code ruby"><code class="ruby">include ::openondemand
+</code></pre>
+
+<p>Install specific versions of OnDemand from 1.6 repo with OpenID Connect
+support.</p>
+
+<pre class="code ruby"><code class="ruby">openondemand::repo_release: &#39;1.6&#39;
+openondemand::ondemand_package_ensure: &quot;1.6.11-1.el7&quot;
+openondemand::mod_auth_openidc_ensure: &quot;2.3.11-1.el7&quot;
+</code></pre>
+
+<p>Configure OnDemand SSL certs</p>
+
+<pre class="code ruby"><code class="ruby">openondemand::servername: ondemand.osc.edu
+openondemand::ssl:
+  - &quot;SSLCertificateFile /etc/pki/tls/certs/%{lookup(&#39;openondemand::servername&#39;)}.crt&quot;
+  - &quot;SSLCertificateKeyFile /etc/pki/tls/private/%{lookup(&#39;openondemand::servername&#39;)}.key&quot;
+  - &quot;SSLCertificateChainFile /etc/pki/tls/certs/%{lookup(&#39;openondemand::servername&#39;)}-interm.crt&quot;
+</code></pre>
+
+<p>If you already declare the apache class you may wish to only include apache
+in this module:</p>
+
+<pre class="code ruby"><code class="ruby">openondemand::declare_apache: false
+apache::version::scl_httpd_version: &#39;2.4&#39;
+apache::version::scl_php_version: &#39;7.0&#39;
+apache::default_vhost: false
+</code></pre>
+
+<p>Add support for interactive apps</p>
+
+<pre class="code ruby"><code class="ruby">openondemand::host_regex: &#39;[\w.-]+\.osc\.edu&#39;
+openondemand::node_uri: &#39;/node&#39;
+openondemand::rnode_uri: &#39;/rnode&#39;
+</code></pre>
+
+<p>Setup OnDemand to authenticate with OpenID Connect system, in these
+examples the IdP is Keycloak.</p>
+
+<pre class="code ruby"><code class="ruby">openondemand::servername: ondemand.osc.edu
+openondemand::auth_type: &#39;openid-connect&#39;
+openondemand::auth_configs:
+  - &#39;Require valid-user&#39;
+openondemand::user_map_cmd: /opt/ood/ood_auth_map/bin/ood_auth_map.regex
+openondemand::logout_redirect: &quot;/oidc?logout=https%3A%2F%2F%{lookup(&#39;openondemand::servername&#39;)}&quot;
+openondemand::oidc_uri: &#39;/oidc&#39;
+openondemand::oidc_provider: &#39;idp.osc.edu/auth/realms/osc&#39;
+openondemand::oidc_provider_token_endpoint_auth: &#39;client_secret_basic&#39;
+openondemand::oidc_provider_scope: &#39;openid email&#39;
+openondemand::oidc_provider_client_id: ondemand.osc.edu
+openondemand::oidc_crypto_passphrase: &#39;SOMEHASH&#39;
+openondemand::oidc_provider_client_secret: &#39;SUPERSECRET&#39;
+</code></pre>
+
+<p>Configure OnDemand via git repo that contains app configs, locales and
+public files</p>
+
+<pre class="code ruby"><code class="ruby">openondemand::servername: ondemand.osc.edu
+openondemand::apps_config_repo: https://github.com/OSC/osc-ood-config.git
+openondemand::apps_config_revision: v30
+openondemand::apps_config_repo_path: &quot;%{lookup(&#39;openondemand::servername&#39;)}/apps&quot;
+openondemand::locales_config_repo_path: &quot;%{lookup(&#39;openondemand::servername&#39;)}/locales&quot;
+openondemand::public_files_repo_paths:
+  - &quot;%{lookup(&#39;openondemand::servername&#39;)}/public/logo.png&quot;
+  - &quot;%{lookup(&#39;openondemand::servername&#39;)}/public/favicon.ico&quot;
+</code></pre>
+
+<p>Define a cluster. The following example is based on a cluster at OSC using
+Torque</p>
+
+<pre class="code ruby"><code class="ruby">openondemand::clusters:
+  owens:
+    cluster_title: &#39;Owens&#39;
+    url: &#39;https://www.osc.edu/supercomputing/computing/owens&#39;
+    login_host: &#39;owens.osc.edu&#39;
+    job_adapter: torque
+    job_host: &#39;owens-batch.ten.osc.edu&#39;
+    job_bin: /opt/torque/bin
+    job_lib: /opt/torque/lib64
+    job_version: &#39;6.0.1&#39;
+    batch_connect:
+      basic:
+        script_wrapper: &#39;module restore\n%s&#39;
+      vnc:
+        script_wrapper: &#39;module restore\nmodule load ondemand-vnc\n%s&#39;
+</code></pre>
+
+<p>Install additional apps of specific versions as well as hide some apps</p>
+
+<pre class="code ruby"><code class="ruby">openondemand::install_apps:
+  bc_osc_rstudio_server:
+    ensure: &quot;0.8.2-1.el7&quot;
+  bc_desktop:
+    mode: &#39;0700&#39;
+</code></pre>
+
+<p>Add usr apps with a default group</p>
+
+<pre class="code ruby"><code class="ruby">openondemand::usr_app_defaults:
+  group: staff
+openondemand::usr_apps:
+  user1:
+    gateway_src: /home/user1/ondemand/share
+  user2:
+    group: faculty
+    gateway_src: /home/user2/ondemand/share
+</code></pre>
+
+<p>Add dev app users</p>
+
+<pre class="code ruby"><code class="ruby">openondemand::dev_app_users:
+  - user1
+  - user2
+</code></pre>
+
+<h2 id="label-Reference">Reference</h2>
+
+<p><a
+href="http://treydock.github.io/puppet-module-openondemand/">treydock.github.io/puppet-module-openondemand/</a></p>
+
+<h2 id="label-Limitations">Limitations</h2>
+
+<p>This module has been tested on:</p>
+<ul><li>
+<p>CentOS 7 x86_64</p>
+</li><li>
+<p>RedHat 7 x86_64</p>
+</li></ul>
+</div></div>
+
+      <div id="footer">
+     Generated by <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>.
+</div>
+
+    </div>
+  </body>
+</html>
