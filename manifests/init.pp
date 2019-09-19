@@ -181,7 +181,7 @@ class openondemand (
   Optional[String] $user_env = undef,
   Optional[String] $map_fail_uri = undef,
   Enum['cilogon', 'openid-connect', 'shibboleth', 'ldap', 'basic'] $auth_type = 'basic',
-  Optional[Array] $auth_configs = $openondemand::params::auth_configs,
+  Optional[Array] $auth_configs = undef,
   String $root_uri = '/pun/sys/dashboard',
   Optional[Struct[{url => String, id => String}]] $analytics = undef,
   String $public_uri = '/public',
@@ -211,13 +211,13 @@ class openondemand (
 
   # Misc configs
   Stdlib::Absolutepath $web_directory = '/var/www/ood',
-  Hash $basic_auth_users  = $openondemand::params::basic_auth_users,
+  Hash $basic_auth_users  = {},
   String $nginx_log_group = 'ondemand-nginx',
 
   # nginx_stage configs
   String $nginx_stage_ondemand_portal = 'ondemand',
   String $nginx_stage_ondemand_title  = 'Open OnDemand',
-  Openondemand::Nginx_stage_namespace_config $nginx_stage_app_root  = $openondemand::params::nginx_stage_app_root,
+  Openondemand::Nginx_stage_namespace_config $nginx_stage_app_root  = {},
   String $nginx_stage_scl_env = 'ondemand',
   Optional[Openondemand::Nginx_stage_namespace_config] $nginx_stage_app_request_regex = undef,
 
@@ -240,7 +240,15 @@ class openondemand (
   Optional[String] $apps_config_source = undef,
   Optional[String] $locales_config_source = undef,
   Array $public_files_repo_paths = [],
-) inherits openondemand::params {
+) {
+
+  $osfamily = $facts.dig('os', 'family')
+  $osmajor = $facts.dig('os', 'release', 'major')
+  $supported = ['RedHat-6','RedHat-7']
+  $os = "${osfamily}-${osmajor}"
+  if ! ($os in $supported) {
+    fail("Unsupported OS: ${osfamily}, module ${module_name} only supports RedHat 6 and 7")
+  }
 
   if $selinux {
     $selinux_package_ensure = $ondemand_package_ensure
@@ -329,6 +337,15 @@ class openondemand (
     'register_root'       => $register_root,
   })
   $ood_portal_yaml = to_yaml($ood_portal_config)
+  $base_apps = {
+    'dashboard' => { 'package' => 'ondemand', 'manage_package' => false },
+    'shell' => { 'package' => 'ondemand', 'manage_package' => false },
+    'files' => { 'package' => 'ondemand', 'manage_package' => false },
+    'file-editor' => { 'package' => 'ondemand', 'manage_package' => false },
+    'activejobs' => { 'package' => 'ondemand', 'manage_package' => false },
+    'myjobs' => { 'package' => 'ondemand', 'manage_package' => false },
+    'bc_desktop' => { 'package' => 'ondemand', 'manage_package' => false },
+  }
 
   contain openondemand::repo
   contain openondemand::install
@@ -368,7 +385,7 @@ class openondemand (
     }
   }
 
-  $apps = deep_merge($openondemand::params::base_apps, $install_apps)
+  $apps = deep_merge($base_apps, $install_apps)
   $apps.each |$name, $app| {
     openondemand::install::app { $name: * => $app }
   }
