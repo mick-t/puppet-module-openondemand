@@ -1,7 +1,7 @@
 # puppet-module-openondemand
 
-[![Puppet Forge](http://img.shields.io/puppetforge/v/treydock/openondemand.svg)](https://forge.puppetlabs.com/treydock/openondemand)
-[![Build Status](https://travis-ci.org/treydock/puppet-module-openondemand.png)](https://travis-ci.org/treydock/puppet-module-openondemand)
+[![Puppet Forge](http://img.shields.io/puppetforge/v/osc/openondemand.svg)](https://forge.puppetlabs.com/osc/openondemand)
+[![Build Status](https://travis-ci.org/osc/puppet-module-openondemand.png)](https://travis-ci.org/osc/puppet-module-openondemand)
 
 #### Table of Contents
 
@@ -148,7 +148,7 @@ openondemand::dev_app_users:
 
 ## Reference
 
-[http://treydock.github.io/puppet-module-openondemand/](http://treydock.github.io/puppet-module-openondemand/)
+[http://osc.github.io/puppet-module-openondemand/](http://osc.github.io/puppet-module-openondemand/)
 
 ## Limitations
 
