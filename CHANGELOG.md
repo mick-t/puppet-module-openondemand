@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v0.1.1](https://github.com/osc/puppet-module-openondemand/tree/v0.1.1) (2019-09-19)
+
+[Full Changelog](https://github.com/osc/puppet-module-openondemand/compare/v0.1.0...v0.1.1)
+
+### Fixed
+
+- Fix README links [\#13](https://github.com/OSC/puppet-module-openondemand/pull/13) ([treydock](https://github.com/treydock))
+
 ## [v0.1.0](https://github.com/osc/puppet-module-openondemand/tree/v0.1.0) (2019-09-19)
 
 [Full Changelog](https://github.com/osc/puppet-module-openondemand/compare/6a14d62901baf820ece3c8c38e29ee3494b30822...v0.1.0)
@@ -20,15 +28,12 @@ All notable changes to this project will be documented in this file. The format 
 - Add README contents [\#10](https://github.com/OSC/puppet-module-openondemand/pull/10) ([treydock](https://github.com/treydock))
 - Improvements to simplify module [\#6](https://github.com/OSC/puppet-module-openondemand/pull/6) ([treydock](https://github.com/treydock))
 - Improve docs and improve app configs parameters [\#5](https://github.com/OSC/puppet-module-openondemand/pull/5) ([treydock](https://github.com/treydock))
+- Convert to PDK module and improvements to pass tests [\#1](https://github.com/OSC/puppet-module-openondemand/pull/1) ([treydock](https://github.com/treydock))
 
 ### Fixed
 
 - Only add LDAP Apache modules if auth\_type is 'ldap' [\#9](https://github.com/OSC/puppet-module-openondemand/pull/9) ([treydock](https://github.com/treydock))
 - Fix extra newline issue in cluster config [\#8](https://github.com/OSC/puppet-module-openondemand/pull/8) ([treydock](https://github.com/treydock))
-
-### UNCATEGORIZED PRS; GO LABEL THEM
-
-- Convert to PDK module and improvements to pass tests [\#1](https://github.com/OSC/puppet-module-openondemand/pull/1) ([treydock](https://github.com/treydock))
 
 
 
