@@ -22,6 +22,8 @@
 #   Hash of apps to install, passed to ondemand::install::app
 # @param declare_apache
 #   Boolean that determines if apache is declared or included
+# @param apache_scls
+#   SCLs to load when starting Apache service
 # @param cilogon_client_id
 #   CILogon client_id
 # @param cilogon_client_secret
@@ -164,6 +166,7 @@ class openondemand (
 
   # Apache
   Boolean $declare_apache = true,
+  String $apache_scls = 'httpd24 rh-ruby25',
 
   # cilogon/oidc
   String $cilogon_client_id      = '',
