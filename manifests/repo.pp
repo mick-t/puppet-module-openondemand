@@ -15,11 +15,7 @@ class openondemand::repo {
   if $openondemand::manage_scl {
     if $facts['os']['name'] == 'CentOS' and versioncmp($facts['os']['release']['major'], '7') == 0 {
       file { '/etc/yum.repos.d/ondemand-centos-scl.repo':
-        ensure => 'file',
-        owner  => 'root',
-        group  => 'root',
-        mode   => '0644',
-        source => 'puppet:///modules/openondemand/ondemand-centos-scl.repo',
+        ensure => 'absent',
       }
     }
 
