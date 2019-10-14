@@ -32,10 +32,4 @@ shared_examples 'openondemand::repo' do |facts|
     it { is_expected.not_to contain_rhsm_repo("rhel-server-rhscl-#{facts[:os]['release']['major']}-rpms") }
     it { is_expected.not_to contain_package('centos-release-scl') }
   end
-
-  context 'when manage_epel => false' do
-    let(:params) { { manage_epel: false } }
-
-    it { is_expected.not_to contain_class('epel') }
-  end
 end

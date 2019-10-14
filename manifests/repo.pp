@@ -36,8 +36,4 @@ class openondemand::repo {
     }
   }
 
-  if $openondemand::manage_epel and $facts['os']['family'] == 'RedHat' {
-    include ::epel
-  }
-
 }
