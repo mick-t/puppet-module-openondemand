@@ -9,7 +9,7 @@ shared_examples 'openondemand::repo' do |facts|
   end
 
   if facts[:os]['name'] == 'CentOS' && facts[:os]['release']['major'].to_i == 7
-    it { is_expected.to contain_file('/etc/yum.repos.d/ondemand-centos-scl.repo').with_ensure('file') }
+    it { is_expected.to contain_file('/etc/yum.repos.d/ondemand-centos-scl.repo').with_ensure('absent') }
   else
     it { is_expected.not_to contain_file('/etc/yum.repos.d/ondemand-centos-scl.repo') }
   end
