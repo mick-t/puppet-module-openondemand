@@ -8,21 +8,19 @@ shared_examples 'openondemand::repo' do |facts|
                                                              metadata_expire: '1')
   end
 
-  if facts[:os]['name'] == 'CentOS' && facts[:os]['release']['major'].to_i == 7
-    it { is_expected.to contain_file('/etc/yum.repos.d/ondemand-centos-scl.repo').with_ensure('absent') }
-  else
-    it { is_expected.not_to contain_file('/etc/yum.repos.d/ondemand-centos-scl.repo') }
-  end
+  if facts[:os]['release']['major'].to_i == 7
+    if facts[:os]['name'] == 'CentOS'
+      it { is_expected.to contain_file('/etc/yum.repos.d/ondemand-centos-scl.repo').with_ensure('absent') }
+    else
+      it { is_expected.not_to contain_file('/etc/yum.repos.d/ondemand-centos-scl.repo') }
+    end
 
-  case facts[:os]['name']
-  when 'RedHat'
-    it { is_expected.to contain_rhsm_repo("rhel-server-rhscl-#{facts[:os]['release']['major']}-rpms").with_ensure('present') }
-  when 'CentOS'
-    it { is_expected.to contain_package('centos-release-scl').with_ensure('installed') }
-  end
-
-  if facts[:os]['family'] == 'RedHat'
-    it { is_expected.to contain_class('epel') }
+    case facts[:os]['name']
+    when 'RedHat'
+      it { is_expected.to contain_rhsm_repo("rhel-server-rhscl-#{facts[:os]['release']['major']}-rpms").with_ensure('present') }
+    when 'CentOS'
+      it { is_expected.to contain_package('centos-release-scl').with_ensure('installed') }
+    end
   end
 
   context 'when manage_scl => false' do
