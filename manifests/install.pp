@@ -12,18 +12,4 @@ class openondemand::install {
     ensure => $openondemand::selinux_package_ensure,
   }
 
-  if $openondemand::oidc_discover_uri {
-    package { 'ondemand-discover':
-      ensure  => $openondemand::ood_auth_discovery_ensure,
-      require => Package['ondemand'],
-    }
-  }
-
-  if $openondemand::register_uri {
-    package { 'ondemand-register':
-      ensure  => $openondemand::ood_auth_registration_ensure,
-      require => Package['ondemand'],
-    }
-  }
-
 }

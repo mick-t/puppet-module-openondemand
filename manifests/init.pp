@@ -14,8 +14,6 @@
 #   Boolean that determines if adding SELinux support
 # @param ondemand_package_ensure
 #   ondemand package ensure
-# @param ood_auth_discovery_ensure
-# @param ood_auth_registration_ensure
 # @param mod_auth_openidc_ensure
 #   mod_auth_openidc package ensure
 # @param install_apps
@@ -159,8 +157,6 @@ class openondemand (
   # packages
   Boolean $selinux = false,
   String $ondemand_package_ensure                 = 'present',
-  String $ood_auth_discovery_ensure               = 'present',
-  String $ood_auth_registration_ensure            = 'present',
   String $mod_auth_openidc_ensure                 = 'present',
   Hash $install_apps                              = {},
 
