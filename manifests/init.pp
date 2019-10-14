@@ -183,7 +183,7 @@ class openondemand (
   String $user_map_cmd  = '/opt/ood/ood_auth_map/bin/ood_auth_map.regex',
   Optional[String] $user_env = undef,
   Optional[String] $map_fail_uri = undef,
-  Enum['cilogon', 'openid-connect', 'shibboleth', 'ldap', 'basic'] $auth_type = 'basic',
+  Enum['openid-connect', 'shibboleth', 'ldap', 'basic'] $auth_type = 'basic',
   Optional[Array] $auth_configs = undef,
   String $root_uri = '/pun/sys/dashboard',
   Optional[Struct[{url => String, id => String}]] $analytics = undef,

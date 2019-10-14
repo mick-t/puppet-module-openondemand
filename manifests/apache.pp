@@ -46,20 +46,10 @@ class openondemand::apache {
   ::apache::mod { 'lua': }
   include ::apache::mod::headers
 
-  if $openondemand::auth_type in ['cilogon', 'openid-connect'] {
+  if $openondemand::auth_type == 'openid-connect' {
     ::apache::mod { 'auth_openidc':
       package        => 'httpd24-mod_auth_openidc',
       package_ensure => $openondemand::mod_auth_openidc_ensure,
-    }
-
-    file { '/opt/rh/httpd24/root/etc/httpd/metadata':
-      ensure  => 'directory',
-      owner   => 'root',
-      group   => 'apache',
-      mode    => '0750',
-      recurse => true,
-      purge   => true,
-      before  => Apache::Custom_config['auth_openidc'],
     }
 
     ::apache::custom_config { 'auth_openidc':
@@ -72,50 +62,6 @@ class openondemand::apache {
       group     => 'apache',
       mode      => '0640',
       show_diff => false,
-    }
-  }
-
-  if $openondemand::auth_type == 'cilogon' {
-    file { '/opt/rh/httpd24/root/etc/httpd/metadata/cilogon.org.client':
-      ensure  => 'file',
-      content => template('openondemand/apache/cilogon.org.client.erb'),
-      notify  => Class['Apache::Service'],
-    }
-    file { '/opt/rh/httpd24/root/etc/httpd/metadata/cilogon.org.conf':
-      ensure  => 'file',
-      content => template('openondemand/apache/cilogon.org.conf.erb'),
-      notify  => Class['Apache::Service'],
-    }
-    file { '/opt/rh/httpd24/root/etc/httpd/metadata/cilogon.org.provider':
-      ensure  => 'file',
-      content => template('openondemand/apache/cilogon.org.provider.erb'),
-      notify  => Class['Apache::Service'],
-    }
-  }
-
-  if $openondemand::auth_type == 'cilogon' and $openondemand::oidc_provider {
-    $oidc_provider_filename = regsubst($openondemand::oidc_provider, '/', '%2F', 'G')
-    $oidc_provider_config = "/opt/rh/httpd24/root/etc/httpd/metadata/${oidc_provider_filename}.provider"
-    $oidc_config_url = "https://${openondemand::oidc_provider}/.well-known/openid-configuration"
-    file { "/opt/rh/httpd24/root/etc/httpd/metadata/${oidc_provider_filename}.conf":
-      ensure  => 'file',
-      content => template('openondemand/apache/oidc-provider.conf.erb'),
-      notify  => Class['Apache::Service'],
-    }
-    file { "/opt/rh/httpd24/root/etc/httpd/metadata/${oidc_provider_filename}.client":
-      ensure  => 'file',
-      content => template('openondemand/apache/oidc-provider.client.erb'),
-      notify  => Class['Apache::Service'],
-    }
-    exec { 'get oidc configuration':
-      path    => '/usr/bin:/bin:/usr/sbin:/sbin',
-      command => "curl --fail ${oidc_config_url} | python -m json.tool > ${oidc_provider_config}",
-      creates => "/opt/rh/httpd24/root/etc/httpd/metadata/${oidc_provider_filename}.provider",
-      require => File['/opt/rh/httpd24/root/etc/httpd/metadata'],
-      notify  => Class['Apache::Service'],
-    }
-    ->file { $oidc_provider_config:
-      ensure => 'file',
     }
   }
 
