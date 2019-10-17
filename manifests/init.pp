@@ -8,20 +8,18 @@
 #   The URL for OnDemand repo GPG key
 # @param manage_scl
 #   Boolean that determines if managing SCL
-# @param manage_epel
-#   Boolean that determines if managing EPEL
 # @param selinux
 #   Boolean that determines if adding SELinux support
 # @param ondemand_package_ensure
 #   ondemand package ensure
-# @param ood_auth_discovery_ensure
-# @param ood_auth_registration_ensure
 # @param mod_auth_openidc_ensure
 #   mod_auth_openidc package ensure
 # @param install_apps
 #   Hash of apps to install, passed to ondemand::install::app
 # @param declare_apache
 #   Boolean that determines if apache is declared or included
+# @param apache_scls
+#   SCLs to load when starting Apache service
 # @param cilogon_client_id
 #   CILogon client_id
 # @param cilogon_client_secret
@@ -152,18 +150,16 @@ class openondemand (
   Variant[Stdlib::HTTPSUrl, Stdlib::HTTPUrl, Stdlib::Absolutepath]
     $repo_gpgkey = 'https://yum.osc.edu/ondemand/RPM-GPG-KEY-ondemand',
   Boolean $manage_scl = true,
-  Boolean $manage_epel = true,
 
   # packages
   Boolean $selinux = false,
   String $ondemand_package_ensure                 = 'present',
-  String $ood_auth_discovery_ensure               = 'present',
-  String $ood_auth_registration_ensure            = 'present',
   String $mod_auth_openidc_ensure                 = 'present',
   Hash $install_apps                              = {},
 
   # Apache
   Boolean $declare_apache = true,
+  String $apache_scls = 'httpd24 rh-ruby25',
 
   # cilogon/oidc
   String $cilogon_client_id      = '',
@@ -180,7 +176,7 @@ class openondemand (
   String $user_map_cmd  = '/opt/ood/ood_auth_map/bin/ood_auth_map.regex',
   Optional[String] $user_env = undef,
   Optional[String] $map_fail_uri = undef,
-  Enum['cilogon', 'openid-connect', 'shibboleth', 'ldap', 'basic'] $auth_type = 'basic',
+  Enum['openid-connect', 'shibboleth', 'ldap', 'basic'] $auth_type = 'basic',
   Optional[Array] $auth_configs = undef,
   String $root_uri = '/pun/sys/dashboard',
   Optional[Struct[{url => String, id => String}]] $analytics = undef,
@@ -244,10 +240,10 @@ class openondemand (
 
   $osfamily = $facts.dig('os', 'family')
   $osmajor = $facts.dig('os', 'release', 'major')
-  $supported = ['RedHat-6','RedHat-7']
+  $supported = ['RedHat-7','RedHat-8']
   $os = "${osfamily}-${osmajor}"
   if ! ($os in $supported) {
-    fail("Unsupported OS: ${osfamily}, module ${module_name} only supports RedHat 6 and 7")
+    fail("Unsupported OS: ${osfamily}, module ${module_name} only supports RedHat 7 and 8")
   }
 
   if $selinux {

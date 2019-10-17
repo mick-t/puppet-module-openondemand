@@ -1,2 +1,3 @@
 Defaults:apache !requiretty, !authenticate
+Defaults:apache env_keep += "NGINX_STAGE_* OOD_*"
 apache ALL=(ALL) NOPASSWD: <%= scope['openondemand::nginx_stage_cmd'] %>

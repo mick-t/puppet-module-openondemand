@@ -39,39 +39,35 @@
     {
       "name": "camptocamp/systemd",
       "version_requirement": ">= 0.4.0 <3.0.0"
-    },
-    {
-      "name": "stahnma/epel",
-      "version_requirement": ">= 1.0.0 <2.0.0"
     }
   ],
   "operatingsystem_support": [
     {
       "operatingsystem": "CentOS",
       "operatingsystemrelease": [
-        "6",
-        "7"
+        "7",
+        "8"
       ]
     },
     {
       "operatingsystem": "OracleLinux",
       "operatingsystemrelease": [
-        "6",
-        "7"
+        "7",
+        "8"
       ]
     },
     {
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
-        "6",
-        "7"
+        "7",
+        "8"
       ]
     },
     {
       "operatingsystem": "Scientific",
       "operatingsystemrelease": [
-        "6",
-        "7"
+        "7",
+        "8"
       ]
     }
   ],
@@ -88,5 +84,5 @@
   ],
   "pdk-version": "1.10.0",
   "template-url": "https://github.com/treydock/pdk-templates.git#master",
-  "template-ref": "heads/master-0-g92d8565"
+  "template-ref": "heads/master-0-gdf6e1ae"
 }

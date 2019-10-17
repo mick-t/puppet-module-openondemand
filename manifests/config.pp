@@ -152,10 +152,11 @@ class openondemand::config {
     before      => ::Apache::Custom_config['ood-portal'],
   }
 
+  include ::apache::params
   ::apache::custom_config { 'ood-portal':
     source         => '/etc/ood/config/ood-portal.conf',
     filename       => 'ood-portal.conf',
-    verify_command => '/opt/rh/httpd24/root/usr/sbin/apachectl -t',
+    verify_command => $::apache::params::verify_command,
   }
 
   file { '/etc/ood/config/nginx_stage.yml':
