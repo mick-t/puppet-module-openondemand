@@ -72,14 +72,6 @@ Boolean that determines if managing SCL
 
 Default value: `true`
 
-##### `manage_epel`
-
-Data type: `Boolean`
-
-Boolean that determines if managing EPEL
-
-Default value: `true`
-
 ##### `selinux`
 
 Data type: `Boolean`
@@ -93,22 +85,6 @@ Default value: `false`
 Data type: `String`
 
 ondemand package ensure
-
-Default value: 'present'
-
-##### `ood_auth_discovery_ensure`
-
-Data type: `String`
-
-
-
-Default value: 'present'
-
-##### `ood_auth_registration_ensure`
-
-Data type: `String`
-
-
 
 Default value: 'present'
 
@@ -135,6 +111,14 @@ Data type: `Boolean`
 Boolean that determines if apache is declared or included
 
 Default value: `true`
+
+##### `apache_scls`
+
+Data type: `String`
+
+SCLs to load when starting Apache service
+
+Default value: 'httpd24 rh-ruby25'
 
 ##### `cilogon_client_id`
 
@@ -234,7 +218,7 @@ Default value: `undef`
 
 ##### `auth_type`
 
-Data type: `Enum['cilogon', 'openid-connect', 'shibboleth', 'ldap', 'basic']`
+Data type: `Enum['openid-connect', 'shibboleth', 'ldap', 'basic']`
 
 ood_portal.yml auth_type
 

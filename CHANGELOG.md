@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v0.2.0](https://github.com/osc/puppet-module-openondemand/tree/v0.2.0) (2019-10-17)
+
+[Full Changelog](https://github.com/osc/puppet-module-openondemand/compare/v0.1.1...v0.2.0)
+
+### Added
+
+- Changes to support 1.7 [\#14](https://github.com/OSC/puppet-module-openondemand/pull/14) ([treydock](https://github.com/treydock))
+
 ## [v0.1.1](https://github.com/osc/puppet-module-openondemand/tree/v0.1.1) (2019-09-19)
 
 [Full Changelog](https://github.com/osc/puppet-module-openondemand/compare/v0.1.0...v0.1.1)
