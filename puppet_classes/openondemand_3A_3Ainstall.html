@@ -104,21 +104,7 @@
 12
 13
 14
-15
-16
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28
-29</pre>
+15</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/install.pp', line 3</span>
@@ -133,20 +119,6 @@ class openondemand::install {
 
   package { &#39;ondemand-selinux&#39;:
     ensure =&gt; $openondemand::selinux_package_ensure,
-  }
-
-  if $openondemand::oidc_discover_uri {
-    package { &#39;ondemand-discover&#39;:
-      ensure  =&gt; $openondemand::ood_auth_discovery_ensure,
-      require =&gt; Package[&#39;ondemand&#39;],
-    }
-  }
-
-  if $openondemand::register_uri {
-    package { &#39;ondemand-register&#39;:
-      ensure  =&gt; $openondemand::ood_auth_registration_ensure,
-      require =&gt; Package[&#39;ondemand&#39;],
-    }
   }
 
 }</pre>

@@ -160,24 +160,6 @@
   
     <li>
       
-        <span class='name'>manage_epel</span>
-      
-      
-        <span class='type'>(<tt>Boolean</tt>)</span>
-      
-      
-        <em class="default">(defaults to: <tt>true</tt>)</em>
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>Boolean that determines if managing EPEL</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
         <span class='name'>selinux</span>
       
       
@@ -209,32 +191,6 @@
         <div class='inline'>
 <p>ondemand package ensure</p>
 </div>
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>ood_auth_discovery_ensure</span>
-      
-      
-        <span class='type'>(<tt>String</tt>)</span>
-      
-      
-        <em class="default">(defaults to: <tt>&#39;present&#39;</tt>)</em>
-      
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>ood_auth_registration_ensure</span>
-      
-      
-        <span class='type'>(<tt>String</tt>)</span>
-      
-      
-        <em class="default">(defaults to: <tt>&#39;present&#39;</tt>)</em>
-      
       
     </li>
   
@@ -288,6 +244,24 @@
         &mdash;
         <div class='inline'>
 <p>Boolean that determines if apache is declared or included</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>apache_scls</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&#39;httpd24 rh-ruby25&#39;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>SCLs to load when starting Apache service</p>
 </div>
       
     </li>
@@ -513,7 +487,7 @@
         <span class='name'>auth_type</span>
       
       
-        <span class='type'>(<tt>Enum['cilogon', 'openid-connect', 'shibboleth', 'ldap', 'basic']</tt>)</span>
+        <span class='type'>(<tt>Enum['openid-connect', 'shibboleth', 'ldap', 'basic']</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>&#39;basic&#39;</tt>)</em>
@@ -1385,6 +1359,8 @@ defined</p>
         <pre class="lines">
 
 
+145
+146
 147
 148
 149
@@ -1627,14 +1603,10 @@ defined</p>
 386
 387
 388
-389
-390
-391
-392
-393</pre>
+389</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 147</span>
+        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 145</span>
 
 class openondemand (
   # repos
@@ -1644,18 +1616,16 @@ class openondemand (
   Variant[Stdlib::HTTPSUrl, Stdlib::HTTPUrl, Stdlib::Absolutepath]
     $repo_gpgkey = &#39;https://yum.osc.edu/ondemand/RPM-GPG-KEY-ondemand&#39;,
   Boolean $manage_scl = true,
-  Boolean $manage_epel = true,
 
   # packages
   Boolean $selinux = false,
   String $ondemand_package_ensure                 = &#39;present&#39;,
-  String $ood_auth_discovery_ensure               = &#39;present&#39;,
-  String $ood_auth_registration_ensure            = &#39;present&#39;,
   String $mod_auth_openidc_ensure                 = &#39;present&#39;,
   Hash $install_apps                              = {},
 
   # Apache
   Boolean $declare_apache = true,
+  String $apache_scls = &#39;httpd24 rh-ruby25&#39;,
 
   # cilogon/oidc
   String $cilogon_client_id      = &#39;&#39;,
@@ -1672,7 +1642,7 @@ class openondemand (
   String $user_map_cmd  = &#39;/opt/ood/ood_auth_map/bin/ood_auth_map.regex&#39;,
   Optional[String] $user_env = undef,
   Optional[String] $map_fail_uri = undef,
-  Enum[&#39;cilogon&#39;, &#39;openid-connect&#39;, &#39;shibboleth&#39;, &#39;ldap&#39;, &#39;basic&#39;] $auth_type = &#39;basic&#39;,
+  Enum[&#39;openid-connect&#39;, &#39;shibboleth&#39;, &#39;ldap&#39;, &#39;basic&#39;] $auth_type = &#39;basic&#39;,
   Optional[Array] $auth_configs = undef,
   String $root_uri = &#39;/pun/sys/dashboard&#39;,
   Optional[Struct[{url =&gt; String, id =&gt; String}]] $analytics = undef,
@@ -1736,10 +1706,10 @@ class openondemand (
 
   $osfamily = $facts.dig(&#39;os&#39;, &#39;family&#39;)
   $osmajor = $facts.dig(&#39;os&#39;, &#39;release&#39;, &#39;major&#39;)
-  $supported = [&#39;RedHat-6&#39;,&#39;RedHat-7&#39;]
+  $supported = [&#39;RedHat-7&#39;,&#39;RedHat-8&#39;]
   $os = &quot;${osfamily}-${osmajor}&quot;
   if ! ($os in $supported) {
-    fail(&quot;Unsupported OS: ${osfamily}, module ${module_name} only supports RedHat 6 and 7&quot;)
+    fail(&quot;Unsupported OS: ${osfamily}, module ${module_name} only supports RedHat 7 and 8&quot;)
   }
 
   if $selinux {

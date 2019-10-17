@@ -295,7 +295,8 @@
 203
 204
 205
-206</pre>
+206
+207</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/config.pp', line 3</span>
@@ -452,10 +453,11 @@ class openondemand::config {
     before      =&gt; ::Apache::Custom_config[&#39;ood-portal&#39;],
   }
 
+  include ::apache::params
   ::apache::custom_config { &#39;ood-portal&#39;:
     source         =&gt; &#39;/etc/ood/config/ood-portal.conf&#39;,
     filename       =&gt; &#39;ood-portal.conf&#39;,
-    verify_command =&gt; &#39;/opt/rh/httpd24/root/usr/sbin/apachectl -t&#39;,
+    verify_command =&gt; $::apache::params::verify_command,
   }
 
   file { &#39;/etc/ood/config/nginx_stage.yml&#39;:

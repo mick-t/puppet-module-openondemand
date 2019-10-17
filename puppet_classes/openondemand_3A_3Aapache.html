@@ -201,53 +201,7 @@
 109
 110
 111
-112
-113
-114
-115
-116
-117
-118
-119
-120
-121
-122
-123
-124
-125
-126
-127
-128
-129
-130
-131
-132
-133
-134
-135
-136
-137
-138
-139
-140
-141
-142
-143
-144
-145
-146
-147
-148
-149
-150
-151
-152
-153
-154
-155
-156
-157
-158</pre>
+112</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/apache.pp', line 3</span>
@@ -256,9 +210,11 @@ class openondemand::apache {
   assert_private()
 
   if $openondemand::declare_apache {
-    class { &#39;::apache::version&#39;:
-      scl_httpd_version =&gt; &#39;2.4&#39;,
-      scl_php_version   =&gt; &#39;7.0&#39;,
+    if versioncmp($facts[&#39;os&#39;][&#39;release&#39;][&#39;major&#39;], &#39;7&#39;) &lt;= 0 {
+      class { &#39;::apache::version&#39;:
+        scl_httpd_version =&gt; &#39;2.4&#39;,
+        scl_php_version   =&gt; &#39;7.0&#39;,
+      }
     }
     class { &#39;::apache&#39;:
       default_vhost =&gt; false,
@@ -267,25 +223,31 @@ class openondemand::apache {
     include ::apache
   }
 
+  if versioncmp($facts[&#39;os&#39;][&#39;release&#39;][&#39;major&#39;], &#39;7&#39;) &lt;= 0 {
+    $package_prefix = &#39;httpd24-&#39;
+  } else {
+    $package_prefix = &#39;&#39;
+  }
+
   include ::apache::mod::ssl
   ::apache::mod { &#39;session&#39;:
-    package =&gt; &#39;httpd24-mod_session&#39;,
+    package =&gt; &quot;${package_prefix}mod_session&quot;,
   }
   ::apache::mod { &#39;session_cookie&#39;:
-    package =&gt; &#39;httpd24-mod_session&#39;,
+    package =&gt; &quot;${package_prefix}mod_session&quot;,
   }
   ::apache::mod { &#39;session_dbd&#39;:
-    package =&gt; &#39;httpd24-mod_session&#39;,
+    package =&gt; &quot;${package_prefix}mod_session&quot;,
   }
   ::apache::mod { &#39;auth_form&#39;:
-    package =&gt; &#39;httpd24-mod_session&#39;,
+    package =&gt; &quot;${package_prefix}mod_session&quot;,
   }
   # mod_request needed by mod_auth_form - should probably be a default module.
   ::apache::mod { &#39;request&#39;: }
   # xml2enc and proxy_html work around apache::mod::proxy_html lack of package name parameter
   ::apache::mod { &#39;xml2enc&#39;:}
   ::apache::mod { &#39;proxy_html&#39;:
-    package =&gt; &#39;httpd24-mod_proxy_html&#39;,
+    package =&gt; &quot;${package_prefix}mod_proxy_html&quot;,
   }
   include ::apache::mod::proxy
   include ::apache::mod::proxy_http
@@ -298,20 +260,10 @@ class openondemand::apache {
   ::apache::mod { &#39;lua&#39;: }
   include ::apache::mod::headers
 
-  if $openondemand::auth_type in [&#39;cilogon&#39;, &#39;openid-connect&#39;] {
+  if $openondemand::auth_type == &#39;openid-connect&#39; {
     ::apache::mod { &#39;auth_openidc&#39;:
-      package        =&gt; &#39;httpd24-mod_auth_openidc&#39;,
+      package        =&gt; &quot;${package_prefix}mod_auth_openidc&quot;,
       package_ensure =&gt; $openondemand::mod_auth_openidc_ensure,
-    }
-
-    file { &#39;/opt/rh/httpd24/root/etc/httpd/metadata&#39;:
-      ensure  =&gt; &#39;directory&#39;,
-      owner   =&gt; &#39;root&#39;,
-      group   =&gt; &#39;apache&#39;,
-      mode    =&gt; &#39;0750&#39;,
-      recurse =&gt; true,
-      purge   =&gt; true,
-      before  =&gt; Apache::Custom_config[&#39;auth_openidc&#39;],
     }
 
     ::apache::custom_config { &#39;auth_openidc&#39;:
@@ -327,54 +279,10 @@ class openondemand::apache {
     }
   }
 
-  if $openondemand::auth_type == &#39;cilogon&#39; {
-    file { &#39;/opt/rh/httpd24/root/etc/httpd/metadata/cilogon.org.client&#39;:
-      ensure  =&gt; &#39;file&#39;,
-      content =&gt; template(&#39;openondemand/apache/cilogon.org.client.erb&#39;),
-      notify  =&gt; Class[&#39;Apache::Service&#39;],
-    }
-    file { &#39;/opt/rh/httpd24/root/etc/httpd/metadata/cilogon.org.conf&#39;:
-      ensure  =&gt; &#39;file&#39;,
-      content =&gt; template(&#39;openondemand/apache/cilogon.org.conf.erb&#39;),
-      notify  =&gt; Class[&#39;Apache::Service&#39;],
-    }
-    file { &#39;/opt/rh/httpd24/root/etc/httpd/metadata/cilogon.org.provider&#39;:
-      ensure  =&gt; &#39;file&#39;,
-      content =&gt; template(&#39;openondemand/apache/cilogon.org.provider.erb&#39;),
-      notify  =&gt; Class[&#39;Apache::Service&#39;],
-    }
-  }
-
-  if $openondemand::auth_type == &#39;cilogon&#39; and $openondemand::oidc_provider {
-    $oidc_provider_filename = regsubst($openondemand::oidc_provider, &#39;/&#39;, &#39;%2F&#39;, &#39;G&#39;)
-    $oidc_provider_config = &quot;/opt/rh/httpd24/root/etc/httpd/metadata/${oidc_provider_filename}.provider&quot;
-    $oidc_config_url = &quot;https://${openondemand::oidc_provider}/.well-known/openid-configuration&quot;
-    file { &quot;/opt/rh/httpd24/root/etc/httpd/metadata/${oidc_provider_filename}.conf&quot;:
-      ensure  =&gt; &#39;file&#39;,
-      content =&gt; template(&#39;openondemand/apache/oidc-provider.conf.erb&#39;),
-      notify  =&gt; Class[&#39;Apache::Service&#39;],
-    }
-    file { &quot;/opt/rh/httpd24/root/etc/httpd/metadata/${oidc_provider_filename}.client&quot;:
-      ensure  =&gt; &#39;file&#39;,
-      content =&gt; template(&#39;openondemand/apache/oidc-provider.client.erb&#39;),
-      notify  =&gt; Class[&#39;Apache::Service&#39;],
-    }
-    exec { &#39;get oidc configuration&#39;:
-      path    =&gt; &#39;/usr/bin:/bin:/usr/sbin:/sbin&#39;,
-      command =&gt; &quot;curl --fail ${oidc_config_url} | python -m json.tool &gt; ${oidc_provider_config}&quot;,
-      creates =&gt; &quot;/opt/rh/httpd24/root/etc/httpd/metadata/${oidc_provider_filename}.provider&quot;,
-      require =&gt; File[&#39;/opt/rh/httpd24/root/etc/httpd/metadata&#39;],
-      notify  =&gt; Class[&#39;Apache::Service&#39;],
-    }
-    -&gt;file { $oidc_provider_config:
-      ensure =&gt; &#39;file&#39;,
-    }
-  }
-
   shellvar { &#39;HTTPD24_HTTPD_SCLS_ENABLED&#39;:
     ensure  =&gt; &#39;present&#39;,
     target  =&gt; &#39;/opt/rh/httpd24/service-environment&#39;,
-    value   =&gt; &#39;httpd24 rh-ruby24&#39;,
+    value   =&gt; $openondemand::apache_scls,
     require =&gt; Package[&#39;httpd&#39;],
     notify  =&gt; Class[&#39;Apache::Service&#39;],
   }
@@ -397,7 +305,7 @@ class openondemand::apache {
   if $openondemand::auth_type == &#39;basic&#39; {
     $_basic_auth_users_defaults = {
       &#39;ensure&#39;    =&gt; &#39;present&#39;,
-      &#39;file&#39;      =&gt; &#39;/opt/rh/httpd24/root/etc/httpd/.htpasswd&#39;,
+      &#39;file&#39;      =&gt; &quot;${::apache::httpd_dir}/.htpasswd&quot;,
       &#39;mechanism&#39; =&gt; &#39;basic&#39;,
       &#39;require&#39;   =&gt; Package[&#39;httpd&#39;],
     }

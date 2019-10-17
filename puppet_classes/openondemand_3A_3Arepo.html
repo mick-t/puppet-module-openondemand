@@ -128,15 +128,7 @@
 36
 37
 38
-39
-40
-41
-42
-43
-44
-45
-46
-47</pre>
+39</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/repo.pp', line 3</span>
@@ -153,14 +145,10 @@ class openondemand::repo {
     metadata_expire =&gt; &#39;1&#39;
   }
 
-  if $openondemand::manage_scl {
+  if versioncmp($facts[&#39;os&#39;][&#39;release&#39;][&#39;major&#39;], &#39;7&#39;) &lt;= 0 and $openondemand::manage_scl {
     if $facts[&#39;os&#39;][&#39;name&#39;] == &#39;CentOS&#39; and versioncmp($facts[&#39;os&#39;][&#39;release&#39;][&#39;major&#39;], &#39;7&#39;) == 0 {
       file { &#39;/etc/yum.repos.d/ondemand-centos-scl.repo&#39;:
-        ensure =&gt; &#39;file&#39;,
-        owner  =&gt; &#39;root&#39;,
-        group  =&gt; &#39;root&#39;,
-        mode   =&gt; &#39;0644&#39;,
-        source =&gt; &#39;puppet:///modules/openondemand/ondemand-centos-scl.repo&#39;,
+        ensure =&gt; &#39;absent&#39;,
       }
     }
 
@@ -179,10 +167,6 @@ class openondemand::repo {
         # Do nothing
       }
     }
-  }
-
-  if $openondemand::manage_epel and $facts[&#39;os&#39;][&#39;family&#39;] == &#39;RedHat&#39; {
-    include ::epel
   }
 
 }</pre>
