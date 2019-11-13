@@ -246,6 +246,12 @@ class openondemand (
     fail("Unsupported OS: ${osfamily}, module ${module_name} only supports RedHat 7 and 8")
   }
 
+  if versioncmp($facts['os']['release']['major'], '7') <= 0 {
+    $scl_apache = true
+  } else {
+    $scl_apache = false
+  }
+
   if $selinux {
     $selinux_package_ensure = $ondemand_package_ensure
   } else {
