@@ -4,7 +4,7 @@ class openondemand::apache {
   assert_private()
 
   if $openondemand::declare_apache {
-    if versioncmp($facts['os']['release']['major'], '7') <= 0 {
+    if $openondemand::scl_apache {
       class { '::apache::version':
         scl_httpd_version => '2.4',
         scl_php_version   => '7.0',
@@ -17,7 +17,7 @@ class openondemand::apache {
     include ::apache
   }
 
-  if versioncmp($facts['os']['release']['major'], '7') <= 0 {
+  if $openondemand::scl_apache {
     $package_prefix = 'httpd24-'
   } else {
     $package_prefix = ''
@@ -73,12 +73,14 @@ class openondemand::apache {
     }
   }
 
-  shellvar { 'HTTPD24_HTTPD_SCLS_ENABLED':
-    ensure  => 'present',
-    target  => '/opt/rh/httpd24/service-environment',
-    value   => $openondemand::apache_scls,
-    require => Package['httpd'],
-    notify  => Class['Apache::Service'],
+  if $openondemand::scl_apache {
+    shellvar { 'HTTPD24_HTTPD_SCLS_ENABLED':
+      ensure  => 'present',
+      target  => '/opt/rh/httpd24/service-environment',
+      value   => $openondemand::apache_scls,
+      require => Package['httpd'],
+      notify  => Class['Apache::Service'],
+    }
   }
 
   if $::service_provider == 'systemd' {
