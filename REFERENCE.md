@@ -465,6 +465,14 @@ nginx_stage.yml ondemand_title
 
 Default value: 'Open OnDemand'
 
+##### `nginx_stage_pun_custom_env`
+
+Data type: `Hash`
+
+nginx_stage.yml pun_custom_env
+
+Default value: {}
+
 ##### `nginx_stage_app_root`
 
 Data type: `Openondemand::Nginx_stage_namespace_config`
