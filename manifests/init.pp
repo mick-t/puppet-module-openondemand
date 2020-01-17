@@ -96,6 +96,8 @@
 #   OIDC provider client_secret
 # @param oidc_remote_user_claim
 #   OIDC provider remote_user claim
+# @param oidc_extra_configs
+#   OIDC extra settings for mod_auth_openidc
 # @param web_directory
 #   Path to main web directory for OnDemand
 # @param basic_auth_users
@@ -206,6 +208,7 @@ class openondemand (
   String $oidc_provider_client_id = '',
   String $oidc_provider_client_secret = '',
   Optional[String] $oidc_remote_user_claim = undef,
+  Hash $oidc_extra_configs = {},
 
   # Misc configs
   Stdlib::Absolutepath $web_directory = '/var/www/ood',
