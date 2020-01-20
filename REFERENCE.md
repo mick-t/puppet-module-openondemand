@@ -424,6 +424,14 @@ OIDC provider remote_user claim
 
 Default value: `undef`
 
+##### `oidc_extra_configs`
+
+Data type: `Hash`
+
+OIDC extra settings for mod_auth_openidc
+
+Default value: {}
+
 ##### `web_directory`
 
 Data type: `Stdlib::Absolutepath`
