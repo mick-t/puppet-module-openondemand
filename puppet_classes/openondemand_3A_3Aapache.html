@@ -201,7 +201,9 @@
 109
 110
 111
-112</pre>
+112
+113
+114</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/apache.pp', line 3</span>
@@ -210,7 +212,7 @@ class openondemand::apache {
   assert_private()
 
   if $openondemand::declare_apache {
-    if versioncmp($facts[&#39;os&#39;][&#39;release&#39;][&#39;major&#39;], &#39;7&#39;) &lt;= 0 {
+    if $openondemand::scl_apache {
       class { &#39;::apache::version&#39;:
         scl_httpd_version =&gt; &#39;2.4&#39;,
         scl_php_version   =&gt; &#39;7.0&#39;,
@@ -223,7 +225,7 @@ class openondemand::apache {
     include ::apache
   }
 
-  if versioncmp($facts[&#39;os&#39;][&#39;release&#39;][&#39;major&#39;], &#39;7&#39;) &lt;= 0 {
+  if $openondemand::scl_apache {
     $package_prefix = &#39;httpd24-&#39;
   } else {
     $package_prefix = &#39;&#39;
@@ -279,12 +281,14 @@ class openondemand::apache {
     }
   }
 
-  shellvar { &#39;HTTPD24_HTTPD_SCLS_ENABLED&#39;:
-    ensure  =&gt; &#39;present&#39;,
-    target  =&gt; &#39;/opt/rh/httpd24/service-environment&#39;,
-    value   =&gt; $openondemand::apache_scls,
-    require =&gt; Package[&#39;httpd&#39;],
-    notify  =&gt; Class[&#39;Apache::Service&#39;],
+  if $openondemand::scl_apache {
+    shellvar { &#39;HTTPD24_HTTPD_SCLS_ENABLED&#39;:
+      ensure  =&gt; &#39;present&#39;,
+      target  =&gt; &#39;/opt/rh/httpd24/service-environment&#39;,
+      value   =&gt; $openondemand::apache_scls,
+      require =&gt; Package[&#39;httpd&#39;],
+      notify  =&gt; Class[&#39;Apache::Service&#39;],
+    }
   }
 
   if $::service_provider == &#39;systemd&#39; {
