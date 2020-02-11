@@ -19,6 +19,7 @@ fixtures:
       repo: https://github.com/saz/puppet-sudo.git
     httpauth:
       repo: https://github.com/jamtur01/jamtur01-httpauth.git
+      ref: v0.0.5
     augeasproviders_core:
       repo: git://github.com/hercules-team/augeasproviders_core.git
     augeasproviders_shellvar:

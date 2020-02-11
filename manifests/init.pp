@@ -94,8 +94,14 @@
 #   OIDC provider client_id
 # @param oidc_provider_client_secret
 #   OIDC provider client_secret
+# @param oidc_session_inactivity_timeout
+#   mod_auth_openidc OIDCSessionInactivityTimeout
+# @param oidc_session_max_duration
+#   mod_auth_openidc OIDCSessionMaxDuration
 # @param oidc_remote_user_claim
 #   OIDC provider remote_user claim
+# @param oidc_pass_claims_as
+#   mod_auth_openidc OIDCPassClaimsAs
 # @param oidc_extra_configs
 #   OIDC extra settings for mod_auth_openidc
 # @param web_directory
@@ -207,7 +213,10 @@ class openondemand (
   String $oidc_provider_scope = 'openid email',
   String $oidc_provider_client_id = '',
   String $oidc_provider_client_secret = '',
+  Integer $oidc_session_inactivity_timeout = 28800,
+  Integer $oidc_session_max_duration = 28800,
   Optional[String] $oidc_remote_user_claim = undef,
+  String $oidc_pass_claims_as = 'environment',
   Hash $oidc_extra_configs = {},
 
   # Misc configs

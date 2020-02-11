@@ -18,8 +18,8 @@ OIDCRedirectURI      https://<%= scope['openondemand::servername'] %><%= scope['
 OIDCCryptoPassphrase "<%= scope['openondemand::oidc_crypto_passphrase'] %>"
 
 # Keep sessions alive for 8 hours
-OIDCSessionInactivityTimeout 28800
-OIDCSessionMaxDuration 28800
+OIDCSessionInactivityTimeout <%= scope['openondemand::oidc_session_inactivity_timeout'] %>
+OIDCSessionMaxDuration <%= scope['openondemand::oidc_session_max_duration'] %>
 
 <%- if scope['openondemand::oidc_remote_user_claim'] -%>
 # Set REMOTE_USER
@@ -27,7 +27,7 @@ OIDCRemoteUserClaim <%= scope['openondemand::oidc_remote_user_claim'] %>
 
 <%- end -%>
 # Don't pass claims to backend servers
-OIDCPassClaimsAs environment
+OIDCPassClaimsAs <%= scope['openondemand::oidc_pass_claims_as'] %>
 
 # Strip out session cookies before passing to backend
 OIDCStripCookies mod_auth_openidc_session mod_auth_openidc_session_chunks mod_auth_openidc_session_0 mod_auth_openidc_session_1
