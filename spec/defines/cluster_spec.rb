@@ -11,7 +11,7 @@ describe 'openondemand::cluster' do
         'test'
       end
 
-      let :params do
+      let :default_params do
         {
           acls: [
             {
@@ -44,6 +44,8 @@ describe 'openondemand::cluster' do
         }
       end
 
+      let(:params) { default_params }
+
       it do
         is_expected.to contain_file('/etc/ood/config/clusters.d/test.yml').with('ensure' => 'file',
                                                                                 'owner'   => 'root',
@@ -54,6 +56,51 @@ describe 'openondemand::cluster' do
       it do
         content = catalogue.resource('file', '/etc/ood/config/clusters.d/test.yml').send(:parameters)[:content]
         puts content
+      end
+
+      context 'with grafana defined' do
+        let :params do
+          default_params.merge!(
+            ganglia_host: nil,
+            grafana_host: 'https://grafana.domain',
+            grafana_dashboard_name: 'test',
+            grafana_dashboard_uid: 'foo',
+            grafana_dashboard_panels: { 'cpu' => 1, 'memory' => 2 },
+            grafana_labels: { 'cluster' => 'cluster', 'host' => 'host' },
+          )
+        end
+
+        it { is_expected.to compile.with_all_deps }
+
+        context 'with partial params' do
+          let :params do
+            default_params.merge!(
+              ganglia_host: nil,
+              grafana_host: 'https://grafana.domain',
+            )
+          end
+
+          it 'fails with lack of parameters' do
+            is_expected.to compile.and_raise_error(%r{Must define grafana})
+          end
+        end
+
+        context 'require cpu and memory panels' do
+          let :params do
+            default_params.merge!(
+              ganglia_host: nil,
+              grafana_host: 'https://grafana.domain',
+              grafana_dashboard_name: 'test',
+              grafana_dashboard_uid: 'foo',
+              grafana_dashboard_panels: { 'cpu' => 1 },
+              grafana_labels: { 'cluster' => 'cluster', 'host' => 'host' },
+            )
+          end
+
+          it 'fails' do
+            is_expected.to compile.and_raise_error(%r{expects a value for key 'memory'})
+          end
+        end
       end
     end
   end
