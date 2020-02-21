@@ -34,6 +34,12 @@
 #   ood_portal.yml ssl
 # @param logroot
 #   ood_portal.yml logroot
+# @param use_rewrites
+#   ood_portal.yml use_rewrites
+# @param use_maintenance
+#   ood_portal.yml use_maintenance
+# @param maintenance_ip_whitelist
+#   ood_portal.yml maintenance_ip_whitelist
 # @param lua_root
 #   ood_portal.yml lua_root
 # @param lua_log_level
@@ -181,6 +187,9 @@ class openondemand (
   Optional[String] $servername = undef,
   Optional[Array] $ssl = undef,
   String  $logroot = 'logs',
+  Boolean $use_rewrites = true,
+  Boolean $use_maintenance = true,
+  Array $maintenance_ip_whitelist = [],
   String $lua_root = '/opt/ood/mod_ood_proxy/lib',
   Optional[String] $lua_log_level = undef,
   String $user_map_cmd  = '/opt/ood/ood_auth_map/bin/ood_auth_map.regex',
@@ -322,36 +331,39 @@ class openondemand (
   }
 
   $ood_portal_config = delete_undef_values({
-    'listen_addr_port'    => $listen_ports,
-    'servername'          => $servername,
-    'port'                => $port,
-    'ssl'                 => $ssl,
-    'logroot'             => $logroot,
-    'lua_root'            => $lua_root,
-    'lua_log_level'       => $lua_log_level,
-    'user_map_cmd'        => $user_map_cmd,
-    'user_env'            => $user_env,
-    'map_fail_uri'        => $map_fail_uri,
-    'pun_stage_cmd'       => $pun_stage_cmd,
-    'auth'                => $auth,
-    'root_uri'            => $root_uri,
-    'analytics'           => $analytics,
-    'public_uri'          => $public_uri,
-    'public_root'         => $public_root,
-    'logout_uri'          => $logout_uri,
-    'logout_redirect'     => $logout_redirect,
-    'host_regex'          => $host_regex,
-    'node_uri'            => $node_uri,
-    'rnode_uri'           => $rnode_uri,
-    'nginx_uri'           => $nginx_uri,
-    'pun_uri'             => $pun_uri,
-    'pun_socket_root'     => $pun_socket_root,
-    'pun_max_retries'     => $pun_max_retries,
-    'oidc_uri'            => $oidc_uri,
-    'oidc_discover_uri'   => $oidc_discover_uri,
-    'oidc_discover_root'  => $oidc_discover_root,
-    'register_uri'        => $register_uri,
-    'register_root'       => $register_root,
+    'listen_addr_port'          => $listen_ports,
+    'servername'                => $servername,
+    'port'                      => $port,
+    'ssl'                       => $ssl,
+    'logroot'                   => $logroot,
+    'use_rewrites'              => $use_rewrites,
+    'use_maintenance'           => $use_maintenance,
+    'maintenance_ip_whitelist'  => $maintenance_ip_whitelist,
+    'lua_root'                  => $lua_root,
+    'lua_log_level'             => $lua_log_level,
+    'user_map_cmd'              => $user_map_cmd,
+    'user_env'                  => $user_env,
+    'map_fail_uri'              => $map_fail_uri,
+    'pun_stage_cmd'             => $pun_stage_cmd,
+    'auth'                      => $auth,
+    'root_uri'                  => $root_uri,
+    'analytics'                 => $analytics,
+    'public_uri'                => $public_uri,
+    'public_root'               => $public_root,
+    'logout_uri'                => $logout_uri,
+    'logout_redirect'           => $logout_redirect,
+    'host_regex'                => $host_regex,
+    'node_uri'                  => $node_uri,
+    'rnode_uri'                 => $rnode_uri,
+    'nginx_uri'                 => $nginx_uri,
+    'pun_uri'                   => $pun_uri,
+    'pun_socket_root'           => $pun_socket_root,
+    'pun_max_retries'           => $pun_max_retries,
+    'oidc_uri'                  => $oidc_uri,
+    'oidc_discover_uri'         => $oidc_discover_uri,
+    'oidc_discover_root'        => $oidc_discover_root,
+    'register_uri'              => $register_uri,
+    'register_root'             => $register_root,
   })
   $ood_portal_yaml = to_yaml($ood_portal_config)
   $base_apps = {
