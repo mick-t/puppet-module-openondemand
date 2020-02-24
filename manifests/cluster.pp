@@ -33,6 +33,13 @@
 # @param ganglia_req_query
 # @param ganglia_opt_query
 # @param ganglia_version
+# @param grafana_host
+# @param grafana_org_id
+# @param grafana_theme
+# @param grafana_dashboard_name
+# @param grafana_dashboard_uid
+# @param grafana_dashboard_panels
+# @param grafana_labels
 # @param batch_connect
 #
 define openondemand::cluster (
@@ -68,8 +75,28 @@ define openondemand::cluster (
   Hash $ganglia_req_query = {'c' => $name},
   Hash $ganglia_opt_query = {'h' => "%{h}.${::domain}"},
   String $ganglia_version = '3',
+  Optional[Variant[Stdlib::HTTPSUrl,Stdlib::HTTPUrl]] $grafana_host = undef,
+  Integer $grafana_org_id = 1,
+  Optional[String] $grafana_theme = undef,
+  Optional[String] $grafana_dashboard_name = undef,
+  Optional[String] $grafana_dashboard_uid = undef,
+  Optional[Struct[{
+    'cpu' => Integer,
+    'memory' => Integer,
+  }]] $grafana_dashboard_panels = undef,
+  Optional[Struct[{
+    'cluster' => String,
+    'host' => String,
+    'jobid' => Optional[String],
+  }]] $grafana_labels = undef,
   Hash[String, Openondemand::Batch_connect] $batch_connect = {},
 ) {
+
+  if $grafana_host {
+    if $grafana_dashboard_name == undef or $grafana_dashboard_uid == undef or $grafana_dashboard_panels == undef or $grafana_labels == undef {
+      fail('Must define grafana_dashboard_name, grafana_dashboard_uid, grafana_dashboard_panels and grafana_labels')
+    }
+  }
 
   include openondemand
 

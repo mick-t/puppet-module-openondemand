@@ -130,6 +130,24 @@ v2:
       <%- end -%>
       version: "<%= @ganglia_version %>"
   <%- end -%>
+  <%- if @grafana_host -%>
+    grafana:
+      host: "<%= @grafana_host %>"
+      orgId: <%= @grafana_ord_id %>
+      <%- if @grafana_theme -%>
+      theme: "<%= @grafana_theme %>"
+      <%- end -%>
+      dashboard:
+        name: "<%= @grafana_dashboard_name %>"
+        uid: "<%= @grafana_dashboard_uid %>"
+        panels:
+          cpu: <%= @grafana_dashboard_panels['cpu'] %>
+          memory: <%= @grafana_dashboard_panels['memory'] %>
+      labels:
+      <%- @grafana_labels.each_pair do |k, v| -%>
+        <%= k %>: "<%= v %>"
+      <%- end -%>
+  <%- end -%>
 <% end -%>
 <% if ! @batch_connect.empty? -%>
   batch_connect:
