@@ -176,6 +176,30 @@ ood_portal.yml logroot
 
 Default value: 'logs'
 
+##### `use_rewrites`
+
+Data type: `Boolean`
+
+ood_portal.yml use_rewrites
+
+Default value: `true`
+
+##### `use_maintenance`
+
+Data type: `Boolean`
+
+ood_portal.yml use_maintenance
+
+Default value: `true`
+
+##### `maintenance_ip_whitelist`
+
+Data type: `Array`
+
+ood_portal.yml maintenance_ip_whitelist
+
+Default value: []
+
 ##### `lua_root`
 
 Data type: `String`
@@ -416,6 +440,22 @@ OIDC provider client_secret
 
 Default value: ''
 
+##### `oidc_session_inactivity_timeout`
+
+Data type: `Integer`
+
+mod_auth_openidc OIDCSessionInactivityTimeout
+
+Default value: 28800
+
+##### `oidc_session_max_duration`
+
+Data type: `Integer`
+
+mod_auth_openidc OIDCSessionMaxDuration
+
+Default value: 28800
+
 ##### `oidc_remote_user_claim`
 
 Data type: `Optional[String]`
@@ -423,6 +463,14 @@ Data type: `Optional[String]`
 OIDC provider remote_user claim
 
 Default value: `undef`
+
+##### `oidc_pass_claims_as`
+
+Data type: `String`
+
+mod_auth_openidc OIDCPassClaimsAs
+
+Default value: 'environment'
 
 ##### `oidc_extra_configs`
 
@@ -1003,6 +1051,69 @@ Data type: `String`
 
 
 Default value: '3'
+
+##### `grafana_host`
+
+Data type: `Optional[Variant[Stdlib::HTTPSUrl,Stdlib::HTTPUrl]]`
+
+
+
+Default value: `undef`
+
+##### `grafana_org_id`
+
+Data type: `Integer`
+
+
+
+Default value: 1
+
+##### `grafana_theme`
+
+Data type: `Optional[String]`
+
+
+
+Default value: `undef`
+
+##### `grafana_dashboard_name`
+
+Data type: `Optional[String]`
+
+
+
+Default value: `undef`
+
+##### `grafana_dashboard_uid`
+
+Data type: `Optional[String]`
+
+
+
+Default value: `undef`
+
+##### `grafana_dashboard_panels`
+
+Data type: `Optional[Struct[{
+    'cpu' => Integer,
+    'memory' => Integer,
+  }]]`
+
+
+
+Default value: `undef`
+
+##### `grafana_labels`
+
+Data type: `Optional[Struct[{
+    'cluster' => String,
+    'host' => String,
+    'jobid' => Optional[String],
+  }]]`
+
+
+
+Default value: `undef`
 
 ##### `batch_connect`
 

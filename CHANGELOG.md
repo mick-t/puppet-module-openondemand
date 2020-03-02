@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v0.6.0](https://github.com/osc/puppet-module-openondemand/tree/v0.6.0) (2020-03-02)
+
+[Full Changelog](https://github.com/osc/puppet-module-openondemand/compare/v0.5.0...v0.6.0)
+
+### Added
+
+- Support grafana in cluster configs [\#21](https://github.com/OSC/puppet-module-openondemand/pull/21) ([treydock](https://github.com/treydock))
+- Add use\_rewrites, use\_maintenance and maintenance\_ip\_whitelist parameters [\#20](https://github.com/OSC/puppet-module-openondemand/pull/20) ([treydock](https://github.com/treydock))
+
 ## [v0.5.0](https://github.com/osc/puppet-module-openondemand/tree/v0.5.0) (2020-02-11)
 
 [Full Changelog](https://github.com/osc/puppet-module-openondemand/compare/v0.4.0...v0.5.0)
