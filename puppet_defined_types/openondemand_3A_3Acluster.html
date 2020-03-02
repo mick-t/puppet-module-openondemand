@@ -502,6 +502,104 @@
   
     <li>
       
+        <span class='name'>grafana_host</span>
+      
+      
+        <span class='type'>(<tt>Optional[Variant[Stdlib::HTTPSUrl,Stdlib::HTTPUrl]]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>grafana_org_id</span>
+      
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>1</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>grafana_theme</span>
+      
+      
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>grafana_dashboard_name</span>
+      
+      
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>grafana_dashboard_uid</span>
+      
+      
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>grafana_dashboard_panels</span>
+      
+      
+        <span class='type'>(<tt>Optional[Struct[{
+    'cpu' =&gt; Integer,
+    'memory' =&gt; Integer,
+  }]]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>grafana_labels</span>
+      
+      
+        <span class='type'>(<tt>Optional[Struct[{
+    'cluster' =&gt; String,
+    'host' =&gt; String,
+    'jobid' =&gt; Optional[String],
+  }]]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
         <span class='name'>batch_connect</span>
       
       
@@ -523,13 +621,6 @@
         <pre class="lines">
 
 
-38
-39
-40
-41
-42
-43
-44
 45
 46
 47
@@ -570,10 +661,37 @@
 82
 83
 84
-85</pre>
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/cluster.pp', line 38</span>
+        <pre class="code"><span class="info file"># File 'manifests/cluster.pp', line 45</span>
 
 define openondemand::cluster (
   String $cluster_title = $name,
@@ -608,8 +726,28 @@ define openondemand::cluster (
   Hash $ganglia_req_query = {&#39;c&#39; =&gt; $name},
   Hash $ganglia_opt_query = {&#39;h&#39; =&gt; &quot;%{h}.${::domain}&quot;},
   String $ganglia_version = &#39;3&#39;,
+  Optional[Variant[Stdlib::HTTPSUrl,Stdlib::HTTPUrl]] $grafana_host = undef,
+  Integer $grafana_org_id = 1,
+  Optional[String] $grafana_theme = undef,
+  Optional[String] $grafana_dashboard_name = undef,
+  Optional[String] $grafana_dashboard_uid = undef,
+  Optional[Struct[{
+    &#39;cpu&#39; =&gt; Integer,
+    &#39;memory&#39; =&gt; Integer,
+  }]] $grafana_dashboard_panels = undef,
+  Optional[Struct[{
+    &#39;cluster&#39; =&gt; String,
+    &#39;host&#39; =&gt; String,
+    &#39;jobid&#39; =&gt; Optional[String],
+  }]] $grafana_labels = undef,
   Hash[String, Openondemand::Batch_connect] $batch_connect = {},
 ) {
+
+  if $grafana_host {
+    if $grafana_dashboard_name == undef or $grafana_dashboard_uid == undef or $grafana_dashboard_panels == undef or $grafana_labels == undef {
+      fail(&#39;Must define grafana_dashboard_name, grafana_dashboard_uid, grafana_dashboard_panels and grafana_labels&#39;)
+    }
+  }
 
   include openondemand
 
