@@ -30,6 +30,10 @@ _Private Classes_
 * [`Openondemand::Batch_connect`](#openondemandbatch_connect): Defines cluster config batch_connect values
 * [`Openondemand::Nginx_stage_namespace_config`](#openondemandnginx_stage_namespace_config): nginx_stage.yml namespace_config
 
+**Tasks**
+
+* [`maintenance`](#maintenance): Put OnDemand into maintenance mode
+
 ## Classes
 
 ### openondemand
@@ -1225,4 +1229,20 @@ Alias of `Struct[{
   'usr' => Optional[String],
   'sys' => Optional[String]
   }]`
+
+## Tasks
+
+### maintenance
+
+Put OnDemand into maintenance mode
+
+**Supports noop?** false
+
+#### Parameters
+
+##### `ensure`
+
+Data type: `Enum['present','absent']`
+
+Set state of maintenance mode
 
