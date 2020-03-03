@@ -1,0 +1,10 @@
+{
+  "description": "Put OnDemand into maintenance mode",
+  "input_method": "stdin",
+  "parameters": {
+    "ensure": {
+      "description": "Set state of maintenance mode",
+      "type": "Enum['present','absent']"
+    }
+  }
+}
