@@ -296,7 +296,25 @@
 204
 205
 206
-207</pre>
+207
+208
+209
+210
+211
+212
+213
+214
+215
+216
+217
+218
+219
+220
+221
+222
+223
+224
+225</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/config.pp', line 3</span>
@@ -368,6 +386,24 @@ class openondemand::config {
     owner  =&gt; &#39;root&#39;,
     group  =&gt; &#39;root&#39;,
     mode   =&gt; &#39;0755&#39;,
+  }
+
+  file { &#39;/var/www/ood/public/maintenance&#39;:
+    ensure =&gt; &#39;directory&#39;,
+    path   =&gt; &quot;${openondemand::public_root}/maintenance&quot;,
+    owner  =&gt; &#39;root&#39;,
+    group  =&gt; &#39;root&#39;,
+    mode   =&gt; &#39;0755&#39;,
+  }
+
+  file { &#39;/var/www/ood/public/maintenance/index.html&#39;:
+    ensure  =&gt; &#39;file&#39;,
+    path    =&gt; &quot;${openondemand::public_root}/maintenance/index.html&quot;,
+    owner   =&gt; &#39;root&#39;,
+    group   =&gt; &#39;root&#39;,
+    mode    =&gt; &#39;0644&#39;,
+    source  =&gt; $openondemand::maintenance_source,
+    content =&gt; $openondemand::maintenance_content,
   }
 
   file { &#39;/etc/ood&#39;:

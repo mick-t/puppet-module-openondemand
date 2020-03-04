@@ -448,6 +448,42 @@
   
     <li>
       
+        <span class='name'>maintenance_source</span>
+      
+      
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Source for maintenance index.html</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>maintenance_content</span>
+      
+      
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Content for maintenance index.html</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
         <span class='name'>lua_root</span>
       
       
@@ -1503,10 +1539,6 @@ defined</p>
         <pre class="lines">
 
 
-161
-162
-163
-164
 165
 166
 167
@@ -1764,10 +1796,16 @@ defined</p>
 419
 420
 421
-422</pre>
+422
+423
+424
+425
+426
+427
+428</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 161</span>
+        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 165</span>
 
 class openondemand (
   # repos
@@ -1801,6 +1839,8 @@ class openondemand (
   Boolean $use_rewrites = true,
   Boolean $use_maintenance = true,
   Array $maintenance_ip_whitelist = [],
+  Optional[String] $maintenance_source = undef,
+  Optional[String] $maintenance_content = undef,
   String $lua_root = &#39;/opt/ood/mod_ood_proxy/lib&#39;,
   Optional[String] $lua_log_level = undef,
   String $user_map_cmd  = &#39;/opt/ood/ood_auth_map/bin/ood_auth_map.regex&#39;,
