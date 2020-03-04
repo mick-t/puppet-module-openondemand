@@ -40,6 +40,10 @@
 #   ood_portal.yml use_maintenance
 # @param maintenance_ip_whitelist
 #   ood_portal.yml maintenance_ip_whitelist
+# @param maintenance_source
+#   Source for maintenance index.html
+# @param maintenance_content
+#   Content for maintenance index.html
 # @param lua_root
 #   ood_portal.yml lua_root
 # @param lua_log_level
@@ -190,6 +194,8 @@ class openondemand (
   Boolean $use_rewrites = true,
   Boolean $use_maintenance = true,
   Array $maintenance_ip_whitelist = [],
+  Optional[String] $maintenance_source = undef,
+  Optional[String] $maintenance_content = undef,
   String $lua_root = '/opt/ood/mod_ood_proxy/lib',
   Optional[String] $lua_log_level = undef,
   String $user_map_cmd  = '/opt/ood/ood_auth_map/bin/ood_auth_map.regex',

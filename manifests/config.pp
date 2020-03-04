@@ -69,6 +69,24 @@ class openondemand::config {
     mode   => '0755',
   }
 
+  file { '/var/www/ood/public/maintenance':
+    ensure => 'directory',
+    path   => "${openondemand::public_root}/maintenance",
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0755',
+  }
+
+  file { '/var/www/ood/public/maintenance/index.html':
+    ensure  => 'file',
+    path    => "${openondemand::public_root}/maintenance/index.html",
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0644',
+    source  => $openondemand::maintenance_source,
+    content => $openondemand::maintenance_content,
+  }
+
   file { '/etc/ood':
     ensure => 'directory',
     owner  => 'root',
