@@ -204,6 +204,22 @@ ood_portal.yml maintenance_ip_whitelist
 
 Default value: []
 
+##### `maintenance_source`
+
+Data type: `Optional[String]`
+
+Source for maintenance index.html
+
+Default value: `undef`
+
+##### `maintenance_content`
+
+Data type: `Optional[String]`
+
+Content for maintenance index.html
+
+Default value: `undef`
+
 ##### `lua_root`
 
 Data type: `String`
