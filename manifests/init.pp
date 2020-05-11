@@ -269,14 +269,21 @@ class openondemand (
 ) {
 
   $osfamily = $facts.dig('os', 'family')
-  $osmajor = $facts.dig('os', 'release', 'major')
+  $_os_release_major = $facts.dig('os', 'release', 'major')
+
+  if $_os_release_major {
+    $osmajor = split($_os_release_major, '[.]')[0]
+  } else {
+    $osmajor = 'Unknown'
+  }
+
   $supported = ['RedHat-7','RedHat-8']
   $os = "${osfamily}-${osmajor}"
   if ! ($os in $supported) {
-    fail("Unsupported OS: ${osfamily}, module ${module_name} only supports RedHat 7 and 8")
+    fail("Unsupported OS: module ${module_name} only supports RedHat 7 and 8. '${os}' detected")
   }
 
-  if versioncmp($facts['os']['release']['major'], '7') <= 0 {
+  if versioncmp($osmajor, '7') <= 0 {
     $scl_apache = true
   } else {
     $scl_apache = false
@@ -288,7 +295,7 @@ class openondemand (
     $selinux_package_ensure = 'absent'
   }
 
-  $repo_baseurl = "${repo_baseurl_prefix}/${repo_release}/web/el${facts['os']['release']['major']}/\$basearch"
+  $repo_baseurl = "${repo_baseurl_prefix}/${repo_release}/web/el${osmajor}/\$basearch"
 
   if $ssl {
     $port = '443'
