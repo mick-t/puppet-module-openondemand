@@ -82,7 +82,7 @@
     "hpc",
     "gateway"
   ],
-  "pdk-version": "1.16.0",
+  "pdk-version": "1.17.0",
   "template-url": "https://github.com/treydock/pdk-templates.git#master",
-  "template-ref": "heads/master-0-gaddf0b8"
+  "template-ref": "heads/master-0-g692bc69"
 }
