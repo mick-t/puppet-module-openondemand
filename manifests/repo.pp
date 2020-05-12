@@ -12,8 +12,8 @@ class openondemand::repo {
     metadata_expire => '1'
   }
 
-  if versioncmp($facts['os']['release']['major'], '7') <= 0 and $openondemand::manage_scl {
-    if $facts['os']['name'] == 'CentOS' and versioncmp($facts['os']['release']['major'], '7') == 0 {
+  if versioncmp($openondemand::osmajor, '7') <= 0 and $openondemand::manage_scl {
+    if $facts['os']['name'] == 'CentOS' and versioncmp($openondemand::osmajor, '7') == 0 {
       file { '/etc/yum.repos.d/ondemand-centos-scl.repo':
         ensure => 'absent',
       }
@@ -21,7 +21,7 @@ class openondemand::repo {
 
     case $facts['os']['name'] {
       'RedHat': {
-        rhsm_repo { "rhel-server-rhscl-${facts['os']['release']['major']}-rpms":
+        rhsm_repo { "rhel-server-rhscl-${openondemand::osmajor}-rpms":
           ensure => 'present',
         }
       }
