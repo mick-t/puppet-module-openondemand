@@ -6,15 +6,15 @@
 <title>
   Puppet Class: openondemand::repo
   
-    &mdash; Documentation by YARD 0.9.20
+    &mdash; Documentation by YARD 0.9.25
   
 </title>
 
-  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
 
-  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../css/common.css" type="text/css" />
 
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript">
   pathId = "puppet_classes::openondemand::repo";
   relpath = '../';
 </script>
@@ -85,6 +85,7 @@
 <div class="tags">
   
 
+
 </div><div class="method_details_list">
   <table class="source_code">
     <tr>
@@ -145,8 +146,8 @@ class openondemand::repo {
     metadata_expire =&gt; &#39;1&#39;
   }
 
-  if versioncmp($facts[&#39;os&#39;][&#39;release&#39;][&#39;major&#39;], &#39;7&#39;) &lt;= 0 and $openondemand::manage_scl {
-    if $facts[&#39;os&#39;][&#39;name&#39;] == &#39;CentOS&#39; and versioncmp($facts[&#39;os&#39;][&#39;release&#39;][&#39;major&#39;], &#39;7&#39;) == 0 {
+  if versioncmp($openondemand::osmajor, &#39;7&#39;) &lt;= 0 and $openondemand::manage_scl {
+    if $facts[&#39;os&#39;][&#39;name&#39;] == &#39;CentOS&#39; and versioncmp($openondemand::osmajor, &#39;7&#39;) == 0 {
       file { &#39;/etc/yum.repos.d/ondemand-centos-scl.repo&#39;:
         ensure =&gt; &#39;absent&#39;,
       }
@@ -154,7 +155,7 @@ class openondemand::repo {
 
     case $facts[&#39;os&#39;][&#39;name&#39;] {
       &#39;RedHat&#39;: {
-        rhsm_repo { &quot;rhel-server-rhscl-${facts[&#39;os&#39;][&#39;release&#39;][&#39;major&#39;]}-rpms&quot;:
+        rhsm_repo { &quot;rhel-server-rhscl-${openondemand::osmajor}-rpms&quot;:
           ensure =&gt; &#39;present&#39;,
         }
       }

@@ -6,15 +6,15 @@
 <title>
   Puppet Class: openondemand
   
-    &mdash; Documentation by YARD 0.9.20
+    &mdash; Documentation by YARD 0.9.25
   
 </title>
 
-  <link rel="stylesheet" href="../css/style.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../css/style.css" type="text/css" />
 
-  <link rel="stylesheet" href="../css/common.css" type="text/css" charset="utf-8" />
+  <link rel="stylesheet" href="../css/common.css" type="text/css" />
 
-<script type="text/javascript" charset="utf-8">
+<script type="text/javascript">
   pathId = "puppet_classes::openondemand";
   relpath = '../';
 </script>
@@ -1532,6 +1532,7 @@ defined</p>
 </ul>
 
 
+
 </div><div class="method_details_list">
   <table class="source_code">
     <tr>
@@ -1802,7 +1803,14 @@ defined</p>
 425
 426
 427
-428</pre>
+428
+429
+430
+431
+432
+433
+434
+435</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/init.pp', line 165</span>
@@ -1914,14 +1922,21 @@ class openondemand (
 ) {
 
   $osfamily = $facts.dig(&#39;os&#39;, &#39;family&#39;)
-  $osmajor = $facts.dig(&#39;os&#39;, &#39;release&#39;, &#39;major&#39;)
+  $_os_release_major = $facts.dig(&#39;os&#39;, &#39;release&#39;, &#39;major&#39;)
+
+  if $_os_release_major {
+    $osmajor = split($_os_release_major, &#39;[.]&#39;)[0]
+  } else {
+    $osmajor = &#39;Unknown&#39;
+  }
+
   $supported = [&#39;RedHat-7&#39;,&#39;RedHat-8&#39;]
   $os = &quot;${osfamily}-${osmajor}&quot;
   if ! ($os in $supported) {
-    fail(&quot;Unsupported OS: ${osfamily}, module ${module_name} only supports RedHat 7 and 8&quot;)
+    fail(&quot;Unsupported OS: module ${module_name} only supports RedHat 7 and 8. &#39;${os}&#39; detected&quot;)
   }
 
-  if versioncmp($facts[&#39;os&#39;][&#39;release&#39;][&#39;major&#39;], &#39;7&#39;) &lt;= 0 {
+  if versioncmp($osmajor, &#39;7&#39;) &lt;= 0 {
     $scl_apache = true
   } else {
     $scl_apache = false
@@ -1933,7 +1948,7 @@ class openondemand (
     $selinux_package_ensure = &#39;absent&#39;
   }
 
-  $repo_baseurl = &quot;${repo_baseurl_prefix}/${repo_release}/web/el${facts[&#39;os&#39;][&#39;release&#39;][&#39;major&#39;]}/\$basearch&quot;
+  $repo_baseurl = &quot;${repo_baseurl_prefix}/${repo_release}/web/el${osmajor}/\$basearch&quot;
 
   if $ssl {
     $port = &#39;443&#39;
