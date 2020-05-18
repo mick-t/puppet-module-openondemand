@@ -1810,7 +1810,9 @@ defined</p>
 432
 433
 434
-435</pre>
+435
+436
+437</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/init.pp', line 165</span>
@@ -1953,9 +1955,11 @@ class openondemand (
   if $ssl {
     $port = &#39;443&#39;
     $listen_ports = [&#39;443&#39;, &#39;80&#39;]
+    $protocol = &#39;https&#39;
   } else {
     $port = &#39;80&#39;
     $listen_ports = [&#39;80&#39;]
+    $protocol = &#39;http&#39;
   }
 
   $nginx_stage_cmd = &#39;/opt/ood/nginx_stage/sbin/nginx_stage&#39;
