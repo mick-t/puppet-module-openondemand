@@ -10,10 +10,10 @@ OIDCClientID        "<%= scope['openondemand::oidc_provider_client_id'] %>"
 OIDCClientSecret    "<%= scope['openondemand::oidc_provider_client_secret'] %>"
 <%- end -%>
 <%- if scope['openondemand::oidc_discover_uri'] -%>
-OIDCDiscoverURL      https://<%= scope['openondemand::servername'] %><%= scope['openondemand::oidc_discover_uri'] %>
+OIDCDiscoverURL      <%= scope['openondemand::protocol'] %>://<%= scope['openondemand::servername'] %><%= scope['openondemand::oidc_discover_uri'] %>
 <%- end -%>
 <%- if scope['openondemand::oidc_uri'] -%>
-OIDCRedirectURI      https://<%= scope['openondemand::servername'] %><%= scope['openondemand::oidc_uri'] %>
+OIDCRedirectURI      <%= scope['openondemand::protocol'] %>://<%= scope['openondemand::servername'] %><%= scope['openondemand::oidc_uri'] %>
 <%- end -%>
 OIDCCryptoPassphrase "<%= scope['openondemand::oidc_crypto_passphrase'] %>"
 
