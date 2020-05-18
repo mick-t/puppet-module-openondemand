@@ -300,9 +300,11 @@ class openondemand (
   if $ssl {
     $port = '443'
     $listen_ports = ['443', '80']
+    $protocol = 'https'
   } else {
     $port = '80'
     $listen_ports = ['80']
+    $protocol = 'http'
   }
 
   $nginx_stage_cmd = '/opt/ood/nginx_stage/sbin/nginx_stage'
