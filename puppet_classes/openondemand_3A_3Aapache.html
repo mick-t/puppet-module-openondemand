@@ -207,7 +207,10 @@
 114
 115
 116
-117</pre>
+117
+118
+119
+120</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/apache.pp', line 3</span>
@@ -259,6 +262,9 @@ class openondemand::apache {
   include ::apache::mod::proxy_http
   include ::apache::mod::proxy_connect
   include ::apache::mod::proxy_wstunnel
+  if $openondemand::auth_type == &#39;CAS&#39; {
+    include ::apache::mod::auth_cas
+  }
   if $openondemand::auth_type == &#39;ldap&#39; {
     include ::apache::mod::authnz_ldap
     include ::apache::mod::ldap
