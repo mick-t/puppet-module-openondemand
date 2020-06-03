@@ -685,6 +685,14 @@ Path to public files in apps config Git repo
 
 Default value: []
 
+##### `manage_logrotate`
+
+Data type: `Boolean`
+
+Boolean that allows disabling management of logrotate
+
+Default value: `true`
+
 ## Defined types
 
 ### openondemand::app::dev
