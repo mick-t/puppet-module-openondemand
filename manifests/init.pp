@@ -161,6 +161,8 @@
 #   Source for locales config, not used if `apps_config_repo` is defined
 # @param public_files_repo_paths
 #   Path to public files in apps config Git repo
+# @param manage_logrotate
+#   Boolean that allows disabling management of logrotate
 #
 class openondemand (
   # repos
@@ -266,6 +268,9 @@ class openondemand (
   Optional[String] $apps_config_source = undef,
   Optional[String] $locales_config_source = undef,
   Array $public_files_repo_paths = [],
+
+  # Disable functionality
+  Boolean $manage_logrotate = true,
 ) {
 
   $osfamily = $facts.dig('os', 'family')

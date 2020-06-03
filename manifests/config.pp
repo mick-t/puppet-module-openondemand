@@ -206,14 +206,16 @@ class openondemand::config {
     content => template('openondemand/ood-cron.erb'),
   }
 
-  logrotate::rule { 'ood':
-    path         => ['/var/log/ondemand-nginx/*/access.log', '/var/log/ondemand-nginx/*/error.log'],
-    compress     => true,
-    missingok    => true,
-    copytruncate => true,
-    ifempty      => false,
-    rotate       => 52,
-    rotate_every => 'week',
+  if $openondemand::manage_logrotate {
+    logrotate::rule { 'ood':
+      path         => ['/var/log/ondemand-nginx/*/access.log', '/var/log/ondemand-nginx/*/error.log'],
+      compress     => true,
+      missingok    => true,
+      copytruncate => true,
+      ifempty      => false,
+      rotate       => 52,
+      rotate_every => 'week',
+    }
   }
 
   file { '/var/log/ondemand-nginx':
