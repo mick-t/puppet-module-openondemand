@@ -1529,6 +1529,24 @@ defined</p>
       
     </li>
   
+    <li>
+      
+        <span class='name'>manage_logrotate</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>true</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Boolean that allows disabling management of logrotate</p>
+</div>
+      
+    </li>
+  
 </ul>
 
 
@@ -1540,8 +1558,6 @@ defined</p>
         <pre class="lines">
 
 
-165
-166
 167
 168
 169
@@ -1812,10 +1828,15 @@ defined</p>
 434
 435
 436
-437</pre>
+437
+438
+439
+440
+441
+442</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 165</span>
+        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 167</span>
 
 class openondemand (
   # repos
@@ -1921,6 +1942,9 @@ class openondemand (
   Optional[String] $apps_config_source = undef,
   Optional[String] $locales_config_source = undef,
   Array $public_files_repo_paths = [],
+
+  # Disable functionality
+  Boolean $manage_logrotate = true,
 ) {
 
   $osfamily = $facts.dig(&#39;os&#39;, &#39;family&#39;)
