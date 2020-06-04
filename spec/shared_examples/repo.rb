@@ -17,7 +17,7 @@ shared_examples 'openondemand::repo' do |facts|
 
     case facts[:os]['name']
     when 'RedHat'
-      it { is_expected.to contain_rhsm_repo("rhel-server-rhscl-#{facts[:os]['release']['major']}-rpms").with_ensure('present') }
+      it { is_expected.to contain_rh_repo("rhel-server-rhscl-#{facts[:os]['release']['major']}-rpms").with_ensure('present') }
     when 'CentOS'
       it { is_expected.to contain_package('centos-release-scl').with_ensure('installed') }
     end
@@ -27,7 +27,7 @@ shared_examples 'openondemand::repo' do |facts|
     let(:params) { { manage_scl: false } }
 
     it { is_expected.not_to contain_file('/etc/yum.repos.d/ondemand-centos-scl.repo') }
-    it { is_expected.not_to contain_rhsm_repo("rhel-server-rhscl-#{facts[:os]['release']['major']}-rpms") }
+    it { is_expected.not_to contain_rh_repo("rhel-server-rhscl-#{facts[:os]['release']['major']}-rpms") }
     it { is_expected.not_to contain_package('centos-release-scl') }
   end
 end

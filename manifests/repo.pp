@@ -21,7 +21,7 @@ class openondemand::repo {
 
     case $facts['os']['name'] {
       'RedHat': {
-        rhsm_repo { "rhel-server-rhscl-${openondemand::osmajor}-rpms":
+        rh_repo { "rhel-server-rhscl-${openondemand::osmajor}-rpms":
           ensure => 'present',
         }
       }
