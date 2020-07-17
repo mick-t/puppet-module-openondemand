@@ -186,6 +186,17 @@ class openondemand::config {
     source         => '/etc/ood/config/ood-portal.conf',
     filename       => 'ood-portal.conf',
     verify_command => $::apache::params::verify_command,
+    show_diff      => false,
+  }
+
+  if $openondemand::auth_type == 'dex' {
+    file { '/etc/ood/dex/config.yaml':
+      ensure  => 'file',
+      owner   => 'ondemand-dex',
+      group   => 'ondemand-dex',
+      mode    => '0600',
+      require => Exec['ood-portal-generator-generate']
+    }
   }
 
   file { '/etc/ood/config/nginx_stage.yml':

@@ -31,4 +31,14 @@ class openondemand::service {
     ],
   }
 
+  if $openondemand::auth_type == 'dex' {
+    service { 'ondemand-dex':
+      ensure    => 'running',
+      enable    => true,
+      subscribe => [
+        Exec['ood-portal-generator-generate'],
+        File['/etc/ood/dex/config.yaml'],
+      ],
+    }
+  }
 }

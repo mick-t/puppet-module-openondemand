@@ -57,22 +57,10 @@ class openondemand::apache {
   ::apache::mod { 'lua': }
   include ::apache::mod::headers
 
-  if $openondemand::auth_type == 'openid-connect' {
+  if $openondemand::auth_type in ['dex','openid-connect'] {
     ::apache::mod { 'auth_openidc':
       package        => "${package_prefix}mod_auth_openidc",
       package_ensure => $openondemand::mod_auth_openidc_ensure,
-    }
-
-    ::apache::custom_config { 'auth_openidc':
-      content  => template('openondemand/apache/auth_openidc.conf.erb'),
-      priority => false,
-    }
-    # Hack to set mode of auth_openidc.conf
-    File <| title == 'apache_auth_openidc' |> {
-      owner     => 'root',
-      group     => 'apache',
-      mode      => '0640',
-      show_diff => false,
     }
   }
 
@@ -103,18 +91,5 @@ class openondemand::apache {
     notify => Class['::apache::service'],
   }
   Class['systemd::systemctl::daemon_reload'] -> Class['::apache::service']
-
-  if $openondemand::auth_type == 'basic' {
-    $_basic_auth_users_defaults = {
-      'ensure'    => 'present',
-      'file'      => "${::apache::httpd_dir}/.htpasswd",
-      'mechanism' => 'basic',
-      'require'   => Package['httpd'],
-    }
-    $openondemand::basic_auth_users.each |$name, $user| {
-      $parameters = $_basic_auth_users_defaults + $user
-      httpauth { $name: * => $parameters }
-    }
-  }
 
 }

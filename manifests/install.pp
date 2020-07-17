@@ -12,4 +12,9 @@ class openondemand::install {
     ensure => $openondemand::selinux_package_ensure,
   }
 
+  if $openondemand::auth_type == 'dex' {
+    package { 'ondemand-dex':
+      ensure => $openondemand::ondemand_dex_package_ensure,
+    }
+  }
 }

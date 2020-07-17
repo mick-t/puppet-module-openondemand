@@ -14,12 +14,9 @@ fixtures:
       repo: https://github.com/puppetlabs/puppetlabs-vcsrepo.git
     apache:
       repo: https://github.com/puppetlabs/puppetlabs-apache.git
-      ref: v5.0.0
+      ref: v5.2.0
     sudo:
       repo: https://github.com/saz/puppet-sudo.git
-    httpauth:
-      repo: https://github.com/jamtur01/jamtur01-httpauth.git
-      ref: v0.0.5
     augeasproviders_core:
       repo: git://github.com/hercules-team/augeasproviders_core.git
     augeasproviders_shellvar:
