@@ -174,9 +174,8 @@ class openondemand::config {
     content => "# File managed by Puppet - do not edit!\n${openondemand::ood_portal_yaml}",
     notify  => Exec['ood-portal-generator-generate'],
   }
-
   exec { 'ood-portal-generator-generate':
-    command     => '/opt/ood/ood-portal-generator/bin/generate -o /etc/ood/config/ood-portal.conf',
+    command     => '/opt/ood/ood-portal-generator/bin/generate -o /etc/ood/config/ood-portal.conf -d /etc/ood/dex/config.yaml',
     refreshonly => true,
     before      => ::Apache::Custom_config['ood-portal'],
   }
