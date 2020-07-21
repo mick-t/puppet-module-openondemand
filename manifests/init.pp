@@ -315,9 +315,11 @@ class openondemand (
   case $auth_type {
     'dex': {
       $auth = undef
+      $_dex_config = $dex_config
     }
     default: {
       $auth = ["AuthType ${auth_type}"] + $auth_configs
+      $_dex_config = undef
     }
   }
 
@@ -393,7 +395,7 @@ class openondemand (
     'oidc_session_max_duration'        => $oidc_session_max_duration,
     'oidc_state_max_number_of_cookies' => $oidc_state_max_number_of_cookies,
     'oidc_settings'                    => $oidc_settings,
-    'dex'                              => $dex_config,
+    'dex'                              => $_dex_config,
   })
   $ood_portal_yaml = to_yaml($ood_portal_config)
   $base_apps = {
