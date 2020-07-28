@@ -161,6 +161,8 @@
 #   Source for apps config, not used if `apps_config_repo` is defined
 # @param locales_config_source
 #   Source for locales config, not used if `apps_config_repo` is defined
+# @param announcements_config_source 
+#   Source for aouncements config, not used if `apps_config_repo` is defined
 # @param public_files_repo_paths
 #   Path to public files in apps config Git repo
 # @param manage_logrotate
