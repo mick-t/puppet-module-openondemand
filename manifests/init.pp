@@ -155,6 +155,8 @@
 #   Path in apps config Git repo for app configs
 # @param locales_config_repo_path
 #   Path in apps config Git repo for locales configs
+# @param announcements_config_repo_path
+#   Path in apps config Git repo for announcements
 # @param apps_config_source
 #   Source for apps config, not used if `apps_config_repo` is defined
 # @param locales_config_source
@@ -265,8 +267,11 @@ class openondemand (
   Optional[String] $apps_config_revision = undef,
   String $apps_config_repo_path = '',
   Optional[String] $locales_config_repo_path = undef,
+  Optional[String] $announcements_config_repo_path = undef,
+
   Optional[String] $apps_config_source = undef,
   Optional[String] $locales_config_source = undef,
+  Optional[String] $announcements_config_source = undef,
   Array $public_files_repo_paths = [],
 
   # Disable functionality
@@ -343,6 +348,13 @@ class openondemand (
   } else {
     $_locales_config_source = $locales_config_source
   }
+
+  if $apps_config_repo and $announcements_config_repo_path {
+    $_announcements_config_source = "/opt/ood-apps-config/${announcements_config_repo_path}"
+  } else {
+    $_announcements_config_source = $announcements_config_source
+  }
+
 
   if $clusters_hiera_merge {
     $_clusters = lookup('openondemand::clusters', Hash, 'deep', {})

@@ -82,7 +82,7 @@ openondemand::oidc_crypto_passphrase: 'SOMEHASH'
 openondemand::oidc_provider_client_secret: 'SUPERSECRET'
 ```
 
-Configure OnDemand via git repo that contains app configs, locales and public files
+Configure OnDemand via git repo that contains app configs, locales, public, and annoucement files
 
 ```yaml
 openondemand::servername: ondemand.osc.edu
@@ -93,6 +93,7 @@ openondemand::locales_config_repo_path: "%{lookup('openondemand::servername')}/l
 openondemand::public_files_repo_paths:
   - "%{lookup('openondemand::servername')}/public/logo.png"
   - "%{lookup('openondemand::servername')}/public/favicon.ico"
+openondemand::announcements_config_repo_path: "%{lookup('openondemand::servername')}/announcements"
 ```
 
 Define a cluster. The following example is based on a cluster at OSC using Torque

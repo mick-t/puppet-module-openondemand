@@ -133,6 +133,17 @@ class openondemand::config {
     force   => true,
   }
 
+  file { '/etc/ood/config/announcements.d':
+    ensure  => 'directory',
+    owner   => 'root',
+    group   => 'root',
+    source  => $openondemand::_announcements_config_source,
+    recurse => true,
+    purge   => true,
+    force   => true,
+  }
+
+
   $openondemand::public_files_repo_paths.each |$path| {
     $basename = basename($path)
     file { "${openondemand::public_root}/${basename}":
