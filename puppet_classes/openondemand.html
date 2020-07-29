@@ -1475,6 +1475,24 @@ used with basic auth</p>
   
     <li>
       
+        <span class='name'>announcements_config_repo_path</span>
+      
+      
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Path in apps config Git repo for announcements</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
         <span class='name'>apps_config_source</span>
       
       
@@ -1506,6 +1524,25 @@ defined</p>
         &mdash;
         <div class='inline'>
 <p>Source for locales config, not used if <code>apps_config_repo</code> is
+defined</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>announcements_config_source</span>
+      
+      
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Source for aouncements config, not used if <code>apps_config_repo</code> is
 defined</p>
 </div>
       
@@ -1558,10 +1595,6 @@ defined</p>
         <pre class="lines">
 
 
-167
-168
-169
-170
 171
 172
 173
@@ -1833,10 +1866,24 @@ defined</p>
 439
 440
 441
-442</pre>
+442
+443
+444
+445
+446
+447
+448
+449
+450
+451
+452
+453
+454
+455
+456</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 167</span>
+        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 171</span>
 
 class openondemand (
   # repos
@@ -1939,8 +1986,11 @@ class openondemand (
   Optional[String] $apps_config_revision = undef,
   String $apps_config_repo_path = &#39;&#39;,
   Optional[String] $locales_config_repo_path = undef,
+  Optional[String] $announcements_config_repo_path = undef,
+
   Optional[String] $apps_config_source = undef,
   Optional[String] $locales_config_source = undef,
+  Optional[String] $announcements_config_source = undef,
   Array $public_files_repo_paths = [],
 
   # Disable functionality
@@ -2017,6 +2067,13 @@ class openondemand (
   } else {
     $_locales_config_source = $locales_config_source
   }
+
+  if $apps_config_repo and $announcements_config_repo_path {
+    $_announcements_config_source = &quot;/opt/ood-apps-config/${announcements_config_repo_path}&quot;
+  } else {
+    $_announcements_config_source = $announcements_config_source
+  }
+
 
   if $clusters_hiera_merge {
     $_clusters = lookup(&#39;openondemand::clusters&#39;, Hash, &#39;deep&#39;, {})

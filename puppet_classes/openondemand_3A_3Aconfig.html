@@ -317,7 +317,18 @@
 224
 225
 226
-227</pre>
+227
+228
+229
+230
+231
+232
+233
+234
+235
+236
+237
+238</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/config.pp', line 3</span>
@@ -454,6 +465,17 @@ class openondemand::config {
     purge   =&gt; true,
     force   =&gt; true,
   }
+
+  file { &#39;/etc/ood/config/announcements.d&#39;:
+    ensure  =&gt; &#39;directory&#39;,
+    owner   =&gt; &#39;root&#39;,
+    group   =&gt; &#39;root&#39;,
+    source  =&gt; $openondemand::_announcements_config_source,
+    recurse =&gt; true,
+    purge   =&gt; true,
+    force   =&gt; true,
+  }
+
 
   $openondemand::public_files_repo_paths.each |$path| {
     $basename = basename($path)
