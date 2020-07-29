@@ -661,6 +661,14 @@ Path in apps config Git repo for locales configs
 
 Default value: `undef`
 
+##### `announcements_config_repo_path`
+
+Data type: `Optional[String]`
+
+Path in apps config Git repo for announcements
+
+Default value: `undef`
+
 ##### `apps_config_source`
 
 Data type: `Optional[String]`
@@ -674,6 +682,14 @@ Default value: `undef`
 Data type: `Optional[String]`
 
 Source for locales config, not used if `apps_config_repo` is defined
+
+Default value: `undef`
+
+##### `announcements_config_source`
+
+Data type: `Optional[String]`
+
+Source for aouncements config, not used if `apps_config_repo` is defined
 
 Default value: `undef`
 

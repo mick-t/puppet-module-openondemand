@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v0.13.0](https://github.com/osc/puppet-module-openondemand/tree/v0.13.0) (2020-07-29)
+
+[Full Changelog](https://github.com/osc/puppet-module-openondemand/compare/v0.12.0...v0.13.0)
+
+### UNCATEGORIZED PRS; GO LABEL THEM
+
+- Add the ability to load announcements from the config\_repo [\#36](https://github.com/OSC/puppet-module-openondemand/pull/36) ([mattmix](https://github.com/mattmix))
+
 ## [v0.12.0](https://github.com/osc/puppet-module-openondemand/tree/v0.12.0) (2020-06-04)
 
 [Full Changelog](https://github.com/osc/puppet-module-openondemand/compare/v0.11.0...v0.12.0)
