@@ -1169,6 +1169,25 @@ used with basic auth</p>
   
     <li>
       
+        <span class='name'>nginx_stage_clean_cron_schedule</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&#39;0 */2 * * *&#39;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Configure how often you want to run nginx_clean Defaults to &#39;0 <em>/2 *
+* </em>&#39; (every other hour)</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
         <span class='name'>nginx_stage_ondemand_portal</span>
       
       
@@ -1595,9 +1614,6 @@ defined</p>
         <pre class="lines">
 
 
-171
-172
-173
 174
 175
 176
@@ -1880,10 +1896,14 @@ defined</p>
 453
 454
 455
-456</pre>
+456
+457
+458
+459
+460</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 171</span>
+        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 174</span>
 
 class openondemand (
   # repos
@@ -1963,6 +1983,7 @@ class openondemand (
   String $nginx_log_group = &#39;ondemand-nginx&#39;,
 
   # nginx_stage configs
+  String $nginx_stage_clean_cron_schedule = &#39;0 */2 * * *&#39;,
   String $nginx_stage_ondemand_portal = &#39;ondemand&#39;,
   String $nginx_stage_ondemand_title  = &#39;Open OnDemand&#39;,
   Hash $nginx_stage_pun_custom_env = {},
