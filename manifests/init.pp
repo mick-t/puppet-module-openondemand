@@ -121,6 +121,9 @@
 #   Only used with basic auth
 # @param nginx_log_group
 #   Group to set for /var/log/ondemand-nginx
+# @param nginx_stage_clean_cron_schedule
+#   Configure how often you want to run nginx_clean
+#   Defaults to '0 */2 * * *' (every other hour)
 # @param nginx_stage_ondemand_portal
 #   nginx_stage.yml ondemand_portal
 # @param nginx_stage_ondemand_title
@@ -246,6 +249,7 @@ class openondemand (
   String $nginx_log_group = 'ondemand-nginx',
 
   # nginx_stage configs
+  String $nginx_stage_clean_cron_schedule = '0 */2 * * *',
   String $nginx_stage_ondemand_portal = 'ondemand',
   String $nginx_stage_ondemand_title  = 'Open OnDemand',
   Hash $nginx_stage_pun_custom_env = {},
