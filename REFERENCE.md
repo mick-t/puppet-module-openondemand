@@ -525,6 +525,15 @@ Group to set for /var/log/ondemand-nginx
 
 Default value: 'ondemand-nginx'
 
+##### `nginx_stage_clean_cron_schedule`
+
+Data type: `String`
+
+Configure how often you want to run nginx_clean
+Defaults to '0 */2 * * *' (every other hour)
+
+Default value: '0 */2 * * *'
+
 ##### `nginx_stage_ondemand_portal`
 
 Data type: `String`
