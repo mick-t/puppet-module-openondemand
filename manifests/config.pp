@@ -138,9 +138,9 @@ class openondemand::config {
     owner   => 'root',
     group   => 'root',
     source  => $openondemand::_announcements_config_source,
-    recurse => true,
-    purge   => true,
-    force   => true,
+    recurse => $openondemand::announcements_purge,
+    purge   => $openondemand::announcements_purge,
+    force   => $openondemand::announcements_purge,
   }
 
 

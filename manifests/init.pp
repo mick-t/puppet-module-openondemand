@@ -345,6 +345,11 @@ class openondemand (
     $_announcements_config_source = $announcements_config_source
   }
 
+  if $_announcements_config_source {
+    $announcements_purge = true
+  } else {
+    $announcements_purge = undef
+  }
 
   if $clusters_hiera_merge {
     $_clusters = lookup('openondemand::clusters', Hash, 'deep', {})
