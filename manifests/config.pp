@@ -170,7 +170,7 @@ class openondemand::config {
     ensure    => 'file',
     owner     => 'root',
     group     => 'root',
-    mode      => '0644',
+    mode      => '0600',
     content   => "# File managed by Puppet - do not edit!\n${openondemand::ood_portal_yaml}",
     show_diff => false,
     notify    => Exec['ood-portal-generator-generate'],
@@ -187,6 +187,9 @@ class openondemand::config {
     filename       => 'ood-portal.conf',
     verify_command => $::apache::params::verify_command,
     show_diff      => false,
+    owner          => 'root',
+    group          => $apache::params::group,
+    file_mode      => '0640',
   }
 
   if $openondemand::auth_type == 'dex' {
