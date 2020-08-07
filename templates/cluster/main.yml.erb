@@ -147,6 +147,9 @@ v2:
       <%- @grafana_labels.each_pair do |k, v| -%>
         <%= k %>: "<%= v %>"
       <%- end -%>
+      <%- if @grafana_cluster_override -%>
+      cluster_override: "<%= @grafana_cluster_override %>"
+      <%- end -%>
   <%- end -%>
 <% end -%>
 <% if ! @batch_connect.empty? -%>
