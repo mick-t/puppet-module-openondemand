@@ -50,10 +50,6 @@ class openondemand::apache {
   if $openondemand::auth_type == 'CAS' {
     include ::apache::mod::auth_cas
   }
-  if $openondemand::auth_type == 'ldap' {
-    include ::apache::mod::authnz_ldap
-    include ::apache::mod::ldap
-  }
   ::apache::mod { 'lua': }
   include ::apache::mod::headers
 
