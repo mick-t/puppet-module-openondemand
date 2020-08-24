@@ -1,4 +1,4 @@
-# nginx_stage.yml namespace_config
+# ondemand-dex config
 type Openondemand::Dex_config = Struct[{
   'ssl' => Optional[Boolean],
   'http_port' => Optional[Variant[String, Integer]],
