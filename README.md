@@ -19,7 +19,7 @@ Manage [Open OnDemand](http://openondemand.org/) installation and configuration.
 
 The following are the versions of this module and the supported versions of Open OnDemand:
 
-* Module >= 0.13.0 supports Open OnDemand >= 1.8
+* Module >= 1.0.0 supports Open OnDemand >= 1.8
 * Module <= 0.12.0 supports Open OnDemand <= 1.7
 
 
