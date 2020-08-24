@@ -181,36 +181,7 @@
 88
 89
 90
-91
-92
-93
-94
-95
-96
-97
-98
-99
-100
-101
-102
-103
-104
-105
-106
-107
-108
-109
-110
-111
-112
-113
-114
-115
-116
-117
-118
-119
-120</pre>
+91</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/apache.pp', line 3</span>
@@ -265,29 +236,13 @@ class openondemand::apache {
   if $openondemand::auth_type == &#39;CAS&#39; {
     include ::apache::mod::auth_cas
   }
-  if $openondemand::auth_type == &#39;ldap&#39; {
-    include ::apache::mod::authnz_ldap
-    include ::apache::mod::ldap
-  }
   ::apache::mod { &#39;lua&#39;: }
   include ::apache::mod::headers
 
-  if $openondemand::auth_type == &#39;openid-connect&#39; {
+  if $openondemand::auth_type in [&#39;dex&#39;,&#39;openid-connect&#39;] {
     ::apache::mod { &#39;auth_openidc&#39;:
       package        =&gt; &quot;${package_prefix}mod_auth_openidc&quot;,
       package_ensure =&gt; $openondemand::mod_auth_openidc_ensure,
-    }
-
-    ::apache::custom_config { &#39;auth_openidc&#39;:
-      content  =&gt; template(&#39;openondemand/apache/auth_openidc.conf.erb&#39;),
-      priority =&gt; false,
-    }
-    # Hack to set mode of auth_openidc.conf
-    File &lt;| title == &#39;apache_auth_openidc&#39; |&gt; {
-      owner     =&gt; &#39;root&#39;,
-      group     =&gt; &#39;apache&#39;,
-      mode      =&gt; &#39;0640&#39;,
-      show_diff =&gt; false,
     }
   }
 
@@ -318,19 +273,6 @@ class openondemand::apache {
     notify =&gt; Class[&#39;::apache::service&#39;],
   }
   Class[&#39;systemd::systemctl::daemon_reload&#39;] -&gt; Class[&#39;::apache::service&#39;]
-
-  if $openondemand::auth_type == &#39;basic&#39; {
-    $_basic_auth_users_defaults = {
-      &#39;ensure&#39;    =&gt; &#39;present&#39;,
-      &#39;file&#39;      =&gt; &quot;${::apache::httpd_dir}/.htpasswd&quot;,
-      &#39;mechanism&#39; =&gt; &#39;basic&#39;,
-      &#39;require&#39;   =&gt; Package[&#39;httpd&#39;],
-    }
-    $openondemand::basic_auth_users.each |$name, $user| {
-      $parameters = $_basic_auth_users_defaults + $user
-      httpauth { $name: * =&gt; $parameters }
-    }
-  }
 
 }</pre>
       </td>

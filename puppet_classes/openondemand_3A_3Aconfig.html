@@ -328,7 +328,21 @@
 235
 236
 237
-238</pre>
+238
+239
+240
+241
+242
+243
+244
+245
+246
+247
+248
+249
+250
+251
+252</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/config.pp', line 3</span>
@@ -471,9 +485,9 @@ class openondemand::config {
     owner   =&gt; &#39;root&#39;,
     group   =&gt; &#39;root&#39;,
     source  =&gt; $openondemand::_announcements_config_source,
-    recurse =&gt; true,
-    purge   =&gt; true,
-    force   =&gt; true,
+    recurse =&gt; $openondemand::announcements_purge,
+    purge   =&gt; $openondemand::announcements_purge,
+    force   =&gt; $openondemand::announcements_purge,
   }
 
 
@@ -500,16 +514,16 @@ class openondemand::config {
   }
 
   file { &#39;/etc/ood/config/ood_portal.yml&#39;:
-    ensure  =&gt; &#39;file&#39;,
-    owner   =&gt; &#39;root&#39;,
-    group   =&gt; &#39;root&#39;,
-    mode    =&gt; &#39;0644&#39;,
-    content =&gt; &quot;# File managed by Puppet - do not edit!\n${openondemand::ood_portal_yaml}&quot;,
-    notify  =&gt; Exec[&#39;ood-portal-generator-generate&#39;],
+    ensure    =&gt; &#39;file&#39;,
+    owner     =&gt; &#39;root&#39;,
+    group     =&gt; &#39;root&#39;,
+    mode      =&gt; &#39;0600&#39;,
+    content   =&gt; &quot;# File managed by Puppet - do not edit!\n${openondemand::ood_portal_yaml}&quot;,
+    show_diff =&gt; false,
+    notify    =&gt; Exec[&#39;ood-portal-generator-generate&#39;],
   }
-
   exec { &#39;ood-portal-generator-generate&#39;:
-    command     =&gt; &#39;/opt/ood/ood-portal-generator/bin/generate -o /etc/ood/config/ood-portal.conf&#39;,
+    command     =&gt; &#39;/opt/ood/ood-portal-generator/bin/generate -o /etc/ood/config/ood-portal.conf -d /etc/ood/dex/config.yaml&#39;,
     refreshonly =&gt; true,
     before      =&gt; ::Apache::Custom_config[&#39;ood-portal&#39;],
   }
@@ -519,6 +533,20 @@ class openondemand::config {
     source         =&gt; &#39;/etc/ood/config/ood-portal.conf&#39;,
     filename       =&gt; &#39;ood-portal.conf&#39;,
     verify_command =&gt; $::apache::params::verify_command,
+    show_diff      =&gt; false,
+    owner          =&gt; &#39;root&#39;,
+    group          =&gt; $apache::params::group,
+    file_mode      =&gt; &#39;0640&#39;,
+  }
+
+  if $openondemand::auth_type == &#39;dex&#39; {
+    file { &#39;/etc/ood/dex/config.yaml&#39;:
+      ensure  =&gt; &#39;file&#39;,
+      owner   =&gt; &#39;ondemand-dex&#39;,
+      group   =&gt; &#39;ondemand-dex&#39;,
+      mode    =&gt; &#39;0600&#39;,
+      require =&gt; Exec[&#39;ood-portal-generator-generate&#39;]
+    }
   }
 
   file { &#39;/etc/ood/config/nginx_stage.yml&#39;:

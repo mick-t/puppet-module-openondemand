@@ -196,6 +196,24 @@
   
     <li>
       
+        <span class='name'>ondemand_dex_package_ensure</span>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>&#39;present&#39;</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>ondemand-dex package ensure</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
         <span class='name'>mod_auth_openidc_ensure</span>
       
       
@@ -262,60 +280,6 @@
         &mdash;
         <div class='inline'>
 <p>SCLs to load when starting Apache service</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>cilogon_client_id</span>
-      
-      
-        <span class='type'>(<tt>String</tt>)</span>
-      
-      
-        <em class="default">(defaults to: <tt>&#39;&#39;</tt>)</em>
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>CILogon client_id</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>cilogon_client_secret</span>
-      
-      
-        <span class='type'>(<tt>String</tt>)</span>
-      
-      
-        <em class="default">(defaults to: <tt>&#39;&#39;</tt>)</em>
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>CILogon client_secret</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>oidc_crypto_passphrase</span>
-      
-      
-        <span class='type'>(<tt>String</tt>)</span>
-      
-      
-        <em class="default">(defaults to: <tt>&#39;CHANGEME&#39;</tt>)</em>
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>OIDC crypto passphrase</p>
 </div>
       
     </li>
@@ -577,10 +541,10 @@
         <span class='name'>auth_type</span>
       
       
-        <span class='type'>(<tt>Enum['CAS', 'openid-connect', 'shibboleth', 'ldap', 'basic']</tt>)</span>
+        <span class='type'>(<tt>Enum['CAS', 'openid-connect', 'shibboleth', 'dex']</tt>)</span>
       
       
-        <em class="default">(defaults to: <tt>&#39;basic&#39;</tt>)</em>
+        <em class="default">(defaults to: <tt>&#39;dex&#39;</tt>)</em>
       
       
         &mdash;
@@ -934,7 +898,7 @@
   
     <li>
       
-        <span class='name'>oidc_provider</span>
+        <span class='name'>oidc_provider_metadata_url</span>
       
       
         <span class='type'>(<tt>Optional[String]</tt>)</span>
@@ -945,14 +909,14 @@
       
         &mdash;
         <div class='inline'>
-<p>OIDC provider</p>
+<p>OIDC metadata URL</p>
 </div>
       
     </li>
   
     <li>
       
-        <span class='name'>oidc_provider_token_endpoint_auth</span>
+        <span class='name'>oidc_client_id</span>
       
       
         <span class='type'>(<tt>Optional[String]</tt>)</span>
@@ -963,61 +927,61 @@
       
         &mdash;
         <div class='inline'>
-<p>OIDC provider token_endpoint_auth</p>
+<p>OIDC client ID</p>
 </div>
       
     </li>
   
     <li>
       
-        <span class='name'>oidc_provider_scope</span>
+        <span class='name'>oidc_client_secret</span>
       
       
-        <span class='type'>(<tt>String</tt>)</span>
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
       
       
-        <em class="default">(defaults to: <tt>&#39;openid email&#39;</tt>)</em>
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
       
       
         &mdash;
         <div class='inline'>
-<p>OIDC provider scope</p>
+<p>OIDC client secret</p>
 </div>
       
     </li>
   
     <li>
       
-        <span class='name'>oidc_provider_client_id</span>
+        <span class='name'>oidc_remote_user_claim</span>
       
       
         <span class='type'>(<tt>String</tt>)</span>
       
       
-        <em class="default">(defaults to: <tt>&#39;&#39;</tt>)</em>
+        <em class="default">(defaults to: <tt>&#39;preferred_username&#39;</tt>)</em>
       
       
         &mdash;
         <div class='inline'>
-<p>OIDC provider client_id</p>
+<p>OIDC REMOTE_USER claim</p>
 </div>
       
     </li>
   
     <li>
       
-        <span class='name'>oidc_provider_client_secret</span>
+        <span class='name'>oidc_scope</span>
       
       
         <span class='type'>(<tt>String</tt>)</span>
       
       
-        <em class="default">(defaults to: <tt>&#39;&#39;</tt>)</em>
+        <em class="default">(defaults to: <tt>&#39;openid profile email&#39;</tt>)</em>
       
       
         &mdash;
         <div class='inline'>
-<p>OIDC provider client_secret</p>
+<p>OIDC scopes</p>
 </div>
       
     </li>
@@ -1035,7 +999,7 @@
       
         &mdash;
         <div class='inline'>
-<p>mod_auth_openidc OIDCSessionInactivityTimeout</p>
+<p>OIDC session inactivity timeout, see OIDCSessionInactivityTimeout</p>
 </div>
       
     </li>
@@ -1053,50 +1017,32 @@
       
         &mdash;
         <div class='inline'>
-<p>mod_auth_openidc OIDCSessionMaxDuration</p>
+<p>OIDC session max duration, see OIDCSessionMaxDuration</p>
 </div>
       
     </li>
   
     <li>
       
-        <span class='name'>oidc_remote_user_claim</span>
-      
-      
-        <span class='type'>(<tt>Optional[String]</tt>)</span>
-      
-      
-        <em class="default">(defaults to: <tt>undef</tt>)</em>
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>OIDC provider remote_user claim</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>oidc_pass_claims_as</span>
+        <span class='name'>oidc_state_max_number_of_cookies</span>
       
       
         <span class='type'>(<tt>String</tt>)</span>
       
       
-        <em class="default">(defaults to: <tt>&#39;environment&#39;</tt>)</em>
+        <em class="default">(defaults to: <tt>&#39;10 true&#39;</tt>)</em>
       
       
         &mdash;
         <div class='inline'>
-<p>mod_auth_openidc OIDCPassClaimsAs</p>
+<p>OIDC setting that determines how to clean up cookies</p>
 </div>
       
     </li>
   
     <li>
       
-        <span class='name'>oidc_extra_configs</span>
+        <span class='name'>oidc_settings</span>
       
       
         <span class='type'>(<tt>Hash</tt>)</span>
@@ -1107,7 +1053,25 @@
       
         &mdash;
         <div class='inline'>
-<p>OIDC extra settings for mod_auth_openidc</p>
+<p>Hash of OIDC settings passsed directly to Apache config</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>dex_config</span>
+      
+      
+        <span class='type'>(<tt>Openondemand::Dex_config</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>{}</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>Dex configuration Hash</p>
 </div>
       
     </li>
@@ -1126,25 +1090,6 @@
         &mdash;
         <div class='inline'>
 <p>Path to main web directory for OnDemand</p>
-</div>
-      
-    </li>
-  
-    <li>
-      
-        <span class='name'>basic_auth_users</span>
-      
-      
-        <span class='type'>(<tt>Hash</tt>)</span>
-      
-      
-        <em class="default">(defaults to: <tt>{}</tt>)</em>
-      
-      
-        &mdash;
-        <div class='inline'>
-<p>Hash of resources to pass to httpauth for defining basic auth users Only
-used with basic auth</p>
 </div>
       
     </li>
@@ -1614,6 +1559,13 @@ defined</p>
         <pre class="lines">
 
 
+167
+168
+169
+170
+171
+172
+173
 174
 175
 176
@@ -1900,10 +1852,13 @@ defined</p>
 457
 458
 459
-460</pre>
+460
+461
+462
+463</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 174</span>
+        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 167</span>
 
 class openondemand (
   # repos
@@ -1917,17 +1872,13 @@ class openondemand (
   # packages
   Boolean $selinux = false,
   String $ondemand_package_ensure                 = &#39;present&#39;,
+  String $ondemand_dex_package_ensure             = &#39;present&#39;,
   String $mod_auth_openidc_ensure                 = &#39;present&#39;,
   Hash $install_apps                              = {},
 
   # Apache
   Boolean $declare_apache = true,
   String $apache_scls = &#39;httpd24 rh-ruby25&#39;,
-
-  # cilogon/oidc
-  String $cilogon_client_id      = &#39;&#39;,
-  String $cilogon_client_secret  = &#39;&#39;,
-  String $oidc_crypto_passphrase  = &#39;CHANGEME&#39;,
 
   # ood_portal.yml
   Variant[Array, String, Undef] $listen_addr_port = undef,
@@ -1944,7 +1895,7 @@ class openondemand (
   String $user_map_cmd  = &#39;/opt/ood/ood_auth_map/bin/ood_auth_map.regex&#39;,
   Optional[String] $user_env = undef,
   Optional[String] $map_fail_uri = undef,
-  Enum[&#39;CAS&#39;, &#39;openid-connect&#39;, &#39;shibboleth&#39;, &#39;ldap&#39;, &#39;basic&#39;] $auth_type = &#39;basic&#39;,
+  Enum[&#39;CAS&#39;, &#39;openid-connect&#39;, &#39;shibboleth&#39;, &#39;dex&#39;] $auth_type = &#39;dex&#39;,
   Optional[Array] $auth_configs = undef,
   String $root_uri = &#39;/pun/sys/dashboard&#39;,
   Optional[Struct[{url =&gt; String, id =&gt; String}]] $analytics = undef,
@@ -1966,20 +1917,21 @@ class openondemand (
   Optional[String] $register_root = undef,
 
   # OIDC configs
-  Optional[String] $oidc_provider = undef,
-  Optional[String] $oidc_provider_token_endpoint_auth = undef,
-  String $oidc_provider_scope = &#39;openid email&#39;,
-  String $oidc_provider_client_id = &#39;&#39;,
-  String $oidc_provider_client_secret = &#39;&#39;,
+  Optional[String] $oidc_provider_metadata_url = undef,
+  Optional[String] $oidc_client_id = undef,
+  Optional[String] $oidc_client_secret = undef,
+  String $oidc_remote_user_claim = &#39;preferred_username&#39;,
+  String $oidc_scope = &#39;openid profile email&#39;,
   Integer $oidc_session_inactivity_timeout = 28800,
   Integer $oidc_session_max_duration = 28800,
-  Optional[String] $oidc_remote_user_claim = undef,
-  String $oidc_pass_claims_as = &#39;environment&#39;,
-  Hash $oidc_extra_configs = {},
+  String $oidc_state_max_number_of_cookies = &#39;10 true&#39;,
+  Hash $oidc_settings = {},
+
+  # Dex configs
+  Openondemand::Dex_config $dex_config = {},
 
   # Misc configs
   Stdlib::Absolutepath $web_directory = &#39;/var/www/ood&#39;,
-  Hash $basic_auth_users  = {},
   String $nginx_log_group = &#39;ondemand-nginx&#39;,
 
   # nginx_stage configs
@@ -2061,15 +2013,13 @@ class openondemand (
   $pun_stage_cmd = &quot;sudo ${nginx_stage_cmd}&quot;
 
   case $auth_type {
-    &#39;ldap&#39;: {
-      $auth = [&#39;AuthType basic&#39;] + $auth_configs
+    &#39;dex&#39;: {
+      $auth = undef
+      $_dex_config = $dex_config
     }
-    &#39;cilogon&#39;: {
-      $auth = [&#39;AuthType openid-connect&#39;] + $auth_configs
-    }
-    # Applies to basic, shibboleth, and openid-connect
     default: {
       $auth = [&quot;AuthType ${auth_type}&quot;] + $auth_configs
+      $_dex_config = undef
     }
   }
 
@@ -2095,6 +2045,11 @@ class openondemand (
     $_announcements_config_source = $announcements_config_source
   }
 
+  if $_announcements_config_source {
+    $announcements_purge = true
+  } else {
+    $announcements_purge = undef
+  }
 
   if $clusters_hiera_merge {
     $_clusters = lookup(&#39;openondemand::clusters&#39;, Hash, &#39;deep&#39;, {})
@@ -2103,39 +2058,49 @@ class openondemand (
   }
 
   $ood_portal_config = delete_undef_values({
-    &#39;listen_addr_port&#39;          =&gt; $listen_ports,
-    &#39;servername&#39;                =&gt; $servername,
-    &#39;port&#39;                      =&gt; $port,
-    &#39;ssl&#39;                       =&gt; $ssl,
-    &#39;logroot&#39;                   =&gt; $logroot,
-    &#39;use_rewrites&#39;              =&gt; $use_rewrites,
-    &#39;use_maintenance&#39;           =&gt; $use_maintenance,
-    &#39;maintenance_ip_whitelist&#39;  =&gt; $maintenance_ip_whitelist,
-    &#39;lua_root&#39;                  =&gt; $lua_root,
-    &#39;lua_log_level&#39;             =&gt; $lua_log_level,
-    &#39;user_map_cmd&#39;              =&gt; $user_map_cmd,
-    &#39;user_env&#39;                  =&gt; $user_env,
-    &#39;map_fail_uri&#39;              =&gt; $map_fail_uri,
-    &#39;pun_stage_cmd&#39;             =&gt; $pun_stage_cmd,
-    &#39;auth&#39;                      =&gt; $auth,
-    &#39;root_uri&#39;                  =&gt; $root_uri,
-    &#39;analytics&#39;                 =&gt; $analytics,
-    &#39;public_uri&#39;                =&gt; $public_uri,
-    &#39;public_root&#39;               =&gt; $public_root,
-    &#39;logout_uri&#39;                =&gt; $logout_uri,
-    &#39;logout_redirect&#39;           =&gt; $logout_redirect,
-    &#39;host_regex&#39;                =&gt; $host_regex,
-    &#39;node_uri&#39;                  =&gt; $node_uri,
-    &#39;rnode_uri&#39;                 =&gt; $rnode_uri,
-    &#39;nginx_uri&#39;                 =&gt; $nginx_uri,
-    &#39;pun_uri&#39;                   =&gt; $pun_uri,
-    &#39;pun_socket_root&#39;           =&gt; $pun_socket_root,
-    &#39;pun_max_retries&#39;           =&gt; $pun_max_retries,
-    &#39;oidc_uri&#39;                  =&gt; $oidc_uri,
-    &#39;oidc_discover_uri&#39;         =&gt; $oidc_discover_uri,
-    &#39;oidc_discover_root&#39;        =&gt; $oidc_discover_root,
-    &#39;register_uri&#39;              =&gt; $register_uri,
-    &#39;register_root&#39;             =&gt; $register_root,
+    &#39;listen_addr_port&#39;                 =&gt; $listen_ports,
+    &#39;servername&#39;                       =&gt; $servername,
+    &#39;port&#39;                             =&gt; $port,
+    &#39;ssl&#39;                              =&gt; $ssl,
+    &#39;logroot&#39;                          =&gt; $logroot,
+    &#39;use_rewrites&#39;                     =&gt; $use_rewrites,
+    &#39;use_maintenance&#39;                  =&gt; $use_maintenance,
+    &#39;maintenance_ip_whitelist&#39;         =&gt; $maintenance_ip_whitelist,
+    &#39;lua_root&#39;                         =&gt; $lua_root,
+    &#39;lua_log_level&#39;                    =&gt; $lua_log_level,
+    &#39;user_map_cmd&#39;                     =&gt; $user_map_cmd,
+    &#39;user_env&#39;                         =&gt; $user_env,
+    &#39;map_fail_uri&#39;                     =&gt; $map_fail_uri,
+    &#39;pun_stage_cmd&#39;                    =&gt; $pun_stage_cmd,
+    &#39;auth&#39;                             =&gt; $auth,
+    &#39;root_uri&#39;                         =&gt; $root_uri,
+    &#39;analytics&#39;                        =&gt; $analytics,
+    &#39;public_uri&#39;                       =&gt; $public_uri,
+    &#39;public_root&#39;                      =&gt; $public_root,
+    &#39;logout_uri&#39;                       =&gt; $logout_uri,
+    &#39;logout_redirect&#39;                  =&gt; $logout_redirect,
+    &#39;host_regex&#39;                       =&gt; $host_regex,
+    &#39;node_uri&#39;                         =&gt; $node_uri,
+    &#39;rnode_uri&#39;                        =&gt; $rnode_uri,
+    &#39;nginx_uri&#39;                        =&gt; $nginx_uri,
+    &#39;pun_uri&#39;                          =&gt; $pun_uri,
+    &#39;pun_socket_root&#39;                  =&gt; $pun_socket_root,
+    &#39;pun_max_retries&#39;                  =&gt; $pun_max_retries,
+    &#39;oidc_uri&#39;                         =&gt; $oidc_uri,
+    &#39;oidc_discover_uri&#39;                =&gt; $oidc_discover_uri,
+    &#39;oidc_discover_root&#39;               =&gt; $oidc_discover_root,
+    &#39;register_uri&#39;                     =&gt; $register_uri,
+    &#39;register_root&#39;                    =&gt; $register_root,
+    &#39;oidc_provider_metadata_url&#39;       =&gt; $oidc_provider_metadata_url,
+    &#39;oidc_client_id&#39;                   =&gt; $oidc_client_id,
+    &#39;oidc_client_secret&#39;               =&gt; $oidc_client_secret,
+    &#39;oidc_remote_user_claim&#39;           =&gt; $oidc_remote_user_claim,
+    &#39;oidc_scope&#39;                       =&gt; $oidc_scope,
+    &#39;oidc_session_inactivity_timeout&#39;  =&gt; $oidc_session_inactivity_timeout,
+    &#39;oidc_session_max_duration&#39;        =&gt; $oidc_session_max_duration,
+    &#39;oidc_state_max_number_of_cookies&#39; =&gt; $oidc_state_max_number_of_cookies,
+    &#39;oidc_settings&#39;                    =&gt; $oidc_settings,
+    &#39;dex&#39;                              =&gt; $_dex_config,
   })
   $ood_portal_yaml = to_yaml($ood_portal_config)
   $base_apps = {

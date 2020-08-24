@@ -124,7 +124,17 @@
 31
 32
 33
-34</pre>
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/service.pp', line 3</span>
@@ -160,6 +170,16 @@ class openondemand::service {
     ],
   }
 
+  if $openondemand::auth_type == &#39;dex&#39; {
+    service { &#39;ondemand-dex&#39;:
+      ensure    =&gt; &#39;running&#39;,
+      enable    =&gt; true,
+      subscribe =&gt; [
+        Exec[&#39;ood-portal-generator-generate&#39;],
+        File[&#39;/etc/ood/dex/config.yaml&#39;],
+      ],
+    }
+  }
 }</pre>
       </td>
     </tr>

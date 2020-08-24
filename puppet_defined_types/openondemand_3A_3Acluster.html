@@ -600,6 +600,19 @@
   
     <li>
       
+        <span class='name'>grafana_cluster_override</span>
+      
+      
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
         <span class='name'>batch_connect</span>
       
       
@@ -622,7 +635,6 @@
         <pre class="lines">
 
 
-45
 46
 47
 48
@@ -689,10 +701,12 @@
 109
 110
 111
-112</pre>
+112
+113
+114</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/cluster.pp', line 45</span>
+        <pre class="code"><span class="info file"># File 'manifests/cluster.pp', line 46</span>
 
 define openondemand::cluster (
   String $cluster_title = $name,
@@ -741,6 +755,7 @@ define openondemand::cluster (
     &#39;host&#39; =&gt; String,
     &#39;jobid&#39; =&gt; Optional[String],
   }]] $grafana_labels = undef,
+  Optional[String] $grafana_cluster_override = undef,
   Hash[String, Openondemand::Batch_connect] $batch_connect = {},
 ) {
 

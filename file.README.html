@@ -91,7 +91,9 @@ and configuration.</p>
 <p>The following are the versions of this module and the supported versions of
 Open OnDemand:</p>
 <ul><li>
-<p>Module 0.x supports Open OnDemand 1.x</p>
+<p>Module &gt;= 1.0.0 supports Open OnDemand &gt;= 1.8</p>
+</li><li>
+<p>Module &lt;= 0.12.0 supports Open OnDemand &lt;= 1.7</p>
 </li></ul>
 
 <h2 id="label-Usage">Usage</h2>
@@ -105,8 +107,8 @@ Example configurations will be done in Hiera format.</p>
 <p>Install specific versions of OnDemand from 1.6 repo with OpenID Connect
 support.</p>
 
-<pre class="code ruby"><code class="ruby">openondemand::repo_release: &#39;1.6&#39;
-openondemand::ondemand_package_ensure: &quot;1.6.11-1.el7&quot;
+<pre class="code ruby"><code class="ruby">openondemand::repo_release: &#39;1.8&#39;
+openondemand::ondemand_package_ensure: &quot;1.8.5-1.el7&quot;
 openondemand::mod_auth_openidc_ensure: &quot;2.3.11-1.el7&quot;
 </code></pre>
 
@@ -135,6 +137,37 @@ openondemand::node_uri: &#39;/node&#39;
 openondemand::rnode_uri: &#39;/rnode&#39;
 </code></pre>
 
+<p>Setup OnDemand to use default Dex authentication against LDAP.</p>
+
+<pre class="code ruby"><code class="ruby">openondemand::servername: ondemand.example.org
+openondemand::auth_type: dex
+openondemand::dex_config:
+  connectors:
+    - type: ldap
+      id: ldap
+      name: LDAP
+      config:
+        host: ldap.example.org:636
+        insecureSkipVerify: true
+        bindDN: cn=admin,dc=example,dc=org
+        bindPW: admin
+        userSearch:
+          baseDN: ou=People,dc=example,dc=org
+          filter: &quot;(objectClass=posixAccount)&quot;
+          username: uid
+          idAttr: uid
+          emailAttr: mail
+          nameAttr: gecos
+          preferredUsernameAttr: uid
+        groupSearch:
+          baseDN: ou=Groups,dc=example,dc=org
+          filter: &quot;(objectClass=posixGroup)&quot;
+          userMatchers:
+            - userAttr: DN
+              groupAttr: member
+          nameAttr: cn
+</code></pre>
+
 <p>Setup OnDemand to authenticate with OpenID Connect system, in these
 examples the IdP is Keycloak.</p>
 
@@ -145,12 +178,15 @@ openondemand::auth_configs:
 openondemand::user_map_cmd: /opt/ood/ood_auth_map/bin/ood_auth_map.regex
 openondemand::logout_redirect: &quot;/oidc?logout=https%3A%2F%2F%{lookup(&#39;openondemand::servername&#39;)}&quot;
 openondemand::oidc_uri: &#39;/oidc&#39;
-openondemand::oidc_provider: &#39;idp.osc.edu/auth/realms/osc&#39;
-openondemand::oidc_provider_token_endpoint_auth: &#39;client_secret_basic&#39;
-openondemand::oidc_provider_scope: &#39;openid email&#39;
-openondemand::oidc_provider_client_id: ondemand.osc.edu
-openondemand::oidc_crypto_passphrase: &#39;SOMEHASH&#39;
-openondemand::oidc_provider_client_secret: &#39;SUPERSECRET&#39;
+openondemand::oidc_provider_metadata_url: &#39;https://idp.osc.edu/auth/realms/osc/.well-known/openid-configuration&#39;
+openondemand::oidc_scope: &#39;openid profile email groups&#39;
+openondemand::oidc_client_id: ondemand.osc.edu
+openondemand::oidc_client_secret: &#39;SUPERSECRET&#39;
+openondemand::oidc_settings:
+  OIDCPassIDTokenAs: &#39;serialized&#39;
+  OIDCPassRefreshToken: &#39;On&#39;
+  OIDCPassClaimsAs: environment
+  OIDCStripCookies: &#39;mod_auth_openidc_session mod_auth_openidc_session_chunks mod_auth_openidc_session_0 mod_auth_openidc_session_1&#39;
 </code></pre>
 
 <p>Configure OnDemand via git repo that contains app configs, locales, public,
@@ -167,8 +203,28 @@ openondemand::public_files_repo_paths:
 openondemand::announcements_config_repo_path: &quot;%{lookup(&#39;openondemand::servername&#39;)}/announcements&quot;
 </code></pre>
 
-<p>Define a cluster. The following example is based on a cluster at OSC using
-Torque</p>
+<p>Define a SLURM cluster:</p>
+
+<pre class="code ruby"><code class="ruby">openondemand::clusters:
+  pitzer-exp:
+    cluster_title: &#39;Pitzer Expansion&#39;
+    url: https://www.osc.edu/supercomputing/computing/pitzer
+    acls:
+      - adapter: group
+        groups:
+          - oscall
+        type: whitelist
+    login_host: pitzer-exp.osc.edu
+    job_adapter: slurm
+    job_host: pitzer-slurm01.ten.osc.edu
+    job_cluster: pitzer
+    job_bin: /usr/bin
+    job_lib: /usr/lib64
+    job_conf: /etc/slurm/slurm.conf
+</code></pre>
+
+<p>Define a Torque cluster. The following example is based on a cluster at OSC
+using Torque</p>
 
 <pre class="code ruby"><code class="ruby">openondemand::clusters:
   owens:
@@ -227,6 +283,10 @@ href="http://osc.github.io/puppet-module-openondemand/">osc.github.io/puppet-mod
 <p>CentOS 7 x86_64</p>
 </li><li>
 <p>RedHat 7 x86_64</p>
+</li><li>
+<p>CentOS 8 x86_64</p>
+</li><li>
+<p>RedHat 8 x86_64</p>
 </li></ul>
 </div></div>
 
