@@ -28,7 +28,7 @@ _Private Classes_
 
 * [`Openondemand::Acl`](#openondemandacl): OnDemand cluster ACL
 * [`Openondemand::Batch_connect`](#openondemandbatch_connect): Defines cluster config batch_connect values
-* [`Openondemand::Dex_config`](#openondemanddex_config): nginx_stage.yml namespace_config
+* [`Openondemand::Dex_config`](#openondemanddex_config): ondemand-dex config
 * [`Openondemand::Nginx_stage_namespace_config`](#openondemandnginx_stage_namespace_config): nginx_stage.yml namespace_config
 
 **Tasks**
@@ -1255,7 +1255,7 @@ Alias of `Struct[{
 
 ### Openondemand::Dex_config
 
-nginx_stage.yml namespace_config
+ondemand-dex config
 
 Alias of `Struct[{
   'ssl' => Optional[Boolean],
