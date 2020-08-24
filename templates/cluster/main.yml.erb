@@ -26,7 +26,7 @@ v2:
 <% if @job_adapter -%>
   job:
     adapter: "<%= @job_adapter %>"
-  <%- if @job_cluster %>
+  <%- if @job_cluster -%>
     cluster: "<%= @job_cluster %>"
   <%- end -%>
   <%- if @job_host -%>
@@ -146,6 +146,9 @@ v2:
       labels:
       <%- @grafana_labels.each_pair do |k, v| -%>
         <%= k %>: "<%= v %>"
+      <%- end -%>
+      <%- if @grafana_cluster_override -%>
+      cluster_override: "<%= @grafana_cluster_override %>"
       <%- end -%>
   <%- end -%>
 <% end -%>

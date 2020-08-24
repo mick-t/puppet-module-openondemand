@@ -19,7 +19,9 @@ Manage [Open OnDemand](http://openondemand.org/) installation and configuration.
 
 The following are the versions of this module and the supported versions of Open OnDemand:
 
-* Module 0.x supports Open OnDemand 1.x
+* Module >= 1.0.0 supports Open OnDemand >= 1.8
+* Module <= 0.12.0 supports Open OnDemand <= 1.7
+
 
 ## Usage
 
@@ -32,8 +34,8 @@ include ::openondemand
 Install specific versions of OnDemand from 1.6 repo with OpenID Connect support.
 
 ```yaml
-openondemand::repo_release: '1.6'
-openondemand::ondemand_package_ensure: "1.6.11-1.el7"
+openondemand::repo_release: '1.8'
+openondemand::ondemand_package_ensure: "1.8.5-1.el7"
 openondemand::mod_auth_openidc_ensure: "2.3.11-1.el7"
 ```
 
@@ -64,6 +66,38 @@ openondemand::node_uri: '/node'
 openondemand::rnode_uri: '/rnode'
 ```
 
+Setup OnDemand to use default Dex authentication against LDAP.
+
+```yaml
+openondemand::servername: ondemand.example.org
+openondemand::auth_type: dex
+openondemand::dex_config:
+  connectors:
+    - type: ldap
+      id: ldap
+      name: LDAP
+      config:
+        host: ldap.example.org:636
+        insecureSkipVerify: true
+        bindDN: cn=admin,dc=example,dc=org
+        bindPW: admin
+        userSearch:
+          baseDN: ou=People,dc=example,dc=org
+          filter: "(objectClass=posixAccount)"
+          username: uid
+          idAttr: uid
+          emailAttr: mail
+          nameAttr: gecos
+          preferredUsernameAttr: uid
+        groupSearch:
+          baseDN: ou=Groups,dc=example,dc=org
+          filter: "(objectClass=posixGroup)"
+          userMatchers:
+            - userAttr: DN
+              groupAttr: member
+          nameAttr: cn
+```
+
 Setup OnDemand to authenticate with OpenID Connect system, in these examples the IdP is Keycloak.
 
 ```yaml
@@ -74,12 +108,15 @@ openondemand::auth_configs:
 openondemand::user_map_cmd: /opt/ood/ood_auth_map/bin/ood_auth_map.regex
 openondemand::logout_redirect: "/oidc?logout=https%3A%2F%2F%{lookup('openondemand::servername')}"
 openondemand::oidc_uri: '/oidc'
-openondemand::oidc_provider: 'idp.osc.edu/auth/realms/osc'
-openondemand::oidc_provider_token_endpoint_auth: 'client_secret_basic'
-openondemand::oidc_provider_scope: 'openid email'
-openondemand::oidc_provider_client_id: ondemand.osc.edu
-openondemand::oidc_crypto_passphrase: 'SOMEHASH'
-openondemand::oidc_provider_client_secret: 'SUPERSECRET'
+openondemand::oidc_provider_metadata_url: 'https://idp.osc.edu/auth/realms/osc/.well-known/openid-configuration'
+openondemand::oidc_scope: 'openid profile email groups'
+openondemand::oidc_client_id: ondemand.osc.edu
+openondemand::oidc_client_secret: 'SUPERSECRET'
+openondemand::oidc_settings:
+  OIDCPassIDTokenAs: 'serialized'
+  OIDCPassRefreshToken: 'On'
+  OIDCPassClaimsAs: environment
+  OIDCStripCookies: 'mod_auth_openidc_session mod_auth_openidc_session_chunks mod_auth_openidc_session_0 mod_auth_openidc_session_1'
 ```
 
 Configure OnDemand via git repo that contains app configs, locales, public, and annoucement files
@@ -96,7 +133,28 @@ openondemand::public_files_repo_paths:
 openondemand::announcements_config_repo_path: "%{lookup('openondemand::servername')}/announcements"
 ```
 
-Define a cluster. The following example is based on a cluster at OSC using Torque
+Define a SLURM cluster:
+
+```yaml
+openondemand::clusters:
+  pitzer-exp:
+    cluster_title: 'Pitzer Expansion'
+    url: https://www.osc.edu/supercomputing/computing/pitzer
+    acls:
+      - adapter: group
+        groups:
+          - oscall
+        type: whitelist
+    login_host: pitzer-exp.osc.edu
+    job_adapter: slurm
+    job_host: pitzer-slurm01.ten.osc.edu
+    job_cluster: pitzer
+    job_bin: /usr/bin
+    job_lib: /usr/lib64
+    job_conf: /etc/slurm/slurm.conf
+```
+
+Define a Torque cluster. The following example is based on a cluster at OSC using Torque
 
 ```yaml
 openondemand::clusters:
@@ -157,3 +215,5 @@ This module has been tested on:
 
 * CentOS 7 x86_64
 * RedHat 7 x86_64
+* CentOS 8 x86_64
+* RedHat 8 x86_64

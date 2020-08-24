@@ -12,6 +12,8 @@
 #   Boolean that determines if adding SELinux support
 # @param ondemand_package_ensure
 #   ondemand package ensure
+# @param ondemand_dex_package_ensure
+#   ondemand-dex package ensure
 # @param mod_auth_openidc_ensure
 #   mod_auth_openidc package ensure
 # @param install_apps
@@ -20,12 +22,6 @@
 #   Boolean that determines if apache is declared or included
 # @param apache_scls
 #   SCLs to load when starting Apache service
-# @param cilogon_client_id
-#   CILogon client_id
-# @param cilogon_client_secret
-#   CILogon client_secret
-# @param oidc_crypto_passphrase
-#   OIDC crypto passphrase
 # @param listen_addr_port
 #   ood_portal.yml listen_addr_port
 # @param servername
@@ -94,31 +90,28 @@
 #   ood_portal.yml register_uri
 # @param register_root
 #   ood_portal.yml register_root
-# @param oidc_provider
-#   OIDC provider
-# @param oidc_provider_token_endpoint_auth
-#   OIDC provider token_endpoint_auth
-# @param oidc_provider_scope
-#   OIDC provider scope
-# @param oidc_provider_client_id
-#   OIDC provider client_id
-# @param oidc_provider_client_secret
-#   OIDC provider client_secret
-# @param oidc_session_inactivity_timeout
-#   mod_auth_openidc OIDCSessionInactivityTimeout
-# @param oidc_session_max_duration
-#   mod_auth_openidc OIDCSessionMaxDuration
+# @param oidc_provider_metadata_url
+#   OIDC metadata URL
+# @param oidc_client_id
+#   OIDC client ID
+# @param oidc_client_secret
+#   OIDC client secret
 # @param oidc_remote_user_claim
-#   OIDC provider remote_user claim
-# @param oidc_pass_claims_as
-#   mod_auth_openidc OIDCPassClaimsAs
-# @param oidc_extra_configs
-#   OIDC extra settings for mod_auth_openidc
+#   OIDC REMOTE_USER claim
+# @param oidc_scope
+#   OIDC scopes
+# @param oidc_session_inactivity_timeout
+#   OIDC session inactivity timeout, see OIDCSessionInactivityTimeout
+# @param oidc_session_max_duration
+#   OIDC session max duration, see OIDCSessionMaxDuration
+# @param oidc_state_max_number_of_cookies
+#   OIDC setting that determines how to clean up cookies
+# @param oidc_settings
+#   Hash of OIDC settings passsed directly to Apache config
+# @param dex_config
+#   Dex configuration Hash
 # @param web_directory
 #   Path to main web directory for OnDemand
-# @param basic_auth_users
-#   Hash of resources to pass to httpauth for defining basic auth users
-#   Only used with basic auth
 # @param nginx_log_group
 #   Group to set for /var/log/ondemand-nginx
 # @param nginx_stage_clean_cron_schedule
@@ -183,17 +176,13 @@ class openondemand (
   # packages
   Boolean $selinux = false,
   String $ondemand_package_ensure                 = 'present',
+  String $ondemand_dex_package_ensure             = 'present',
   String $mod_auth_openidc_ensure                 = 'present',
   Hash $install_apps                              = {},
 
   # Apache
   Boolean $declare_apache = true,
   String $apache_scls = 'httpd24 rh-ruby25',
-
-  # cilogon/oidc
-  String $cilogon_client_id      = '',
-  String $cilogon_client_secret  = '',
-  String $oidc_crypto_passphrase  = 'CHANGEME',
 
   # ood_portal.yml
   Variant[Array, String, Undef] $listen_addr_port = undef,
@@ -210,7 +199,7 @@ class openondemand (
   String $user_map_cmd  = '/opt/ood/ood_auth_map/bin/ood_auth_map.regex',
   Optional[String] $user_env = undef,
   Optional[String] $map_fail_uri = undef,
-  Enum['CAS', 'openid-connect', 'shibboleth', 'ldap', 'basic'] $auth_type = 'basic',
+  Enum['CAS', 'openid-connect', 'shibboleth', 'dex'] $auth_type = 'dex',
   Optional[Array] $auth_configs = undef,
   String $root_uri = '/pun/sys/dashboard',
   Optional[Struct[{url => String, id => String}]] $analytics = undef,
@@ -232,20 +221,21 @@ class openondemand (
   Optional[String] $register_root = undef,
 
   # OIDC configs
-  Optional[String] $oidc_provider = undef,
-  Optional[String] $oidc_provider_token_endpoint_auth = undef,
-  String $oidc_provider_scope = 'openid email',
-  String $oidc_provider_client_id = '',
-  String $oidc_provider_client_secret = '',
+  Optional[String] $oidc_provider_metadata_url = undef,
+  Optional[String] $oidc_client_id = undef,
+  Optional[String] $oidc_client_secret = undef,
+  String $oidc_remote_user_claim = 'preferred_username',
+  String $oidc_scope = 'openid profile email',
   Integer $oidc_session_inactivity_timeout = 28800,
   Integer $oidc_session_max_duration = 28800,
-  Optional[String] $oidc_remote_user_claim = undef,
-  String $oidc_pass_claims_as = 'environment',
-  Hash $oidc_extra_configs = {},
+  String $oidc_state_max_number_of_cookies = '10 true',
+  Hash $oidc_settings = {},
+
+  # Dex configs
+  Openondemand::Dex_config $dex_config = {},
 
   # Misc configs
   Stdlib::Absolutepath $web_directory = '/var/www/ood',
-  Hash $basic_auth_users  = {},
   String $nginx_log_group = 'ondemand-nginx',
 
   # nginx_stage configs
@@ -327,15 +317,13 @@ class openondemand (
   $pun_stage_cmd = "sudo ${nginx_stage_cmd}"
 
   case $auth_type {
-    'ldap': {
-      $auth = ['AuthType basic'] + $auth_configs
+    'dex': {
+      $auth = undef
+      $_dex_config = $dex_config
     }
-    'cilogon': {
-      $auth = ['AuthType openid-connect'] + $auth_configs
-    }
-    # Applies to basic, shibboleth, and openid-connect
     default: {
       $auth = ["AuthType ${auth_type}"] + $auth_configs
+      $_dex_config = undef
     }
   }
 
@@ -361,6 +349,11 @@ class openondemand (
     $_announcements_config_source = $announcements_config_source
   }
 
+  if $_announcements_config_source {
+    $announcements_purge = true
+  } else {
+    $announcements_purge = undef
+  }
 
   if $clusters_hiera_merge {
     $_clusters = lookup('openondemand::clusters', Hash, 'deep', {})
@@ -369,39 +362,49 @@ class openondemand (
   }
 
   $ood_portal_config = delete_undef_values({
-    'listen_addr_port'          => $listen_ports,
-    'servername'                => $servername,
-    'port'                      => $port,
-    'ssl'                       => $ssl,
-    'logroot'                   => $logroot,
-    'use_rewrites'              => $use_rewrites,
-    'use_maintenance'           => $use_maintenance,
-    'maintenance_ip_whitelist'  => $maintenance_ip_whitelist,
-    'lua_root'                  => $lua_root,
-    'lua_log_level'             => $lua_log_level,
-    'user_map_cmd'              => $user_map_cmd,
-    'user_env'                  => $user_env,
-    'map_fail_uri'              => $map_fail_uri,
-    'pun_stage_cmd'             => $pun_stage_cmd,
-    'auth'                      => $auth,
-    'root_uri'                  => $root_uri,
-    'analytics'                 => $analytics,
-    'public_uri'                => $public_uri,
-    'public_root'               => $public_root,
-    'logout_uri'                => $logout_uri,
-    'logout_redirect'           => $logout_redirect,
-    'host_regex'                => $host_regex,
-    'node_uri'                  => $node_uri,
-    'rnode_uri'                 => $rnode_uri,
-    'nginx_uri'                 => $nginx_uri,
-    'pun_uri'                   => $pun_uri,
-    'pun_socket_root'           => $pun_socket_root,
-    'pun_max_retries'           => $pun_max_retries,
-    'oidc_uri'                  => $oidc_uri,
-    'oidc_discover_uri'         => $oidc_discover_uri,
-    'oidc_discover_root'        => $oidc_discover_root,
-    'register_uri'              => $register_uri,
-    'register_root'             => $register_root,
+    'listen_addr_port'                 => $listen_ports,
+    'servername'                       => $servername,
+    'port'                             => $port,
+    'ssl'                              => $ssl,
+    'logroot'                          => $logroot,
+    'use_rewrites'                     => $use_rewrites,
+    'use_maintenance'                  => $use_maintenance,
+    'maintenance_ip_whitelist'         => $maintenance_ip_whitelist,
+    'lua_root'                         => $lua_root,
+    'lua_log_level'                    => $lua_log_level,
+    'user_map_cmd'                     => $user_map_cmd,
+    'user_env'                         => $user_env,
+    'map_fail_uri'                     => $map_fail_uri,
+    'pun_stage_cmd'                    => $pun_stage_cmd,
+    'auth'                             => $auth,
+    'root_uri'                         => $root_uri,
+    'analytics'                        => $analytics,
+    'public_uri'                       => $public_uri,
+    'public_root'                      => $public_root,
+    'logout_uri'                       => $logout_uri,
+    'logout_redirect'                  => $logout_redirect,
+    'host_regex'                       => $host_regex,
+    'node_uri'                         => $node_uri,
+    'rnode_uri'                        => $rnode_uri,
+    'nginx_uri'                        => $nginx_uri,
+    'pun_uri'                          => $pun_uri,
+    'pun_socket_root'                  => $pun_socket_root,
+    'pun_max_retries'                  => $pun_max_retries,
+    'oidc_uri'                         => $oidc_uri,
+    'oidc_discover_uri'                => $oidc_discover_uri,
+    'oidc_discover_root'               => $oidc_discover_root,
+    'register_uri'                     => $register_uri,
+    'register_root'                    => $register_root,
+    'oidc_provider_metadata_url'       => $oidc_provider_metadata_url,
+    'oidc_client_id'                   => $oidc_client_id,
+    'oidc_client_secret'               => $oidc_client_secret,
+    'oidc_remote_user_claim'           => $oidc_remote_user_claim,
+    'oidc_scope'                       => $oidc_scope,
+    'oidc_session_inactivity_timeout'  => $oidc_session_inactivity_timeout,
+    'oidc_session_max_duration'        => $oidc_session_max_duration,
+    'oidc_state_max_number_of_cookies' => $oidc_state_max_number_of_cookies,
+    'oidc_settings'                    => $oidc_settings,
+    'dex'                              => $_dex_config,
   })
   $ood_portal_yaml = to_yaml($ood_portal_config)
   $base_apps = {

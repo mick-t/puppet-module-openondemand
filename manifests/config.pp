@@ -138,9 +138,9 @@ class openondemand::config {
     owner   => 'root',
     group   => 'root',
     source  => $openondemand::_announcements_config_source,
-    recurse => true,
-    purge   => true,
-    force   => true,
+    recurse => $openondemand::announcements_purge,
+    purge   => $openondemand::announcements_purge,
+    force   => $openondemand::announcements_purge,
   }
 
 
@@ -167,16 +167,16 @@ class openondemand::config {
   }
 
   file { '/etc/ood/config/ood_portal.yml':
-    ensure  => 'file',
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
-    content => "# File managed by Puppet - do not edit!\n${openondemand::ood_portal_yaml}",
-    notify  => Exec['ood-portal-generator-generate'],
+    ensure    => 'file',
+    owner     => 'root',
+    group     => 'root',
+    mode      => '0600',
+    content   => "# File managed by Puppet - do not edit!\n${openondemand::ood_portal_yaml}",
+    show_diff => false,
+    notify    => Exec['ood-portal-generator-generate'],
   }
-
   exec { 'ood-portal-generator-generate':
-    command     => '/opt/ood/ood-portal-generator/bin/generate -o /etc/ood/config/ood-portal.conf',
+    command     => '/opt/ood/ood-portal-generator/bin/generate -o /etc/ood/config/ood-portal.conf -d /etc/ood/dex/config.yaml',
     refreshonly => true,
     before      => ::Apache::Custom_config['ood-portal'],
   }
@@ -186,6 +186,20 @@ class openondemand::config {
     source         => '/etc/ood/config/ood-portal.conf',
     filename       => 'ood-portal.conf',
     verify_command => $::apache::params::verify_command,
+    show_diff      => false,
+    owner          => 'root',
+    group          => $apache::params::group,
+    file_mode      => '0640',
+  }
+
+  if $openondemand::auth_type == 'dex' {
+    file { '/etc/ood/dex/config.yaml':
+      ensure  => 'file',
+      owner   => 'ondemand-dex',
+      group   => 'ondemand-dex',
+      mode    => '0600',
+      require => Exec['ood-portal-generator-generate']
+    }
   }
 
   file { '/etc/ood/config/nginx_stage.yml':
