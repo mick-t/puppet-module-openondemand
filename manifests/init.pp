@@ -414,14 +414,14 @@ class openondemand (
   }
 
   contain openondemand::repo
-  contain openondemand::install
   contain openondemand::apache
+  contain openondemand::install
   contain openondemand::config
   contain openondemand::service
 
   Class['openondemand::repo']
-  ->Class['openondemand::install']
   ->Class['openondemand::apache']
+  ->Class['openondemand::install']
   ->Class['openondemand::config']
   ->Class['openondemand::service']
 
