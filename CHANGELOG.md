@@ -2,17 +2,21 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
-## [v0.14.0](https://github.com/osc/puppet-module-openondemand/tree/v0.14.0) (2020-08-03)
+## [v1.0.0](https://github.com/osc/puppet-module-openondemand/tree/v1.0.0) (2020-08-24)
 
-[Full Changelog](https://github.com/osc/puppet-module-openondemand/compare/v0.14.0...v0.14.0)
+[Full Changelog](https://github.com/osc/puppet-module-openondemand/compare/v0.14.0...v1.0.0)
 
-### UNCATEGORIZED PRS; GO LABEL THEM
+### Changed
 
-- Make nginx\_clean cron schedule configurable [\#37](https://github.com/OSC/puppet-module-openondemand/pull/37) ([danifr](https://github.com/danifr))
+- BREAKING: READ COMMENTS - Major changes to support OnDemand 1.8 [\#35](https://github.com/OSC/puppet-module-openondemand/pull/35) ([treydock](https://github.com/treydock))
 
 ## [v0.14.0](https://github.com/osc/puppet-module-openondemand/tree/v0.14.0) (2020-08-03)
 
 [Full Changelog](https://github.com/osc/puppet-module-openondemand/compare/v0.13.0...v0.14.0)
+
+### Added
+
+- Make nginx\_clean cron schedule configurable [\#37](https://github.com/OSC/puppet-module-openondemand/pull/37) ([danifr](https://github.com/danifr))
 
 ## [v0.13.0](https://github.com/osc/puppet-module-openondemand/tree/v0.13.0) (2020-07-29)
 

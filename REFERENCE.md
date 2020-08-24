@@ -28,6 +28,7 @@ _Private Classes_
 
 * [`Openondemand::Acl`](#openondemandacl): OnDemand cluster ACL
 * [`Openondemand::Batch_connect`](#openondemandbatch_connect): Defines cluster config batch_connect values
+* [`Openondemand::Dex_config`](#openondemanddex_config): nginx_stage.yml namespace_config
 * [`Openondemand::Nginx_stage_namespace_config`](#openondemandnginx_stage_namespace_config): nginx_stage.yml namespace_config
 
 **Tasks**
@@ -92,6 +93,14 @@ ondemand package ensure
 
 Default value: 'present'
 
+##### `ondemand_dex_package_ensure`
+
+Data type: `String`
+
+ondemand-dex package ensure
+
+Default value: 'present'
+
 ##### `mod_auth_openidc_ensure`
 
 Data type: `String`
@@ -123,30 +132,6 @@ Data type: `String`
 SCLs to load when starting Apache service
 
 Default value: 'httpd24 rh-ruby25'
-
-##### `cilogon_client_id`
-
-Data type: `String`
-
-CILogon client_id
-
-Default value: ''
-
-##### `cilogon_client_secret`
-
-Data type: `String`
-
-CILogon client_secret
-
-Default value: ''
-
-##### `oidc_crypto_passphrase`
-
-Data type: `String`
-
-OIDC crypto passphrase
-
-Default value: 'CHANGEME'
 
 ##### `listen_addr_port`
 
@@ -262,11 +247,11 @@ Default value: `undef`
 
 ##### `auth_type`
 
-Data type: `Enum['CAS', 'openid-connect', 'shibboleth', 'ldap', 'basic']`
+Data type: `Enum['CAS', 'openid-connect', 'shibboleth', 'dex']`
 
 ood_portal.yml auth_type
 
-Default value: 'basic'
+Default value: 'dex'
 
 ##### `auth_configs`
 
@@ -420,51 +405,51 @@ ood_portal.yml register_root
 
 Default value: `undef`
 
-##### `oidc_provider`
+##### `oidc_provider_metadata_url`
 
 Data type: `Optional[String]`
 
-OIDC provider
+OIDC metadata URL
 
 Default value: `undef`
 
-##### `oidc_provider_token_endpoint_auth`
+##### `oidc_client_id`
 
 Data type: `Optional[String]`
 
-OIDC provider token_endpoint_auth
+OIDC client ID
 
 Default value: `undef`
 
-##### `oidc_provider_scope`
+##### `oidc_client_secret`
+
+Data type: `Optional[String]`
+
+OIDC client secret
+
+Default value: `undef`
+
+##### `oidc_remote_user_claim`
 
 Data type: `String`
 
-OIDC provider scope
+OIDC REMOTE_USER claim
 
-Default value: 'openid email'
+Default value: 'preferred_username'
 
-##### `oidc_provider_client_id`
-
-Data type: `String`
-
-OIDC provider client_id
-
-Default value: ''
-
-##### `oidc_provider_client_secret`
+##### `oidc_scope`
 
 Data type: `String`
 
-OIDC provider client_secret
+OIDC scopes
 
-Default value: ''
+Default value: 'openid profile email'
 
 ##### `oidc_session_inactivity_timeout`
 
 Data type: `Integer`
 
-mod_auth_openidc OIDCSessionInactivityTimeout
+OIDC session inactivity timeout, see OIDCSessionInactivityTimeout
 
 Default value: 28800
 
@@ -472,31 +457,31 @@ Default value: 28800
 
 Data type: `Integer`
 
-mod_auth_openidc OIDCSessionMaxDuration
+OIDC session max duration, see OIDCSessionMaxDuration
 
 Default value: 28800
 
-##### `oidc_remote_user_claim`
-
-Data type: `Optional[String]`
-
-OIDC provider remote_user claim
-
-Default value: `undef`
-
-##### `oidc_pass_claims_as`
+##### `oidc_state_max_number_of_cookies`
 
 Data type: `String`
 
-mod_auth_openidc OIDCPassClaimsAs
+OIDC setting that determines how to clean up cookies
 
-Default value: 'environment'
+Default value: '10 true'
 
-##### `oidc_extra_configs`
+##### `oidc_settings`
 
 Data type: `Hash`
 
-OIDC extra settings for mod_auth_openidc
+Hash of OIDC settings passsed directly to Apache config
+
+Default value: {}
+
+##### `dex_config`
+
+Data type: `Openondemand::Dex_config`
+
+Dex configuration Hash
 
 Default value: {}
 
@@ -507,15 +492,6 @@ Data type: `Stdlib::Absolutepath`
 Path to main web directory for OnDemand
 
 Default value: '/var/www/ood'
-
-##### `basic_auth_users`
-
-Data type: `Hash`
-
-Hash of resources to pass to httpauth for defining basic auth users
-Only used with basic auth
-
-Default value: {}
 
 ##### `nginx_log_group`
 
@@ -1168,6 +1144,14 @@ Data type: `Optional[Struct[{
 
 Default value: `undef`
 
+##### `grafana_cluster_override`
+
+Data type: `Optional[String]`
+
+
+
+Default value: `undef`
+
 ##### `batch_connect`
 
 Data type: `Hash[String, Openondemand::Batch_connect]`
@@ -1268,6 +1252,28 @@ Defines cluster config batch_connect values
 Alias of `Struct[{
                                     'script_wrapper' => String,
                                     }]`
+
+### Openondemand::Dex_config
+
+nginx_stage.yml namespace_config
+
+Alias of `Struct[{
+  'ssl' => Optional[Boolean],
+  'http_port' => Optional[Variant[String, Integer]],
+  'https_port' => Optional[Variant[String, Integer]],
+  'tls_cert' => Optional[Stdlib::Absolutepath],
+  'tls_key' => Optional[Stdlib::Absolutepath],
+  'storage_file' => Optional[Stdlib::Absolutepath],
+  'grpc' => Optional[Hash],
+  'expiry' => Optional[Hash],
+  'client_id' => Optional[String],
+  'client_redirect_uris' => Optional[Array],
+  'client_name' => Optional[String],
+  'client_secret' => Optional[String],
+  'static_clients' => Optional[Array[Hash]],
+  'connectors' => Optional[Array[Hash]],
+  'frontend' => Optional[Hash],
+  }]`
 
 ### Openondemand::Nginx_stage_namespace_config
 
