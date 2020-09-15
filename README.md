@@ -174,6 +174,32 @@ openondemand::clusters:
         script_wrapper: 'module restore\nmodule load ondemand-vnc\n%s'
 ```
 
+Define a Linux Host Adapter cluster:
+
+```yaml
+openondemand::clusters:
+  pitzer-login:
+    cluster_title: 'Pitzer Login'
+    url: https://www.osc.edu/supercomputing/computing/pitzer
+    hidden: true
+    job_adapter: linux_host
+    job_submit_host: pitzer.osc.edu
+    job_ssh_hosts:
+      - pitzer-login01.hpc.osc.edu
+      - pitzer-login02.hpc.osc.edu
+      - pitzer-login03.hpc.osc.edu
+    job_site_timeout: 7200
+    job_debug: true
+    job_singularity_bin: /usr/bin/singularity
+    job_singularity_bindpath: /etc,/media,/mnt,/run,/srv,/usr,/var,/users,/opt
+    job_singularity_image: /path/to/custom/image.sif
+    job_strict_host_checking: false
+    job_tmux_bin: /usr/bin/tmux
+    batch_connect:
+      vnc:
+        script_wrapper: 'module restore\nmodule load ondemand-vnc\n%s'
+```
+
 Install additional apps of specific versions as well as hide some apps
 
 ```yaml

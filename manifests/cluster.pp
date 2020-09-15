@@ -21,6 +21,15 @@
 # @param libdrmaa_path
 # @param job_version
 # @param job_bin_overrides
+# @param job_submit_host
+# @param job_ssh_hosts
+# @param job_site_timeout
+# @param job_debug
+# @param job_singularity_bin
+# @param job_singularity_bindpath
+# @param job_singularity_image
+# @param job_strict_host_checking
+# @param job_tmux_bin
 # @param scheduler_type
 # @param scheduler_host
 # @param scheduler_bin
@@ -49,7 +58,7 @@ define openondemand::cluster (
   Boolean $hidden = false,
   Array[Openondemand::Acl] $acls = [],
   Optional[Stdlib::Host] $login_host = undef,
-  Optional[Enum['torque','slurm','lsf','pbspro','sge']] $job_adapter = undef,
+  Optional[Enum['torque','slurm','lsf','pbspro','sge','linux_host']] $job_adapter = undef,
   Optional[String] $job_cluster = undef,
   Optional[Stdlib::Host] $job_host = undef,
   Optional[Stdlib::Absolutepath] $job_lib = undef,
@@ -64,6 +73,15 @@ define openondemand::cluster (
   Optional[Stdlib::Absolutepath] $libdrmaa_path = undef,
   Optional[String] $job_version = undef,
   Hash[String, Stdlib::Absolutepath] $job_bin_overrides = {},
+  Optional[Stdlib::Host] $job_submit_host = undef,
+  Array[Stdlib::Host] $job_ssh_hosts = [],
+  Optional[Integer] $job_site_timeout = undef,
+  Optional[Boolean] $job_debug = undef,
+  Optional[Stdlib::Absolutepath] $job_singularity_bin = undef,
+  Optional[Variant[Array[Stdlib::Absolutepath], String]] $job_singularity_bindpath = undef,
+  Optional[String] $job_singularity_image = undef,
+  Optional[Boolean] $job_strict_host_checking = undef,
+  Optional[Stdlib::Absolutepath] $job_tmux_bin = undef,
   Optional[Enum['moab']] $scheduler_type = undef,
   Optional[Stdlib::Host] $scheduler_host = undef,
   Optional[Stdlib::Absolutepath] $scheduler_bin = undef,
