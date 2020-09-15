@@ -154,7 +154,7 @@
         <span class='name'>job_adapter</span>
       
       
-        <span class='type'>(<tt>Optional[Enum['torque','slurm','lsf','pbspro','sge']]</tt>)</span>
+        <span class='type'>(<tt>Optional[Enum['torque','slurm','lsf','pbspro','sge','linux_host']]</tt>)</span>
       
       
         <em class="default">(defaults to: <tt>undef</tt>)</em>
@@ -340,6 +340,123 @@
       
       
         <em class="default">(defaults to: <tt>{}</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>job_submit_host</span>
+      
+      
+        <span class='type'>(<tt>Optional[Stdlib::Host]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>job_ssh_hosts</span>
+      
+      
+        <span class='type'>(<tt>Array[Stdlib::Host]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>[]</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>job_site_timeout</span>
+      
+      
+        <span class='type'>(<tt>Optional[Integer]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>job_debug</span>
+      
+      
+        <span class='type'>(<tt>Optional[Boolean]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>job_singularity_bin</span>
+      
+      
+        <span class='type'>(<tt>Optional[Stdlib::Absolutepath]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>job_singularity_bindpath</span>
+      
+      
+        <span class='type'>(<tt>Optional[Variant[Array[Stdlib::Absolutepath], String]]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>job_singularity_image</span>
+      
+      
+        <span class='type'>(<tt>Optional[String]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>job_strict_host_checking</span>
+      
+      
+        <span class='type'>(<tt>Optional[Boolean]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>job_tmux_bin</span>
+      
+      
+        <span class='type'>(<tt>Optional[Stdlib::Absolutepath]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
       
       
     </li>
@@ -635,15 +752,6 @@
         <pre class="lines">
 
 
-46
-47
-48
-49
-50
-51
-52
-53
-54
 55
 56
 57
@@ -703,10 +811,28 @@
 111
 112
 113
-114</pre>
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/cluster.pp', line 46</span>
+        <pre class="code"><span class="info file"># File 'manifests/cluster.pp', line 55</span>
 
 define openondemand::cluster (
   String $cluster_title = $name,
@@ -714,7 +840,7 @@ define openondemand::cluster (
   Boolean $hidden = false,
   Array[Openondemand::Acl] $acls = [],
   Optional[Stdlib::Host] $login_host = undef,
-  Optional[Enum[&#39;torque&#39;,&#39;slurm&#39;,&#39;lsf&#39;,&#39;pbspro&#39;,&#39;sge&#39;]] $job_adapter = undef,
+  Optional[Enum[&#39;torque&#39;,&#39;slurm&#39;,&#39;lsf&#39;,&#39;pbspro&#39;,&#39;sge&#39;,&#39;linux_host&#39;]] $job_adapter = undef,
   Optional[String] $job_cluster = undef,
   Optional[Stdlib::Host] $job_host = undef,
   Optional[Stdlib::Absolutepath] $job_lib = undef,
@@ -729,6 +855,15 @@ define openondemand::cluster (
   Optional[Stdlib::Absolutepath] $libdrmaa_path = undef,
   Optional[String] $job_version = undef,
   Hash[String, Stdlib::Absolutepath] $job_bin_overrides = {},
+  Optional[Stdlib::Host] $job_submit_host = undef,
+  Array[Stdlib::Host] $job_ssh_hosts = [],
+  Optional[Integer] $job_site_timeout = undef,
+  Optional[Boolean] $job_debug = undef,
+  Optional[Stdlib::Absolutepath] $job_singularity_bin = undef,
+  Optional[Variant[Array[Stdlib::Absolutepath], String]] $job_singularity_bindpath = undef,
+  Optional[String] $job_singularity_image = undef,
+  Optional[Boolean] $job_strict_host_checking = undef,
+  Optional[Stdlib::Absolutepath] $job_tmux_bin = undef,
   Optional[Enum[&#39;moab&#39;]] $scheduler_type = undef,
   Optional[Stdlib::Host] $scheduler_host = undef,
   Optional[Stdlib::Absolutepath] $scheduler_bin = undef,
