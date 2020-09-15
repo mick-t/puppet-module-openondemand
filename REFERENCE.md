@@ -867,7 +867,7 @@ Default value: `undef`
 
 ##### `job_adapter`
 
-Data type: `Optional[Enum['torque','slurm','lsf','pbspro','sge']]`
+Data type: `Optional[Enum['torque','slurm','lsf','pbspro','sge','linux_host']]`
 
 
 
@@ -984,6 +984,78 @@ Data type: `Hash[String, Stdlib::Absolutepath]`
 
 
 Default value: {}
+
+##### `job_submit_host`
+
+Data type: `Optional[Stdlib::Host]`
+
+
+
+Default value: `undef`
+
+##### `job_ssh_hosts`
+
+Data type: `Array[Stdlib::Host]`
+
+
+
+Default value: []
+
+##### `job_site_timeout`
+
+Data type: `Optional[Integer]`
+
+
+
+Default value: `undef`
+
+##### `job_debug`
+
+Data type: `Optional[Boolean]`
+
+
+
+Default value: `undef`
+
+##### `job_singularity_bin`
+
+Data type: `Optional[Stdlib::Absolutepath]`
+
+
+
+Default value: `undef`
+
+##### `job_singularity_bindpath`
+
+Data type: `Optional[Variant[Array[Stdlib::Absolutepath], String]]`
+
+
+
+Default value: `undef`
+
+##### `job_singularity_image`
+
+Data type: `Optional[String]`
+
+
+
+Default value: `undef`
+
+##### `job_strict_host_checking`
+
+Data type: `Optional[Boolean]`
+
+
+
+Default value: `undef`
+
+##### `job_tmux_bin`
+
+Data type: `Optional[Stdlib::Absolutepath]`
+
+
+
+Default value: `undef`
 
 ##### `scheduler_type`
 
