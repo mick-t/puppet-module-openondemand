@@ -72,6 +72,32 @@ describe 'openondemand::cluster' do
 
         it { is_expected.to compile.with_all_deps }
 
+        context 'with slurm' do
+          let :params do
+            {
+              job_adapter: 'slurm',
+              job_host: 'pitzer-slurm01.ten.osc.edu',
+              job_cluster: 'pitzer',
+              job_bin: '/usr/bin',
+              job_lib: '/usr/lib64',
+              job_conf: '/etc/slurm/slurm.conf',
+              grafana_host: 'https://grafana.domain',
+              grafana_dashboard_name: 'test',
+              grafana_dashboard_uid: 'foo',
+              grafana_dashboard_panels: { 'cpu' => 1, 'memory' => 2 },
+              grafana_labels: { 'cluster' => 'cluster', 'host' => 'host' },
+            }
+          end
+
+          it { is_expected.to compile.with_all_deps }
+
+          it do
+            content = catalogue.resource('file', '/etc/ood/config/clusters.d/test.yml').send(:parameters)[:content]
+            data = YAML.safe_load(content)
+            expect(data['v2']['custom']['grafana']['host']).to eq('https://grafana.domain')
+          end
+        end
+
         context 'with partial params' do
           let :params do
             default_params.merge!(
