@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.1.1](https://github.com/osc/puppet-module-openondemand/tree/v1.1.1) (2020-09-17)
+
+[Full Changelog](https://github.com/osc/puppet-module-openondemand/compare/v1.1.0...v1.1.1)
+
+### Fixed
+
+- Ensure grafana configs are shown when using SLURM [\#39](https://github.com/OSC/puppet-module-openondemand/pull/39) ([treydock](https://github.com/treydock))
+
 ## [v1.1.0](https://github.com/osc/puppet-module-openondemand/tree/v1.1.0) (2020-09-15)
 
 [Full Changelog](https://github.com/osc/puppet-module-openondemand/compare/v1.0.0...v1.1.0)
