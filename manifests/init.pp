@@ -6,6 +6,8 @@
 #   The baseurl prefix for OnDemand repo
 # @param repo_gpgkey
 #   The URL for OnDemand repo GPG key
+# @param repo_priority
+#   The priority of the OnDemand repo
 # @param manage_scl
 #   Boolean that determines if managing SCL
 # @param selinux
@@ -171,6 +173,7 @@ class openondemand (
     $repo_baseurl_prefix = 'https://yum.osc.edu/ondemand',
   Variant[Stdlib::HTTPSUrl, Stdlib::HTTPUrl, Stdlib::Absolutepath]
     $repo_gpgkey = 'https://yum.osc.edu/ondemand/RPM-GPG-KEY-ondemand',
+  Integer[1,99] $repo_priority = 99,
   Boolean $manage_scl = true,
 
   # packages

@@ -9,7 +9,8 @@ class openondemand::repo {
     enabled         => '1',
     gpgcheck        => '1',
     gpgkey          => $openondemand::repo_gpgkey,
-    metadata_expire => '1'
+    metadata_expire => '1',
+    priority        => $openondemand::repo_priority,
   }
 
   if versioncmp($openondemand::osmajor, '7') <= 0 and $openondemand::manage_scl {

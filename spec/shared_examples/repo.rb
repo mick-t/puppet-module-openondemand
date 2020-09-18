@@ -5,7 +5,8 @@ shared_examples 'openondemand::repo' do |facts|
                                                              enabled: '1',
                                                              gpgcheck: '1',
                                                              gpgkey: 'https://yum.osc.edu/ondemand/RPM-GPG-KEY-ondemand',
-                                                             metadata_expire: '1')
+                                                             metadata_expire: '1',
+                                                             priority: '99')
   end
 
   if facts[:os]['release']['major'].to_i == 7
