@@ -129,7 +129,9 @@
 36
 37
 38
-39</pre>
+39
+40
+41</pre>
       </td>
       <td>
         <pre class="code"><span class="info file"># File 'manifests/repo.pp', line 3</span>
@@ -142,8 +144,10 @@ class openondemand::repo {
     baseurl         =&gt; $openondemand::repo_baseurl,
     enabled         =&gt; &#39;1&#39;,
     gpgcheck        =&gt; &#39;1&#39;,
+    repo_gpgcheck   =&gt; &#39;1&#39;,
     gpgkey          =&gt; $openondemand::repo_gpgkey,
-    metadata_expire =&gt; &#39;1&#39;
+    metadata_expire =&gt; &#39;1&#39;,
+    priority        =&gt; $openondemand::repo_priority,
   }
 
   if versioncmp($openondemand::osmajor, &#39;7&#39;) &lt;= 0 and $openondemand::manage_scl {

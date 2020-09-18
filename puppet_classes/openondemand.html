@@ -142,6 +142,24 @@
   
     <li>
       
+        <span class='name'>repo_priority</span>
+      
+      
+        <span class='type'>(<tt>Integer[1,99]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>99</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>The priority of the OnDemand repo</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
         <span class='name'>manage_scl</span>
       
       
@@ -1559,8 +1577,6 @@ defined</p>
         <pre class="lines">
 
 
-167
-168
 169
 170
 171
@@ -1855,10 +1871,13 @@ defined</p>
 460
 461
 462
-463</pre>
+463
+464
+465
+466</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 167</span>
+        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 169</span>
 
 class openondemand (
   # repos
@@ -1867,6 +1886,7 @@ class openondemand (
     $repo_baseurl_prefix = &#39;https://yum.osc.edu/ondemand&#39;,
   Variant[Stdlib::HTTPSUrl, Stdlib::HTTPUrl, Stdlib::Absolutepath]
     $repo_gpgkey = &#39;https://yum.osc.edu/ondemand/RPM-GPG-KEY-ondemand&#39;,
+  Integer[1,99] $repo_priority = 99,
   Boolean $manage_scl = true,
 
   # packages
