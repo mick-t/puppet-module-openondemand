@@ -4,8 +4,10 @@ shared_examples 'openondemand::repo' do |facts|
                                                              baseurl: "https://yum.osc.edu/ondemand/latest/web/el#{facts[:os]['release']['major']}/$basearch",
                                                              enabled: '1',
                                                              gpgcheck: '1',
+                                                             repo_gpgcheck: '1',
                                                              gpgkey: 'https://yum.osc.edu/ondemand/RPM-GPG-KEY-ondemand',
-                                                             metadata_expire: '1')
+                                                             metadata_expire: '1',
+                                                             priority: '99')
   end
 
   if facts[:os]['release']['major'].to_i == 7
