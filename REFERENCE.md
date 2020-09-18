@@ -69,6 +69,14 @@ The URL for OnDemand repo GPG key
 
 Default value: 'https://yum.osc.edu/ondemand/RPM-GPG-KEY-ondemand'
 
+##### `repo_priority`
+
+Data type: `Integer[1,99]`
+
+The priority of the OnDemand repo
+
+Default value: 99
+
 ##### `manage_scl`
 
 Data type: `Boolean`
