@@ -106,7 +106,7 @@ v2:
     <%- end -%>
   <%- end -%>
 <% end -%>
-<% if @job_adapter == "torque" || @scheduler_type || @ganglia_host || @grafana_host -%>
+<% if @job_adapter == "torque" || @scheduler_type || @ganglia_host || @grafana_host || @xdmod_resource_id -%>
   custom:
   <%- if @job_adapter == "torque" -%>
     pbs:
@@ -184,6 +184,10 @@ v2:
       <%- if @grafana_cluster_override -%>
       cluster_override: "<%= @grafana_cluster_override %>"
       <%- end -%>
+  <%- end -%>
+  <%- if @xdmod_resource_id -%>
+    xdmod:
+      resource_id: <%= @xdmod_resource_id %>
   <%- end -%>
 <% end -%>
 <% if ! @batch_connect.empty? -%>
