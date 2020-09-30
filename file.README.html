@@ -268,6 +268,16 @@ using Torque</p>
         script_wrapper: &#39;module restore\nmodule load ondemand-vnc\n%s&#39;
 </code></pre>
 
+<p>Add XDMoD support</p>
+
+<p>Ensure the cluster definition has <code>xdmod_resource_id</code> set to
+<code>resource_id</code> of the cluster in XDMoD. Also must do something
+like the following to set the appropriate environment variable:</p>
+
+<pre class="code ruby"><code class="ruby">openondemand::nginx_stage_pun_custom_env:
+  OOD_XDMOD_HOST: http://xdmod.osc.edu
+</code></pre>
+
 <p>Install additional apps of specific versions as well as hide some apps</p>
 
 <pre class="code ruby"><code class="ruby">openondemand::install_apps:

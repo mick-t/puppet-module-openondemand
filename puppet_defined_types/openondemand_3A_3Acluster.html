@@ -730,6 +730,19 @@
   
     <li>
       
+        <span class='name'>xdmod_resource_id</span>
+      
+      
+        <span class='type'>(<tt>Optional[Integer]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+    </li>
+  
+    <li>
+      
         <span class='name'>batch_connect</span>
       
       
@@ -752,7 +765,6 @@
         <pre class="lines">
 
 
-55
 56
 57
 58
@@ -829,10 +841,12 @@
 129
 130
 131
-132</pre>
+132
+133
+134</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/cluster.pp', line 55</span>
+        <pre class="code"><span class="info file"># File 'manifests/cluster.pp', line 56</span>
 
 define openondemand::cluster (
   String $cluster_title = $name,
@@ -891,6 +905,7 @@ define openondemand::cluster (
     &#39;jobid&#39; =&gt; Optional[String],
   }]] $grafana_labels = undef,
   Optional[String] $grafana_cluster_override = undef,
+  Optional[Integer] $xdmod_resource_id = undef,
   Hash[String, Openondemand::Batch_connect] $batch_connect = {},
 ) {
 
