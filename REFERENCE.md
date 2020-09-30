@@ -1232,6 +1232,14 @@ Data type: `Optional[String]`
 
 Default value: `undef`
 
+##### `xdmod_resource_id`
+
+Data type: `Optional[Integer]`
+
+
+
+Default value: `undef`
+
 ##### `batch_connect`
 
 Data type: `Hash[String, Openondemand::Batch_connect]`
