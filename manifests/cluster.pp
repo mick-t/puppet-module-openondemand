@@ -50,6 +50,7 @@
 # @param grafana_dashboard_panels
 # @param grafana_labels
 # @param grafana_cluster_override
+# @param xdmod_resource_id
 # @param batch_connect
 #
 define openondemand::cluster (
@@ -109,6 +110,7 @@ define openondemand::cluster (
     'jobid' => Optional[String],
   }]] $grafana_labels = undef,
   Optional[String] $grafana_cluster_override = undef,
+  Optional[Integer] $xdmod_resource_id = undef,
   Hash[String, Openondemand::Batch_connect] $batch_connect = {},
 ) {
 

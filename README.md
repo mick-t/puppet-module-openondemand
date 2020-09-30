@@ -200,6 +200,15 @@ openondemand::clusters:
         script_wrapper: 'module restore\nmodule load ondemand-vnc\n%s'
 ```
 
+Add XDMoD support
+
+Ensure the cluster definition has `xdmod_resource_id` set to `resource_id` of the cluster in XDMoD.  Also must do something like the following to set the appropriate environment variable:
+
+```yaml
+openondemand::nginx_stage_pun_custom_env:
+  OOD_XDMOD_HOST: http://xdmod.osc.edu
+```
+
 Install additional apps of specific versions as well as hide some apps
 
 ```yaml
