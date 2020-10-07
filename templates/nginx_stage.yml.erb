@@ -205,7 +205,7 @@ app_request_regex:
 # Minimum user id required to generate per-user NGINX server as the requested
 # user
 #
-#min_uid: 1000
+min_uid: <%= scope['openondemand::nginx_stage_min_uid'] -%>
 
 # Restrict starting up per-user NGINX process as user with this shell.
 # NB: This only affects the `pun` command, you are still able to start or stop
