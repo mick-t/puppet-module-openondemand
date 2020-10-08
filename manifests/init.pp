@@ -131,6 +131,8 @@
 #   nginx_stage.yml scl_env
 # @param nginx_stage_app_request_regex
 #   nginx_stage.yml app_request_regex
+# @param nginx_stage_min_uid
+#   nginx_stage.yml min_uid
 # @param clusters
 #   Hash of resources to apss to openondemand::cluster
 # @param clusters_hiera_merge
@@ -159,7 +161,7 @@
 #   Source for apps config, not used if `apps_config_repo` is defined
 # @param locales_config_source
 #   Source for locales config, not used if `apps_config_repo` is defined
-# @param announcements_config_source 
+# @param announcements_config_source
 #   Source for aouncements config, not used if `apps_config_repo` is defined
 # @param public_files_repo_paths
 #   Path to public files in apps config Git repo
@@ -249,6 +251,7 @@ class openondemand (
   Openondemand::Nginx_stage_namespace_config $nginx_stage_app_root  = {},
   String $nginx_stage_scl_env = 'ondemand',
   Optional[Openondemand::Nginx_stage_namespace_config] $nginx_stage_app_request_regex = undef,
+  Integer $nginx_stage_min_uid = 1000,
 
   # clusters
   Hash $clusters = {},
