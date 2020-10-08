@@ -566,6 +566,14 @@ nginx_stage.yml app_request_regex
 
 Default value: `undef`
 
+##### `nginx_stage_min_uid`
+
+Data type: `Integer`
+
+nginx_stage.yml min_uid
+
+Default value: 1000
+
 ##### `clusters`
 
 Data type: `Hash`
