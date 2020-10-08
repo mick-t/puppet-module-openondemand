@@ -1259,6 +1259,24 @@
   
     <li>
       
+        <span class='name'>nginx_stage_min_uid</span>
+      
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>1000</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>nginx_stage.yml min_uid</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
         <span class='name'>clusters</span>
       
       
@@ -1577,8 +1595,6 @@ defined</p>
         <pre class="lines">
 
 
-169
-170
 171
 172
 173
@@ -1874,10 +1890,13 @@ defined</p>
 463
 464
 465
-466</pre>
+466
+467
+468
+469</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 169</span>
+        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 171</span>
 
 class openondemand (
   # repos
@@ -1962,6 +1981,7 @@ class openondemand (
   Openondemand::Nginx_stage_namespace_config $nginx_stage_app_root  = {},
   String $nginx_stage_scl_env = &#39;ondemand&#39;,
   Optional[Openondemand::Nginx_stage_namespace_config] $nginx_stage_app_request_regex = undef,
+  Integer $nginx_stage_min_uid = 1000,
 
   # clusters
   Hash $clusters = {},
