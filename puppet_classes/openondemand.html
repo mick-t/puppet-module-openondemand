@@ -466,6 +466,42 @@
   
     <li>
       
+        <span class='name'>security_csp_frame_ancestors</span>
+      
+      
+        <span class='type'>(<tt>Optional[Variant[String, Boolean]]</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>undef</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>ood_portal.yml security_csp_frame_ancestors</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
+        <span class='name'>security_strict_transport</span>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+        <em class="default">(defaults to: <tt>true</tt>)</em>
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>ood_portal.yml security_strict_transport</p>
+</div>
+      
+    </li>
+  
+    <li>
+      
         <span class='name'>lua_root</span>
       
       
@@ -1595,10 +1631,6 @@ defined</p>
         <pre class="lines">
 
 
-171
-172
-173
-174
 175
 176
 177
@@ -1893,10 +1925,18 @@ defined</p>
 466
 467
 468
-469</pre>
+469
+470
+471
+472
+473
+474
+475
+476
+477</pre>
       </td>
       <td>
-        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 171</span>
+        <pre class="code"><span class="info file"># File 'manifests/init.pp', line 175</span>
 
 class openondemand (
   # repos
@@ -1929,6 +1969,8 @@ class openondemand (
   Array $maintenance_ip_whitelist = [],
   Optional[String] $maintenance_source = undef,
   Optional[String] $maintenance_content = undef,
+  Optional[Variant[String, Boolean]] $security_csp_frame_ancestors = undef,
+  Boolean $security_strict_transport = true,
   String $lua_root = &#39;/opt/ood/mod_ood_proxy/lib&#39;,
   Optional[String] $lua_log_level = undef,
   String $user_map_cmd  = &#39;/opt/ood/ood_auth_map/bin/ood_auth_map.regex&#39;,
@@ -2106,6 +2148,8 @@ class openondemand (
     &#39;use_rewrites&#39;                     =&gt; $use_rewrites,
     &#39;use_maintenance&#39;                  =&gt; $use_maintenance,
     &#39;maintenance_ip_whitelist&#39;         =&gt; $maintenance_ip_whitelist,
+    &#39;security_csp_frame_ancestors&#39;     =&gt; $security_csp_frame_ancestors,
+    &#39;security_strict_transport&#39;        =&gt; $security_strict_transport,
     &#39;lua_root&#39;                         =&gt; $lua_root,
     &#39;lua_log_level&#39;                    =&gt; $lua_log_level,
     &#39;user_map_cmd&#39;                     =&gt; $user_map_cmd,
