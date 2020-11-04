@@ -42,6 +42,10 @@
 #   Source for maintenance index.html
 # @param maintenance_content
 #   Content for maintenance index.html
+# @param security_csp_frame_ancestors
+#   ood_portal.yml security_csp_frame_ancestors
+# @param security_strict_transport
+#   ood_portal.yml security_strict_transport
 # @param lua_root
 #   ood_portal.yml lua_root
 # @param lua_log_level
@@ -199,6 +203,8 @@ class openondemand (
   Array $maintenance_ip_whitelist = [],
   Optional[String] $maintenance_source = undef,
   Optional[String] $maintenance_content = undef,
+  Optional[Variant[String, Boolean]] $security_csp_frame_ancestors = undef,
+  Boolean $security_strict_transport = true,
   String $lua_root = '/opt/ood/mod_ood_proxy/lib',
   Optional[String] $lua_log_level = undef,
   String $user_map_cmd  = '/opt/ood/ood_auth_map/bin/ood_auth_map.regex',
@@ -376,6 +382,8 @@ class openondemand (
     'use_rewrites'                     => $use_rewrites,
     'use_maintenance'                  => $use_maintenance,
     'maintenance_ip_whitelist'         => $maintenance_ip_whitelist,
+    'security_csp_frame_ancestors'     => $security_csp_frame_ancestors,
+    'security_strict_transport'        => $security_strict_transport,
     'lua_root'                         => $lua_root,
     'lua_log_level'                    => $lua_log_level,
     'user_map_cmd'                     => $user_map_cmd,
