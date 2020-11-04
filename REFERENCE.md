@@ -213,6 +213,22 @@ Content for maintenance index.html
 
 Default value: `undef`
 
+##### `security_csp_frame_ancestors`
+
+Data type: `Optional[Variant[String, Boolean]]`
+
+ood_portal.yml security_csp_frame_ancestors
+
+Default value: `undef`
+
+##### `security_strict_transport`
+
+Data type: `Boolean`
+
+ood_portal.yml security_strict_transport
+
+Default value: `true`
+
 ##### `lua_root`
 
 Data type: `String`

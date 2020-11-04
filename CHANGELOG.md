@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v1.5.0](https://github.com/osc/puppet-module-openondemand/tree/v1.5.0) (2020-11-04)
+
+[Full Changelog](https://github.com/osc/puppet-module-openondemand/compare/v1.4.0...v1.5.0)
+
+### Added
+
+- Add parameters around ood-portal-generator security settings [\#43](https://github.com/OSC/puppet-module-openondemand/pull/43) ([treydock](https://github.com/treydock))
+
 ## [v1.4.0](https://github.com/osc/puppet-module-openondemand/tree/v1.4.0) (2020-10-08)
 
 [Full Changelog](https://github.com/osc/puppet-module-openondemand/compare/v1.3.0...v1.4.0)
