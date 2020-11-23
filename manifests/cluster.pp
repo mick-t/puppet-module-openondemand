@@ -30,6 +30,12 @@
 # @param job_singularity_image
 # @param job_strict_host_checking
 # @param job_tmux_bin
+# @param job_config_file
+# @param job_username_prefix
+# @param job_all_namespaces
+# @param job_server
+# @param job_mounts
+# @param job_auth
 # @param scheduler_type
 # @param scheduler_host
 # @param scheduler_bin
@@ -59,7 +65,7 @@ define openondemand::cluster (
   Boolean $hidden = false,
   Array[Openondemand::Acl] $acls = [],
   Optional[Stdlib::Host] $login_host = undef,
-  Optional[Enum['torque','slurm','lsf','pbspro','sge','linux_host']] $job_adapter = undef,
+  Optional[Enum['torque','slurm','lsf','pbspro','sge','linux_host','kubernetes']] $job_adapter = undef,
   Optional[String] $job_cluster = undef,
   Optional[Stdlib::Host] $job_host = undef,
   Optional[Stdlib::Absolutepath] $job_lib = undef,
@@ -83,6 +89,14 @@ define openondemand::cluster (
   Optional[String] $job_singularity_image = undef,
   Optional[Boolean] $job_strict_host_checking = undef,
   Optional[Stdlib::Absolutepath] $job_tmux_bin = undef,
+  # Kubernetes
+  Optional[String[1]] $job_config_file = undef,
+  Optional[String] $job_username_prefix = undef,
+  Boolean $job_all_namespaces = false,
+  Optional[Openondemand::K8_server] $job_server = undef,
+  Array[Openondemand::K8_mount] $job_mounts = [],
+  Optional[Openondemand::K8_auth] $job_auth = undef,
+  # END Kubernetes
   Optional[Enum['moab']] $scheduler_type = undef,
   Optional[Stdlib::Host] $scheduler_host = undef,
   Optional[Stdlib::Absolutepath] $scheduler_bin = undef,
@@ -117,6 +131,12 @@ define openondemand::cluster (
   if $grafana_host {
     if $grafana_dashboard_name == undef or $grafana_dashboard_uid == undef or $grafana_dashboard_panels == undef or $grafana_labels == undef {
       fail('Must define grafana_dashboard_name, grafana_dashboard_uid, grafana_dashboard_panels and grafana_labels')
+    }
+  }
+
+  if $job_adapter == 'kubernetes' {
+    if !$job_server {
+      fail('Must define job_server when job_adapter is kubernetes')
     }
   }
 
