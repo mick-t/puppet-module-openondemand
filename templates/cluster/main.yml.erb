@@ -109,6 +109,9 @@ v2:
   <%- if @job_username_prefix -%>
     username_prefix: "<%= @job_username_prefix %>"
   <%- end -%>
+  <%- if @job_namespace_prefix -%>
+    namespace_prefix: "<%= @job_namespace_prefix %>"
+  <%- end -%>
     all_namespaces: <%= @job_all_namespaces %>
   <%- if @job_server -%>
     server:

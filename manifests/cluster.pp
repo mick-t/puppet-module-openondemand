@@ -32,6 +32,7 @@
 # @param job_tmux_bin
 # @param job_config_file
 # @param job_username_prefix
+# @param job_namespace_prefix
 # @param job_all_namespaces
 # @param job_server
 # @param job_mounts
@@ -92,6 +93,7 @@ define openondemand::cluster (
   # Kubernetes
   Optional[String[1]] $job_config_file = undef,
   Optional[String] $job_username_prefix = undef,
+  Optional[String] $job_namespace_prefix = undef,
   Boolean $job_all_namespaces = false,
   Optional[Openondemand::K8_server] $job_server = undef,
   Array[Openondemand::K8_mount] $job_mounts = [],
