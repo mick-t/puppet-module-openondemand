@@ -1,7 +1,7 @@
 # puppet-module-openondemand
 
 [![Puppet Forge](http://img.shields.io/puppetforge/v/osc/openondemand.svg)](https://forge.puppetlabs.com/osc/openondemand)
-[![Build Status](https://travis-ci.org/osc/puppet-module-openondemand.png)](https://travis-ci.org/osc/puppet-module-openondemand)
+[![CI Status](https://github.com/osc/puppet-module-openondemand/workflows/CI/badge.svg?branch=master)](https://github.com/osc/puppet-module-openondemand/actions?query=workflow%3ACI)
 
 #### Table of Contents
 
