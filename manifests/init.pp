@@ -50,6 +50,8 @@
 #   ood_portal.yml lua_root
 # @param lua_log_level
 #   ood_portal.yml lua_log_level
+# @param user_map_match
+#   ood_portal.yml user_map_match
 # @param user_map_cmd
 #   ood_portal.yml user_map_cmd
 # @param user_env
@@ -207,7 +209,8 @@ class openondemand (
   Boolean $security_strict_transport = true,
   String $lua_root = '/opt/ood/mod_ood_proxy/lib',
   Optional[String] $lua_log_level = undef,
-  String $user_map_cmd  = '/opt/ood/ood_auth_map/bin/ood_auth_map.regex',
+  String $user_map_match = '.*',
+  Optional[String] $user_map_cmd  = undef,
   Optional[String] $user_env = undef,
   Optional[String] $map_fail_uri = undef,
   Enum['CAS', 'openid-connect', 'shibboleth', 'dex'] $auth_type = 'dex',
@@ -386,6 +389,7 @@ class openondemand (
     'security_strict_transport'        => $security_strict_transport,
     'lua_root'                         => $lua_root,
     'lua_log_level'                    => $lua_log_level,
+    'user_map_match'                   => $user_map_match,
     'user_map_cmd'                     => $user_map_cmd,
     'user_env'                         => $user_env,
     'map_fail_uri'                     => $map_fail_uri,
