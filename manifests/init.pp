@@ -88,6 +88,10 @@
 #   ood_portal.yml pun_socket_root
 # @param pun_max_retries
 #   ood_portal.yml pun_max_retries
+# @param pun_pre_hook_root_cmd
+#   ood_portal.yml pun_pre_hook_root_cmd
+# @param pun_pre_hook_exports
+#   ood_porta.yml pun_pre_hook_exports
 # @param oidc_uri
 #   ood_portal.yml oidc_uri
 # @param oidc_discover_uri
@@ -228,6 +232,8 @@ class openondemand (
   String $pun_uri = '/pun',
   String $pun_socket_root = '/var/run/ondemand-nginx',
   Integer $pun_max_retries = 5,
+  Optional[Stdlib::Absolutepath] $pun_pre_hook_root_cmd = undef,
+  Optional[String] $pun_pre_hook_exports = undef,
   Optional[String] $oidc_uri = undef,
   Optional[String] $oidc_discover_uri = undef,
   Optional[String] $oidc_discover_root = undef,
@@ -408,6 +414,8 @@ class openondemand (
     'pun_uri'                          => $pun_uri,
     'pun_socket_root'                  => $pun_socket_root,
     'pun_max_retries'                  => $pun_max_retries,
+    'pun_pre_hook_root_cmd'            => $pun_pre_hook_root_cmd,
+    'pun_pre_hook_exports'             => $pun_pre_hook_exports,
     'oidc_uri'                         => $oidc_uri,
     'oidc_discover_uri'                => $oidc_discover_uri,
     'oidc_discover_root'               => $oidc_discover_root,
