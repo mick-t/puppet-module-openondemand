@@ -23,10 +23,43 @@ shared_examples 'openondemand::repo' do |facts|
     when 'CentOS'
       it { is_expected.to contain_package('centos-release-scl').with_ensure('installed') }
     end
+    it { is_expected.not_to contain_package('nodejs:12') }
+    it { is_expected.not_to contain_package('ruby:2.7') }
   end
 
-  context 'when manage_scl => false' do
-    let(:params) { { manage_scl: false } }
+  if facts[:os]['release']['major'].to_i == 8
+    it do
+      is_expected.to contain_package('nodejs:10').with(
+        ensure: 'disabled',
+        provider: 'dnfmodule',
+        before: 'Package[nodejs:12]',
+      )
+    end
+    it do
+      is_expected.to contain_package('nodejs:12').with(
+        ensure: 'present',
+        enable_only: 'true',
+        provider: 'dnfmodule',
+      )
+    end
+    it do
+      is_expected.to contain_package('ruby:2.5').with(
+        ensure: 'disabled',
+        provider: 'dnfmodule',
+        before: 'Package[ruby:2.7]',
+      )
+    end
+    it do
+      is_expected.to contain_package('ruby:2.7').with(
+        ensure: 'present',
+        enable_only: 'true',
+        provider: 'dnfmodule',
+      )
+    end
+  end
+
+  context 'when manage_dependency_repos => false' do
+    let(:params) { { manage_dependency_repos: false } }
 
     it { is_expected.not_to contain_file('/etc/yum.repos.d/ondemand-centos-scl.repo') }
     it { is_expected.not_to contain_rh_repo("rhel-server-rhscl-#{facts[:os]['release']['major']}-rpms") }

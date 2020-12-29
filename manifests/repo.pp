@@ -14,7 +14,7 @@ class openondemand::repo {
     priority        => $openondemand::repo_priority,
   }
 
-  if versioncmp($openondemand::osmajor, '7') <= 0 and $openondemand::manage_scl {
+  if versioncmp($openondemand::osmajor, '7') <= 0 and $openondemand::manage_dependency_repos {
     if $facts['os']['name'] == 'CentOS' and versioncmp($openondemand::osmajor, '7') == 0 {
       file { '/etc/yum.repos.d/ondemand-centos-scl.repo':
         ensure => 'absent',
@@ -35,6 +35,29 @@ class openondemand::repo {
       default: {
         # Do nothing
       }
+    }
+  }
+
+  if versioncmp($openondemand::osmajor, '8') >= 0 and $openondemand::manage_dependency_repos {
+    package { 'nodejs:10':
+      ensure   => 'disabled',
+      provider => 'dnfmodule',
+      before   => Package['nodejs:12'],
+    }
+    package { 'nodejs:12':
+      ensure      => 'present',
+      enable_only => true,
+      provider    => 'dnfmodule',
+    }
+    package { 'ruby:2.5':
+      ensure   => 'disabled',
+      provider => 'dnfmodule',
+      before   => Package['ruby:2.7'],
+    }
+    package { 'ruby:2.7':
+      ensure      => 'present',
+      enable_only => true,
+      provider    => 'dnfmodule',
     }
   }
 
