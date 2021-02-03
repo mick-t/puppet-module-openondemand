@@ -6,9 +6,6 @@ on:
       - main
       - master
   pull_request:
-    branches:
-      - main
-      - master
 
 jobs:
   unit:
@@ -24,6 +21,10 @@ jobs:
             allow_failure: false
           - ruby: 2.5.7
             puppet: 6
+            fixtures: .fixtures.yml
+            allow_failure: false
+          - ruby: 2.7.0
+            puppet: 7
             fixtures: .fixtures.yml
             allow_failure: false
     env:
@@ -55,6 +56,7 @@ jobs:
         puppet:
           - "puppet5"
           - "puppet6"
+          - "puppet7"
     env:
       BUNDLE_WITHOUT: development:release
       BEAKER_debug: true
