@@ -201,6 +201,31 @@ openondemand::clusters:
         script_wrapper: 'module restore\nmodule load ondemand-vnc\n%s'
 ```
 
+Define a Kubernetes cluster:
+
+```yaml
+openondemand::clusters:
+  kubernetes:
+    cluster_title: Kubernetes
+    hidden: true
+    job_adapter: kubernetes
+    job_bin: /usr/local/bin/kubectl
+    job_cluster: ood-prod
+    job_username_prefix: prod
+    job_namespace_prefix: 'user-'
+    job_server:
+      endpoint: "https://k8controler.example.com:6443"
+      cert_authority_file: /etc/pki/tls/kubernetes-ca.crt
+    job_mounts:
+      - name: home
+        destination_path: /users
+        path: /users
+        host_type: Directory
+        type: host
+    job_auth:
+      type: oidc
+```
+
 Add XDMoD support
 
 Ensure the cluster definition has `xdmod_resource_id` set to `resource_id` of the cluster in XDMoD.  Also must do something like the following to set the appropriate environment variable:
