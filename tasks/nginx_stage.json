@@ -1,0 +1,22 @@
+{
+  "description": "Run nginx_stage commands",
+  "input_method": "stdin",
+  "parameters": {
+    "command": {
+      "description": "nginx_stage command to execute",
+      "type": "Enum[nginx_clean,nginx_list]"
+    },
+    "user": {
+      "description": "Operate on specific user",
+      "type": "Optional[String[1]]"
+    },
+    "skip_nginx": {
+      "description": "Skip execution of the per-user nginx process",
+      "type": "Optional[Boolean]"
+    },
+    "force": {
+      "description": "Force clean ALL per-user nginx processes",
+      "type": "Optional[Boolean]"
+    }
+  }
+}

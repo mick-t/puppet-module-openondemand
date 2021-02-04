@@ -1,0 +1,10 @@
+{
+  "description": "Install Open OnDemand announcement file",
+  "input_method": "stdin",
+  "parameters": {
+    "source": {
+      "description": "Path to file to install (or purge)",
+      "type": "String[1]"
+    }
+  }
+}
