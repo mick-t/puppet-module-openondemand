@@ -11,6 +11,8 @@ shared_examples 'openondemand::repo' do |facts|
   end
 
   if facts[:os]['release']['major'].to_i == 7
+    it { is_expected.not_to contain_exec('dnf makecache ondemand-web') }
+
     if facts[:os]['name'] == 'CentOS'
       it { is_expected.to contain_file('/etc/yum.repos.d/ondemand-centos-scl.repo').with_ensure('absent') }
     else
@@ -29,29 +31,29 @@ shared_examples 'openondemand::repo' do |facts|
 
   if facts[:os]['release']['major'].to_i == 8
     it do
-      is_expected.to contain_package('nodejs:10').with(
-        ensure: 'disabled',
-        provider: 'dnfmodule',
-        before: 'Package[nodejs:12]',
+      is_expected.to contain_exec('dnf makecache ondemand-web').with(
+        path: '/usr/bin:/bin:/usr/sbin:/sbin',
+        command: "dnf -q makecache -y --disablerepo='*' --enablerepo='ondemand-web'",
+        refreshonly: 'true',
+        subscribe: 'Yumrepo[ondemand-web]',
       )
     end
+
     it do
-      is_expected.to contain_package('nodejs:12').with(
-        ensure: 'present',
+      is_expected.to contain_exec('dnf makecache ondemand-web').that_comes_before('Package[nodejs]')
+      is_expected.to contain_exec('dnf makecache ondemand-web').that_comes_before('Package[ruby]')
+    end
+
+    it do
+      is_expected.to contain_package('nodejs').with(
+        ensure: '12',
         enable_only: 'true',
         provider: 'dnfmodule',
       )
     end
     it do
-      is_expected.to contain_package('ruby:2.5').with(
-        ensure: 'disabled',
-        provider: 'dnfmodule',
-        before: 'Package[ruby:2.7]',
-      )
-    end
-    it do
-      is_expected.to contain_package('ruby:2.7').with(
-        ensure: 'present',
+      is_expected.to contain_package('ruby').with(
+        ensure: '2.7',
         enable_only: 'true',
         provider: 'dnfmodule',
       )

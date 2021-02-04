@@ -14,6 +14,20 @@ class openondemand::repo {
     priority        => $openondemand::repo_priority,
   }
 
+  # Work around a bug where 'dnf module list' is not executed with -y
+  if versioncmp($openondemand::osmajor, '8') >= 0 {
+    exec { 'dnf makecache ondemand-web':
+      path        => '/usr/bin:/bin:/usr/sbin:/sbin',
+      command     => "dnf -q makecache -y --disablerepo='*' --enablerepo='ondemand-web'",
+      refreshonly => true,
+      subscribe   => Yumrepo['ondemand-web'],
+    }
+    if $openondemand::manage_dependency_repos {
+      Exec['dnf makecache ondemand-web'] -> Package['nodejs']
+      Exec['dnf makecache ondemand-web'] -> Package['ruby']
+    }
+  }
+
   if versioncmp($openondemand::osmajor, '7') <= 0 and $openondemand::manage_dependency_repos {
     if $facts['os']['name'] == 'CentOS' and versioncmp($openondemand::osmajor, '7') == 0 {
       file { '/etc/yum.repos.d/ondemand-centos-scl.repo':
@@ -39,23 +53,13 @@ class openondemand::repo {
   }
 
   if versioncmp($openondemand::osmajor, '8') >= 0 and $openondemand::manage_dependency_repos {
-    package { 'nodejs:10':
-      ensure   => 'disabled',
-      provider => 'dnfmodule',
-      before   => Package['nodejs:12'],
-    }
-    package { 'nodejs:12':
-      ensure      => 'present',
+    package { 'nodejs':
+      ensure      => '12',
       enable_only => true,
       provider    => 'dnfmodule',
     }
-    package { 'ruby:2.5':
-      ensure   => 'disabled',
-      provider => 'dnfmodule',
-      before   => Package['ruby:2.7'],
-    }
-    package { 'ruby:2.7':
-      ensure      => 'present',
+    package { 'ruby':
+      ensure      => '2.7',
       enable_only => true,
       provider    => 'dnfmodule',
     }
