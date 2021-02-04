@@ -8,8 +8,8 @@
 #   The URL for OnDemand repo GPG key
 # @param repo_priority
 #   The priority of the OnDemand repo
-# @param manage_scl
-#   Boolean that determines if managing SCL
+# @param manage_dependency_repos
+#   Boolean that determines if managing repos for package dependencies
 # @param selinux
 #   Boolean that determines if adding SELinux support
 # @param ondemand_package_ensure
@@ -50,6 +50,8 @@
 #   ood_portal.yml lua_root
 # @param lua_log_level
 #   ood_portal.yml lua_log_level
+# @param user_map_match
+#   ood_portal.yml user_map_match
 # @param user_map_cmd
 #   ood_portal.yml user_map_cmd
 # @param user_env
@@ -86,6 +88,10 @@
 #   ood_portal.yml pun_socket_root
 # @param pun_max_retries
 #   ood_portal.yml pun_max_retries
+# @param pun_pre_hook_root_cmd
+#   ood_portal.yml pun_pre_hook_root_cmd
+# @param pun_pre_hook_exports
+#   ood_porta.yml pun_pre_hook_exports
 # @param oidc_uri
 #   ood_portal.yml oidc_uri
 # @param oidc_discover_uri
@@ -180,7 +186,7 @@ class openondemand (
   Variant[Stdlib::HTTPSUrl, Stdlib::HTTPUrl, Stdlib::Absolutepath]
     $repo_gpgkey = 'https://yum.osc.edu/ondemand/RPM-GPG-KEY-ondemand',
   Integer[1,99] $repo_priority = 99,
-  Boolean $manage_scl = true,
+  Boolean $manage_dependency_repos = true,
 
   # packages
   Boolean $selinux = false,
@@ -191,7 +197,7 @@ class openondemand (
 
   # Apache
   Boolean $declare_apache = true,
-  String $apache_scls = 'httpd24 rh-ruby25',
+  String $apache_scls = 'httpd24 rh-ruby27',
 
   # ood_portal.yml
   Variant[Array, String, Undef] $listen_addr_port = undef,
@@ -207,7 +213,8 @@ class openondemand (
   Boolean $security_strict_transport = true,
   String $lua_root = '/opt/ood/mod_ood_proxy/lib',
   Optional[String] $lua_log_level = undef,
-  String $user_map_cmd  = '/opt/ood/ood_auth_map/bin/ood_auth_map.regex',
+  String $user_map_match = '.*',
+  Optional[String] $user_map_cmd  = undef,
   Optional[String] $user_env = undef,
   Optional[String] $map_fail_uri = undef,
   Enum['CAS', 'openid-connect', 'shibboleth', 'dex'] $auth_type = 'dex',
@@ -225,6 +232,8 @@ class openondemand (
   String $pun_uri = '/pun',
   String $pun_socket_root = '/var/run/ondemand-nginx',
   Integer $pun_max_retries = 5,
+  Optional[Stdlib::Absolutepath] $pun_pre_hook_root_cmd = undef,
+  Optional[String] $pun_pre_hook_exports = undef,
   Optional[String] $oidc_uri = undef,
   Optional[String] $oidc_discover_uri = undef,
   Optional[String] $oidc_discover_root = undef,
@@ -386,6 +395,7 @@ class openondemand (
     'security_strict_transport'        => $security_strict_transport,
     'lua_root'                         => $lua_root,
     'lua_log_level'                    => $lua_log_level,
+    'user_map_match'                   => $user_map_match,
     'user_map_cmd'                     => $user_map_cmd,
     'user_env'                         => $user_env,
     'map_fail_uri'                     => $map_fail_uri,
@@ -404,6 +414,8 @@ class openondemand (
     'pun_uri'                          => $pun_uri,
     'pun_socket_root'                  => $pun_socket_root,
     'pun_max_retries'                  => $pun_max_retries,
+    'pun_pre_hook_root_cmd'            => $pun_pre_hook_root_cmd,
+    'pun_pre_hook_exports'             => $pun_pre_hook_exports,
     'oidc_uri'                         => $oidc_uri,
     'oidc_discover_uri'                => $oidc_discover_uri,
     'oidc_discover_root'               => $oidc_discover_root,

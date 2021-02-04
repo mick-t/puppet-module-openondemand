@@ -19,7 +19,8 @@ Manage [Open OnDemand](http://openondemand.org/) installation and configuration.
 
 The following are the versions of this module and the supported versions of Open OnDemand:
 
-* Module >= 1.0.0 supports Open OnDemand >= 1.8
+* Module 2.x supports Open OnDemand 2.x
+* Module 1.x supports Open OnDemand 1.18.x
 * Module <= 0.12.0 supports Open OnDemand <= 1.7
 
 
@@ -28,15 +29,15 @@ The following are the versions of this module and the supported versions of Open
 All configuration can be done through the `openondemand` class. Example configurations will be done in Hiera format.
 
 ```puppet
-include ::openondemand
+include openondemand
 ```
 
-Install specific versions of OnDemand from 1.6 repo with OpenID Connect support.
+Install specific versions of OnDemand from 2.0 repo with OpenID Connect support.
 
 ```yaml
-openondemand::repo_release: '1.8'
-openondemand::ondemand_package_ensure: "1.8.5-1.el7"
-openondemand::mod_auth_openidc_ensure: "2.3.11-1.el7"
+openondemand::repo_release: '2.0'
+openondemand::ondemand_package_ensure: "2.0.0-1.el7"
+openondemand::mod_auth_openidc_ensure: "2.4.5-1.el7"
 ```
 
 Configure OnDemand SSL certs
@@ -105,7 +106,7 @@ openondemand::servername: ondemand.osc.edu
 openondemand::auth_type: 'openid-connect'
 openondemand::auth_configs:
   - 'Require valid-user'
-openondemand::user_map_cmd: /opt/ood/ood_auth_map/bin/ood_auth_map.regex
+openondemand::user_map_match: '.*'
 openondemand::logout_redirect: "/oidc?logout=https%3A%2F%2F%{lookup('openondemand::servername')}"
 openondemand::oidc_uri: '/oidc'
 openondemand::oidc_provider_metadata_url: 'https://idp.osc.edu/auth/realms/osc/.well-known/openid-configuration'
