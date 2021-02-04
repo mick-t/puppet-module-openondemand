@@ -99,6 +99,40 @@ v2:
   <%- if @job_tmux_bin -%>
     tmux_bin: "<%= @job_tmux_bin %>"
   <%- end -%>
+<%- if @job_adapter == 'kubernetes' -%>
+  <%- if @job_config_file -%>
+    config_file: "<%= @job_config_file %>"
+  <%- end -%>
+  <%- if @job_username_prefix -%>
+    username_prefix: "<%= @job_username_prefix %>"
+  <%- end -%>
+  <%- if @job_namespace_prefix -%>
+    namespace_prefix: "<%= @job_namespace_prefix %>"
+  <%- end -%>
+    all_namespaces: <%= @job_all_namespaces %>
+  <%- if @job_server -%>
+    server:
+    <%- @job_server.each_pair do |key, value| -%>
+      <%= key %>: "<%= value %>"
+    <%- end -%>
+  <%- end # if job_server -%>
+  <%- if ! @job_mounts.empty? -%>
+    mounts:
+    <%- @job_mounts.each do |mount| -%>
+      - name: "<%= mount['name'] %>"
+      <%- mount.each_pair do |key, value| -%>
+        <%- next if key == 'name' -%>
+        <%= key %>: "<%= value %>"
+      <%- end -%>
+    <%- end -%>
+  <%- end # if @job_mounts empty? -%>
+  <%- if @job_auth -%>
+    auth:
+    <%- @job_auth.each_pair do |key, value| -%>
+      <%= key %>: "<%= value %>"
+    <%- end -%>
+  <%- end # if job_auth -%>
+<%- end # if kubernetes -%>
   <%- if ! @job_bin_overrides.empty? -%>
     bin_overrides:
     <%- @job_bin_overrides.each_pair do |command, path| -%>

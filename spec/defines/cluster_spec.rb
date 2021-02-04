@@ -58,6 +58,31 @@ describe 'openondemand::cluster' do
         puts content
       end
 
+      context 'kubernetes' do
+        let :params do
+          {
+            job_adapter: 'kubernetes',
+            job_cluster: 'k8-dev',
+            job_bin: '/usr/bin/kubectl',
+            job_username_prefix: 'dev',
+            job_server: { 'endpoint' => 'https://k8dev.example.com:6443', 'cert_authority_file' => '/etc/k8dev.crt' },
+            job_mounts: [
+              { 'name' => 'home', 'destination_path' => '/home', 'path' => '/home', 'host_type' => 'Directory', 'type' => 'host' },
+            ],
+            job_auth: { 'type' => 'oidc' },
+          }
+        end
+
+        it { is_expected.to compile.with_all_deps }
+
+        it do
+          content = catalogue.resource('file', '/etc/ood/config/clusters.d/test.yml').send(:parameters)[:content]
+          puts content
+          data = YAML.safe_load(content)
+          expect(data['v2']['job']['bin']).to eq('/usr/bin/kubectl')
+        end
+      end
+
       context 'with grafana defined' do
         let :params do
           default_params.merge!(
