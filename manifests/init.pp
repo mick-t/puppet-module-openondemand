@@ -197,7 +197,7 @@ class openondemand (
 
   # Apache
   Boolean $declare_apache = true,
-  String $apache_scls = 'httpd24 rh-ruby27',
+  String $apache_scls = 'httpd24',
 
   # ood_portal.yml
   Variant[Array, String, Undef] $listen_addr_port = undef,
