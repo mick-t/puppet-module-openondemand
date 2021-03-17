@@ -14,11 +14,11 @@
     },
     {
       "name": "puppetlabs/apache",
-      "version_requirement": ">= 5.2.0 < 6.0.0"
+      "version_requirement": ">= 5.2.0 < 7.0.0"
     },
     {
       "name": "puppetlabs/vcsrepo",
-      "version_requirement": ">= 1.3.0 < 4.0.0"
+      "version_requirement": ">= 1.3.0 < 5.0.0"
     },
     {
       "name": "saz/sudo",
@@ -70,7 +70,7 @@
   "requirements": [
     {
       "name": "puppet",
-      "version_requirement": ">= 5.0.0 < 8.0.0"
+      "version_requirement": ">= 6.1.0 < 8.0.0"
     }
   ],
   "tags": [
@@ -80,5 +80,5 @@
   ],
   "pdk-version": "1.17.0",
   "template-url": "https://github.com/treydock/pdk-templates.git#master",
-  "template-ref": "heads/master-0-ge286426"
+  "template-ref": "heads/master-0-g963939d"
 }
