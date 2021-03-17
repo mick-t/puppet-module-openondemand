@@ -86,6 +86,4 @@ class openondemand::apache {
     unit   => "${::apache::service_name}.service",
     notify => Class['::apache::service'],
   }
-  Class['systemd::systemctl::daemon_reload'] -> Class['::apache::service']
-
 }
