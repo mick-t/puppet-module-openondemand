@@ -18,6 +18,8 @@
 #   ondemand-dex package ensure
 # @param mod_auth_openidc_ensure
 #   mod_auth_openidc package ensure
+# @param mod_auth_mellon_ensure
+#   mod_auth_mellon package ensure
 # @param install_apps
 #   Hash of apps to install, passed to ondemand::install::app
 # @param declare_apache
@@ -122,6 +124,20 @@
 #   Hash of OIDC settings passsed directly to Apache config
 # @param dex_config
 #   Dex configuration Hash
+# @param mellon_sp_privatekey_file
+#   Mellon private key file location
+# @param mellon_sp_cert_file
+#   Mellon certificate file location
+# @param mellon_sp_metadata_file
+#   Mellon metadata file location
+# @param mellon_idp_metadata_file
+#   Mellon IdP metadata file location
+# @param mellon_endpoint_path
+#   Mellon endpoint for apache
+# @param mellon_enable
+#   Mellon enable for apache
+# @param mellon_settings
+#   Additional Mellon config for apache
 # @param web_directory
 #   Path to main web directory for OnDemand
 # @param nginx_log_group
@@ -193,6 +209,7 @@ class openondemand (
   String $ondemand_package_ensure                 = 'present',
   String $ondemand_dex_package_ensure             = 'present',
   String $mod_auth_openidc_ensure                 = 'present',
+  String $mod_auth_mellon_ensure                  = 'present',
   Hash $install_apps                              = {},
 
   # Apache
@@ -217,7 +234,7 @@ class openondemand (
   Optional[String] $user_map_cmd  = undef,
   Optional[String] $user_env = undef,
   Optional[String] $map_fail_uri = undef,
-  Enum['CAS', 'openid-connect', 'shibboleth', 'dex'] $auth_type = 'dex',
+  Enum['CAS', 'openid-connect', 'mellon', 'shibboleth', 'dex'] $auth_type = 'dex',
   Optional[Array] $auth_configs = undef,
   String $root_uri = '/pun/sys/dashboard',
   Optional[Struct[{url => String, id => String}]] $analytics = undef,
@@ -253,6 +270,14 @@ class openondemand (
 
   # Dex configs
   Openondemand::Dex_config $dex_config = {},
+
+  # Mellon Configs
+  Stdlib::Absolutepath $mellon_sp_privatekey_file = '/etc/httpd/mellon/mellon.key',
+  Stdlib::Absolutepath $mellon_sp_cert_file = '/etc/httpd/mellon/mellon.cer',
+  Stdlib::Absolutepath $mellon_sp_metadata_file = '/etc/httpd/mellon/mellon_metadata.xml',
+  Stdlib::Absolutepath $mellon_idp_metadata_file = '/etc/httpd/mellon/idp_metadata.xml',
+  #  String $mellon_endpoint_path = '/mellon',
+  #  String $mellon_enable = 'auth',
 
   # Misc configs
   Stdlib::Absolutepath $web_directory = '/var/www/ood',
