@@ -272,10 +272,10 @@ class openondemand (
   Openondemand::Dex_config $dex_config = {},
 
   # Mellon Configs
-  Stdlib::Absolutepath $mellon_sp_privatekey_file = '/etc/httpd/mellon/mellon.key',
-  Stdlib::Absolutepath $mellon_sp_cert_file = '/etc/httpd/mellon/mellon.cer',
-  Stdlib::Absolutepath $mellon_sp_metadata_file = '/etc/httpd/mellon/mellon_metadata.xml',
-  Stdlib::Absolutepath $mellon_idp_metadata_file = '/etc/httpd/mellon/idp_metadata.xml',
+  Optional[Stdlib::Absolutepath] $mellon_sp_privatekey_file = '/etc/httpd/mellon/mellon.key',
+  Optional[Stdlib::Absolutepath] $mellon_sp_cert_file = '/etc/httpd/mellon/mellon.cer',
+  Optional[Stdlib::Absolutepath] $mellon_sp_metadata_file = '/etc/httpd/mellon/mellon_metadata.xml',
+  Optional[Stdlib::Absolutepath] $mellon_idp_metadata_file = '/etc/httpd/mellon/idp_metadata.xml',
   #  String $mellon_endpoint_path = '/mellon',
   #  String $mellon_enable = 'auth',
 
