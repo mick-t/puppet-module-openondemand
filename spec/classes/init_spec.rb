@@ -13,6 +13,7 @@ describe 'openondemand' do
 
       include_context 'openondemand::repo', facts
       include_context 'openondemand::apache', facts
+      include_context 'openondemand::config', facts
     end # end context
   end # end on_supported_os loop
 end # end describe
