@@ -210,6 +210,25 @@ class openondemand::config {
     content => template('openondemand/nginx_stage.yml.erb'),
   }
 
+  if $openondemand::hook_env and $openondemand::pun_pre_hook_root_cmd {
+    $hook_env_default = {
+      'CLIENT_ID' => $openondemand::oidc_client_id,
+      'CLIENT_SECRET' => $openondemand::oidc_client_secret,
+    }.filter |$key,$value| { $value =~ NotUndef }
+    $hook_env_config = $hook_env_default + $openondemand::hook_env_config
+    $hook_env = $hook_env_config.map |$key,$value| { "${key}=\"${value}\"" }
+    $hook_env_content = join($hook_env, "\n")
+
+    file { $openondemand::hook_env_path:
+      ensure    => 'file',
+      owner     => 'root',
+      group     => 'root',
+      mode      => '0600',
+      show_diff => false,
+      content   => $hook_env_content,
+    }
+  }
+
   file { '/etc/ood/profile':
     ensure  => 'file',
     owner   => 'root',

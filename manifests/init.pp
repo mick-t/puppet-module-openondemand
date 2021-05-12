@@ -143,6 +143,12 @@
 #   nginx_stage.yml app_request_regex
 # @param nginx_stage_min_uid
 #   nginx_stage.yml min_uid
+# @param hook_env
+#   Boolean that sets of hook.env configuration should be managed
+# @param hook_env_path
+#   Path to hook.env
+# @param hook_env_config
+#   Configuration hash to pass into hook.env
 # @param clusters
 #   Hash of resources to apss to openondemand::cluster
 # @param clusters_hiera_merge
@@ -267,6 +273,11 @@ class openondemand (
   String $nginx_stage_scl_env = 'ondemand',
   Optional[Openondemand::Nginx_stage_namespace_config] $nginx_stage_app_request_regex = undef,
   Integer $nginx_stage_min_uid = 1000,
+
+  # hooks
+  Boolean $hook_env = true,
+  Stdlib::Absolutepath $hook_env_path = '/etc/ood/config/hook.env',
+  Hash $hook_env_config = {},
 
   # clusters
   Hash $clusters = {},
