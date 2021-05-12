@@ -29,6 +29,8 @@ class openondemand::repo {
   }
 
   if versioncmp($openondemand::osmajor, '7') <= 0 and $openondemand::manage_dependency_repos {
+    contain epel
+
     if $facts['os']['name'] == 'CentOS' and versioncmp($openondemand::osmajor, '7') == 0 {
       file { '/etc/yum.repos.d/ondemand-centos-scl.repo':
         ensure => 'absent',
