@@ -6,6 +6,8 @@ fixtures:
     yumrepo_core:
       repo: https://github.com/puppetlabs/puppetlabs-yumrepo_core.git
       puppet_version: ">= 6.0.0"
+    epel:
+      repo: https://github.com/voxpupuli/puppet-epel.git
     rhsm:
       repo: https://github.com/voxpupuli/puppet-rhsm
     concat:
