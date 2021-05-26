@@ -127,7 +127,7 @@ define openondemand::cluster (
   }]] $grafana_labels = undef,
   Optional[String] $grafana_cluster_override = undef,
   Optional[Integer] $xdmod_resource_id = undef,
-  Hash[String, Openondemand::Batch_connect] $batch_connect = {},
+  Openondemand::Batch_connect $batch_connect = {},
 ) {
 
   if $grafana_host {

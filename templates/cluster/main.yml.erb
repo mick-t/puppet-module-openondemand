@@ -226,10 +226,15 @@ v2:
 <% end -%>
 <% if ! @batch_connect.empty? -%>
   batch_connect:
-    <%- @batch_connect.each do |script_type, options| -%>
-      <%= script_type %>:
-      <%- options.each do |option, value| -%>
-        <%= option %>: "<%= value %>"
-      <%- end -%>
-    <%- end -%>
+  <%- if @batch_connect.key?('basic') -%>
+    basic:
+      script_wrapper: "<%= @batch_connect['basic']['script_wrapper'] %>"
+  <%- end -%>
+  <%- if @batch_connect.key?('vnc') -%>
+    vnc:
+      script_wrapper: "<%= @batch_connect['vnc']['script_wrapper'] %>"
+  <%- end -%>
+  <%- if @batch_connect.key?('ssh_allow') -%>
+    ssh_allow: <%= @batch_connect['ssh_allow'] %>
+  <%- end -%>
 <% end -%>
