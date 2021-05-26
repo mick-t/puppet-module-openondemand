@@ -1540,7 +1540,7 @@ Default value: ``undef``
 
 ##### <a name="batch_connect"></a>`batch_connect`
 
-Data type: `Hash[String, Openondemand::Batch_connect]`
+Data type: `Openondemand::Batch_connect`
 
 
 
@@ -1651,8 +1651,10 @@ Alias of
 
 ```puppet
 Struct[{
-                                    'script_wrapper' => String,
-                                    }]
+  Optional['basic']     => Struct[{'script_wrapper' => String}],
+  Optional['vnc']       => Struct[{'script_wrapper' => String}],
+  Optional['ssh_allow'] => Boolean,
+}]
 ```
 
 ### <a name="openondemanddex_config"></a>`Openondemand::Dex_config`

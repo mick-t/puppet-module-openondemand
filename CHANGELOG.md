@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](http://semver.org).
 
+## [v2.1.0](https://github.com/osc/puppet-module-openondemand/tree/v2.1.0) (2021-05-26)
+
+[Full Changelog](https://github.com/osc/puppet-module-openondemand/compare/v2.0.0...v2.1.0)
+
+### Added
+
+- Better cluster batch\_connect support, add ssh\_allow support [\#53](https://github.com/OSC/puppet-module-openondemand/pull/53) ([treydock](https://github.com/treydock))
+
 ## [v2.0.0](https://github.com/osc/puppet-module-openondemand/tree/v2.0.0) (2021-05-19)
 
 [Full Changelog](https://github.com/osc/puppet-module-openondemand/compare/v1.5.0...v2.0.0)
