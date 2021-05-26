@@ -41,6 +41,10 @@ describe 'openondemand::cluster' do
             'moabhomedir' => '/var/spool/moab',
           },
           ganglia_host: 'ganglia.test',
+          batch_connect: {
+            'basic' => { 'script_wrapper' => 'module restore\n%s' },
+            'vnc'   => { 'script_wrapper' => 'module restore\nmodule load ondemand-vnc\n%s' },
+          },
         }
       end
 
@@ -70,6 +74,7 @@ describe 'openondemand::cluster' do
               { 'name' => 'home', 'destination_path' => '/home', 'path' => '/home', 'host_type' => 'Directory', 'type' => 'host' },
             ],
             job_auth: { 'type' => 'oidc' },
+            batch_connect: { 'ssh_allow' => false },
           }
         end
 
