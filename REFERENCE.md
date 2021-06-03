@@ -23,12 +23,15 @@
 * [`openondemand::app::dev`](#openondemandappdev): Manage Open OnDemand dev app
 * [`openondemand::app::usr`](#openondemandappusr): Manage Open OnDemand user app
 * [`openondemand::cluster`](#openondemandcluster): Manage Open OnDemand cluster definition
+* [`openondemand::conf`](#openondemandconf): Manage Open OnDemand configuration file in /etc/ood/config/ondemand.d
 * [`openondemand::install::app`](#openondemandinstallapp): Manage Open OnDemand app
 
 ### Data types
 
 * [`Openondemand::Acl`](#openondemandacl): OnDemand cluster ACL
 * [`Openondemand::Batch_connect`](#openondemandbatch_connect): Defines cluster config batch_connect values
+* [`Openondemand::Dashboard_layout`](#openondemanddashboard_layout): Dashboard layout
+* [`Openondemand::Dashboard_layout_column`](#openondemanddashboard_layout_column): Dashboard layout column
 * [`Openondemand::Dex_config`](#openondemanddex_config): ondemand-dex config
 * [`Openondemand::K8_auth`](#openondemandk8_auth): OnDemand cluster Kubernetes auth
 * [`Openondemand::K8_mount`](#openondemandk8_mount): OnDemand cluster Kubernetes mount
@@ -122,6 +125,14 @@ The following parameters are available in the `openondemand` class:
 * [`nginx_stage_scl_env`](#nginx_stage_scl_env)
 * [`nginx_stage_app_request_regex`](#nginx_stage_app_request_regex)
 * [`nginx_stage_min_uid`](#nginx_stage_min_uid)
+* [`config_dir_purge`](#config_dir_purge)
+* [`config_source`](#config_source)
+* [`config_content`](#config_content)
+* [`confs`](#confs)
+* [`pinned_apps`](#pinned_apps)
+* [`pinned_apps_menu_length`](#pinned_apps_menu_length)
+* [`pinned_apps_group_by`](#pinned_apps_group_by)
+* [`dashboard_layout`](#dashboard_layout)
 * [`hook_env`](#hook_env)
 * [`hook_env_path`](#hook_env_path)
 * [`hook_env_config`](#hook_env_config)
@@ -711,6 +722,72 @@ Data type: `Integer`
 nginx_stage.yml min_uid
 
 Default value: `1000`
+
+##### <a name="config_dir_purge"></a>`config_dir_purge`
+
+Data type: `Boolean`
+
+Boolean that sets if ondemand.d should be purged of unmanaged files
+
+Default value: ``true``
+
+##### <a name="config_source"></a>`config_source`
+
+Data type: `Optional[String]`
+
+The source for /etc/ood/config/ondemand.d/ondemand.yml
+Overrides `config_content` as well as pinned apps and dashboard layout parameters
+
+Default value: ``undef``
+
+##### <a name="config_content"></a>`config_content`
+
+Data type: `Optional[String]`
+
+The content for /etc/ood/config/ondemand.d/ondemand.yml
+Overrides pinned apps and dashboard layout parameters
+
+Default value: ``undef``
+
+##### <a name="confs"></a>`confs`
+
+Data type: `Hash`
+
+Hash to define openondemand::conf resources
+
+Default value: `{}`
+
+##### <a name="pinned_apps"></a>`pinned_apps`
+
+Data type: `Optional[Array[Variant[String[1], Hash]]]`
+
+Defines the OnDemand configuration for pinned_apps
+
+Default value: ``undef``
+
+##### <a name="pinned_apps_menu_length"></a>`pinned_apps_menu_length`
+
+Data type: `Optional[Integer]`
+
+Defines the OnDemand configuration for pinned_apps_menu_length
+
+Default value: ``undef``
+
+##### <a name="pinned_apps_group_by"></a>`pinned_apps_group_by`
+
+Data type: `Optional[String[1]]`
+
+Defines the OnDemand configuration for pinned_apps_group_by
+
+Default value: ``undef``
+
+##### <a name="dashboard_layout"></a>`dashboard_layout`
+
+Data type: `Optional[Openondemand::Dashboard_layout]`
+
+Defines the OnDemand configuration for dashboard_layout
+
+Default value: ``undef``
 
 ##### <a name="hook_env"></a>`hook_env`
 
@@ -1546,6 +1623,69 @@ Data type: `Openondemand::Batch_connect`
 
 Default value: `{}`
 
+### <a name="openondemandconf"></a>`openondemand::conf`
+
+Manage Open OnDemand configuration file in /etc/ood/config/ondemand.d
+
+#### Parameters
+
+The following parameters are available in the `openondemand::conf` defined type:
+
+* [`source`](#source)
+* [`content`](#content)
+* [`content_template`](#content_template)
+* [`data`](#data)
+* [`template`](#template)
+* [`filename`](#filename)
+
+##### <a name="source"></a>`source`
+
+Data type: `Optional[String]`
+
+The source of the configuration file
+
+Default value: ``undef``
+
+##### <a name="content"></a>`content`
+
+Data type: `Optional[String]`
+
+The content template of the configuration file
+
+Default value: ``undef``
+
+##### <a name="content_template"></a>`content_template`
+
+Data type: `Optional[String]`
+
+The template to define content
+
+Default value: ``undef``
+
+##### <a name="data"></a>`data`
+
+Data type: `Optional[Hash]`
+
+A hash of data to convert to YAML that defines the configuration file contents
+
+Default value: ``undef``
+
+##### <a name="template"></a>`template`
+
+Data type: `Boolean`
+
+If true, the file will have .yml.erb extension, otherwise the extension is .yml
+
+Default value: ``false``
+
+##### <a name="filename"></a>`filename`
+
+Data type: `Optional[String]`
+
+Override the default filename for the configuration file
+
+Default value: ``undef``
+
 ### <a name="openondemandinstallapp"></a>`openondemand::install::app`
 
 Manage Open OnDemand app
@@ -1654,6 +1794,31 @@ Struct[{
   Optional['basic']     => Struct[{'script_wrapper' => String}],
   Optional['vnc']       => Struct[{'script_wrapper' => String}],
   Optional['ssh_allow'] => Boolean,
+}]
+```
+
+### <a name="openondemanddashboard_layout"></a>`Openondemand::Dashboard_layout`
+
+Dashboard layout
+
+Alias of
+
+```puppet
+Struct[{
+  'rows' => Array[Struct[{'columns' => Array[Openondemand::Dashboard_layout_column]}]]
+}]
+```
+
+### <a name="openondemanddashboard_layout_column"></a>`Openondemand::Dashboard_layout_column`
+
+Dashboard layout column
+
+Alias of
+
+```puppet
+Struct[{
+  'width' => Integer,
+  'widgets' => Array[String[1]],
 }]
 ```
 
