@@ -125,6 +125,8 @@ The following parameters are available in the `openondemand` class:
 * [`nginx_stage_scl_env`](#nginx_stage_scl_env)
 * [`nginx_stage_app_request_regex`](#nginx_stage_app_request_regex)
 * [`nginx_stage_min_uid`](#nginx_stage_min_uid)
+* [`nginx_stage_passenger_pool_idle_time`](#nginx_stage_passenger_pool_idle_time)
+* [`nginx_stage_passenger_options`](#nginx_stage_passenger_options)
 * [`config_dir_purge`](#config_dir_purge)
 * [`config_source`](#config_source)
 * [`config_content`](#config_content)
@@ -722,6 +724,22 @@ Data type: `Integer`
 nginx_stage.yml min_uid
 
 Default value: `1000`
+
+##### <a name="nginx_stage_passenger_pool_idle_time"></a>`nginx_stage_passenger_pool_idle_time`
+
+Data type: `Integer`
+
+nginx_stage.yml passenger_pool_idle_time
+
+Default value: `300`
+
+##### <a name="nginx_stage_passenger_options"></a>`nginx_stage_passenger_options`
+
+Data type: `Hash[Pattern[/^passenger_.+/], Variant[String, Integer]]`
+
+nginx_stage.yml passenger_options
+
+Default value: `{}`
 
 ##### <a name="config_dir_purge"></a>`config_dir_purge`
 
