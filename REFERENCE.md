@@ -138,6 +138,7 @@ The following parameters are available in the `openondemand` class:
 * [`hook_env`](#hook_env)
 * [`hook_env_path`](#hook_env_path)
 * [`hook_env_config`](#hook_env_config)
+* [`kubectl_path`](#kubectl_path)
 * [`clusters`](#clusters)
 * [`clusters_hiera_merge`](#clusters_hiera_merge)
 * [`usr_apps`](#usr_apps)
@@ -830,6 +831,14 @@ Data type: `Hash`
 Configuration hash to pass into hook.env
 
 Default value: `{}`
+
+##### <a name="kubectl_path"></a>`kubectl_path`
+
+Data type: `Stdlib::Absolutepath`
+
+Path to kubectl
+
+Default value: `'/bin/kubectl'`
 
 ##### <a name="clusters"></a>`clusters`
 
