@@ -1153,6 +1153,7 @@ The following parameters are available in the `openondemand::cluster` defined ty
 * [`job_username_prefix`](#job_username_prefix)
 * [`job_namespace_prefix`](#job_namespace_prefix)
 * [`job_all_namespaces`](#job_all_namespaces)
+* [`job_auto_supplemental_groups`](#job_auto_supplemental_groups)
 * [`job_server`](#job_server)
 * [`job_mounts`](#job_mounts)
 * [`job_auth`](#job_auth)
@@ -1436,6 +1437,14 @@ Data type: `Optional[String]`
 Default value: ``undef``
 
 ##### <a name="job_all_namespaces"></a>`job_all_namespaces`
+
+Data type: `Boolean`
+
+
+
+Default value: ``false``
+
+##### <a name="job_auto_supplemental_groups"></a>`job_auto_supplemental_groups`
 
 Data type: `Boolean`
 
