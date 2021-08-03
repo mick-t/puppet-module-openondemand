@@ -1178,6 +1178,7 @@ The following parameters are available in the `openondemand::cluster` defined ty
 * [`grafana_labels`](#grafana_labels)
 * [`grafana_cluster_override`](#grafana_cluster_override)
 * [`xdmod_resource_id`](#xdmod_resource_id)
+* [`custom_config`](#custom_config)
 * [`batch_connect`](#batch_connect)
 
 ##### <a name="cluster_title"></a>`cluster_title`
@@ -1650,6 +1651,14 @@ Data type: `Optional[Integer]`
 
 
 Default value: ``undef``
+
+##### <a name="custom_config"></a>`custom_config`
+
+Data type: `Hash`
+
+Custom Hash passed to `v2.custom` in cluster YAML
+
+Default value: `{}`
 
 ##### <a name="batch_connect"></a>`batch_connect`
 
