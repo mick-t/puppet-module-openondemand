@@ -127,6 +127,8 @@ The following parameters are available in the `openondemand` class:
 * [`nginx_stage_min_uid`](#nginx_stage_min_uid)
 * [`nginx_stage_passenger_pool_idle_time`](#nginx_stage_passenger_pool_idle_time)
 * [`nginx_stage_passenger_options`](#nginx_stage_passenger_options)
+* [`nginx_stage_nginx_file_upload_max`](#nginx_stage_nginx_file_upload_max)
+* [`nginx_stage_configs`](#nginx_stage_configs)
 * [`config_dir_purge`](#config_dir_purge)
 * [`config_source`](#config_source)
 * [`config_content`](#config_content)
@@ -739,6 +741,22 @@ Default value: `300`
 Data type: `Hash[Pattern[/^passenger_.+/], Variant[String, Integer]]`
 
 nginx_stage.yml passenger_options
+
+Default value: `{}`
+
+##### <a name="nginx_stage_nginx_file_upload_max"></a>`nginx_stage_nginx_file_upload_max`
+
+Data type: `Optional[Integer]`
+
+nginx_stage.yml nginx_file_upload_max
+
+Default value: ``undef``
+
+##### <a name="nginx_stage_configs"></a>`nginx_stage_configs`
+
+Data type: `Hash`
+
+nginx_stage.yml extra configuration options
 
 Default value: `{}`
 
