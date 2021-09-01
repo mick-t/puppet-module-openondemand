@@ -59,6 +59,7 @@ The following parameters are available in the `openondemand` class:
 * [`repo_gpgkey`](#repo_gpgkey)
 * [`repo_priority`](#repo_priority)
 * [`manage_dependency_repos`](#manage_dependency_repos)
+* [`repo_nightly`](#repo_nightly)
 * [`selinux`](#selinux)
 * [`ondemand_package_ensure`](#ondemand_package_ensure)
 * [`ondemand_dex_package_ensure`](#ondemand_dex_package_ensure)
@@ -198,6 +199,14 @@ Data type: `Boolean`
 Boolean that determines if managing repos for package dependencies
 
 Default value: ``true``
+
+##### <a name="repo_nightly"></a>`repo_nightly`
+
+Data type: `Boolean`
+
+Add the OnDemand nightly repo
+
+Default value: ``false``
 
 ##### <a name="selinux"></a>`selinux`
 
