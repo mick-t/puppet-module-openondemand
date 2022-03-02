@@ -50,7 +50,7 @@ class openondemand::apache {
   ::apache::mod { 'lua': }
   include ::apache::mod::headers
 
-  case $openondemand::auth_type == 'CAS' {
+  case $openondemand::auth_type {
     'CAS': {
       include ::apache::mod::auth_cas
     }
