@@ -53,20 +53,18 @@ class openondemand::apache {
   ::apache::mod { 'lua': }
   include ::apache::mod::headers
 
-  case $openondemand::auth_type {
-    '(dex|openid-connect|mellon)': {
-      ::apache::mod { 'auth_openidc':
-        package        => "${package_prefix}mod_auth_openidc",
-        package_ensure => $openondemand::mod_auth_openidc_ensure,
-      }
+  if $openondemand::auth_type in [ 'dex','openid-connect','mellon' ] {
+    ::apache::mod { 'auth_openidc':
+      package        => "${package_prefix}mod_auth_openidc",
+      package_ensure => $openondemand::mod_auth_openidc_ensure,
     }
-    'mellon': {
-      ::apache::mod { 'auth_mellon':
-        package        => "${package_prefix}mod_auth_mellon",
-        package_ensure => $openondemand::mod_auth_openidc_ensure,
-      }
+  }
+
+  if $openondemand::auth_type = 'mellon' {
+    ::apache::mod { 'auth_mellon':
+      package        => "${package_prefix}mod_auth_mellon",
+      package_ensure => $openondemand::mod_auth_openidc_ensure,
     }
-    default: {}
   }
 
   if $openondemand::scl_apache {
