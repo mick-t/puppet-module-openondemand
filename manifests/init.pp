@@ -456,7 +456,7 @@ class openondemand (
     'oidc_state_max_number_of_cookies' => $oidc_state_max_number_of_cookies,
     'oidc_settings'                    => $oidc_settings,
     'dex'                              => $_dex_config,
-  })
+  }).filter |$val| { $val =~ NotUndef }
   $ood_portal_yaml = to_yaml($ood_portal_config)
   $base_apps = {
     'dashboard' => { 'package' => 'ondemand', 'manage_package' => false },
