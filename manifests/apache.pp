@@ -65,6 +65,13 @@ class openondemand::apache {
         package        => "${package_prefix}mod_auth_mellon",
         package_ensure => $openondemand::mod_auth_mellon_ensure,
       }
+      file { "${apache::params::confd_dir}/00-auth_mellon.conf":
+        ensure  => file,
+        owner   => 'root',
+        group   => $apache::params::group,
+        mode    => '0640',
+        content => template('openondemand/auth_mellon.conf.erb'),
+      }
     }
     default: {}
   }
