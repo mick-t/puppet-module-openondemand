@@ -54,7 +54,7 @@ class openondemand::apache {
   include ::apache::mod::headers
 
   case $openondemand::auth_type {
-    '(dex|openid-connect)': {
+    '(dex|openid-connect|mellon)': {
       ::apache::mod { 'auth_openidc':
         package        => "${package_prefix}mod_auth_openidc",
         package_ensure => $openondemand::mod_auth_openidc_ensure,
