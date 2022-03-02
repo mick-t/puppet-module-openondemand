@@ -175,8 +175,15 @@ class openondemand::config {
     show_diff => false,
     notify    => Exec['ood-portal-generator-generate'],
   }
+
+  if $openondemand::auth_type == 'dex' {
+    $generate_with_dex = '-d /etc/ood/dex/config.yaml'
+  } else {
+    $generate_with_dex = ''
+  }
+
   exec { 'ood-portal-generator-generate':
-    command     => '/opt/ood/ood-portal-generator/bin/generate -o /etc/ood/config/ood-portal.conf -d /etc/ood/dex/config.yaml',
+    command     => "/opt/ood/ood-portal-generator/bin/generate -o /etc/ood/config/ood-portal.conf ${generate_with_dex}",
     refreshonly => true,
     before      => ::Apache::Custom_config['ood-portal'],
   }

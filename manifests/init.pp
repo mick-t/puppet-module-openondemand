@@ -30,6 +30,8 @@
 #   ood_portal.yml listen_addr_port
 # @param servername
 #   ood_portal.yml servername
+# @param proxy_server
+#   ood_portal.yml proxy_server
 # @param ssl
 #   ood_portal.yml ssl
 # @param logroot
@@ -219,6 +221,7 @@ class openondemand (
   # ood_portal.yml
   Variant[Array, String, Undef] $listen_addr_port = undef,
   Optional[String] $servername = undef,
+  Optional[String] $proxy_server = undef,
   Optional[Array] $ssl = undef,
   String  $logroot = 'logs',
   Boolean $use_rewrites = true,
@@ -351,11 +354,11 @@ class openondemand (
 
   if $ssl {
     $port = '443'
-    $listen_ports = ['443', '80']
+    $listen_ports = pick($listen_addr_port, ['443', '80'])
     $protocol = 'https'
   } else {
     $port = '80'
-    $listen_ports = ['80']
+    $listen_ports = pick($listen_addr_port, ['80'])
     $protocol = 'http'
   }
 
@@ -410,6 +413,7 @@ class openondemand (
   $ood_portal_config = delete_undef_values({
     'listen_addr_port'                 => $listen_ports,
     'servername'                       => $servername,
+    'proxy_server'                     => $proxy_server,
     'port'                             => $port,
     'ssl'                              => $ssl,
     'logroot'                          => $logroot,
