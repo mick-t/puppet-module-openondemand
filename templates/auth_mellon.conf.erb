@@ -1,6 +1,6 @@
-< Location <%= scope['openondemand::mellon_endpoint_path'] -%> >
+<Location <%= scope['openondemand::mellon_endpoint_path'] -%>>
 <% scope['openondemand::auth'].each do |k| -%>
   <%= k %>
 <% end %>
 
-< /Location >
+</Location>
