@@ -176,14 +176,17 @@ class openondemand::config {
     notify    => Exec['ood-portal-generator-generate'],
   }
 
-  if $openondemand::auth_type == 'dex' {
-    $generate_with_dex = '-d /etc/ood/dex/config.yaml'
-  } else {
-    $generate_with_dex = ''
+  if $openondemand::auth_type == 'mellon' {
+    file { '/usr/local/bin/mellon_ood_metadata.sh':
+      content => template('openondemand/generate_ood_mellon_metadata.sh.erb'),
+      owner   => 'root',
+      group   => 'root',
+      mode    => '0755',
+    }
   }
 
   exec { 'ood-portal-generator-generate':
-    command     => "/opt/ood/ood-portal-generator/bin/generate -o /etc/ood/config/ood-portal.conf ${generate_with_dex}",
+    command     => "/opt/ood/ood-portal-generator/bin/generate -o /etc/ood/config/ood-portal.conf -d /etc/ood/dex/config.yaml",
     refreshonly => true,
     before      => ::Apache::Custom_config['ood-portal'],
   }
