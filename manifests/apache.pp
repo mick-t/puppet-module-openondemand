@@ -60,7 +60,7 @@ class openondemand::apache {
     }
   }
 
-  if $openondemand::auth_type = 'mellon' {
+  if $openondemand::auth_type == 'mellon' {
     ::apache::mod { 'auth_mellon':
       package        => "${package_prefix}mod_auth_mellon",
       package_ensure => $openondemand::mod_auth_openidc_ensure,
