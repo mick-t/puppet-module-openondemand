@@ -126,18 +126,6 @@
 #   Hash of OIDC settings passsed directly to Apache config
 # @param dex_config
 #   Dex configuration Hash
-# @param mellon_sp_privatekey_file
-#   Mellon private key file location
-# @param mellon_sp_cert_file
-#   Mellon certificate file location
-# @param mellon_sp_metadata_file
-#   Mellon metadata file location
-# @param mellon_idp_metadata_file
-#   Mellon IdP metadata file location
-# @param mellon_endpoint_path
-#   Mellon endpoint for apache
-# @param mellon_enable
-#   Mellon enable for apache
 # @param mellon_settings
 #   Additional Mellon config for apache
 # @param web_directory
@@ -276,12 +264,12 @@ class openondemand (
 
   # Mellon Configs
   Optional[Hash] $mellon_settings = {
-    'mellon_sp_privatekey_file' => '/etc/httpd/mellon/mellon.key',
-    'mellon_sp_cert_file' => '/etc/httpd/mellon/mellon.cer',
-    'mellon_sp_metadata_file' => '/etc/httpd/mellon/mellon_metadata.xml',
-    'mellon_idp_metadata_file' => '/etc/httpd/mellon/idp_metadata.xml',
-    'mellon_enable' => 'auth',
-    'mellon_endpoint_path' => '/mellon',
+    'MellonSPPrivateKeyFile' => '/etc/httpd/mellon/mellon.key',
+    'MellonSPCertFile' => '/etc/httpd/mellon/mellon.cer',
+    'MellonSPMetadataFile' => '/etc/httpd/mellon/mellon_metadata.xml',
+    'MellonIdPMetadataFile' => '/etc/httpd/mellon/idp_metadata.xml',
+    'MellonEnable' => 'auth',
+    'MellonEndpointPath' => '/mellon',
   },
 
   # Misc configs
