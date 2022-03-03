@@ -282,7 +282,7 @@ class openondemand (
     'mellon_idp_metadata_file' => "${apache::params::httpd_dir}/mellon/idp_metadata.xml",
     'mellon_enable' => 'auth',
     'mellon_endpoint_path' => '/mellon',
-  }
+  },
 
   # Misc configs
   Stdlib::Absolutepath $web_directory = '/var/www/ood',
