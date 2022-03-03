@@ -276,10 +276,10 @@ class openondemand (
 
   # Mellon Configs
   Optional[Hash] $mellon_settings = {
-    'mellon_sp_privatekey_file' => '/etc/httpd/mellon/mellon.key',
-    'mellon_sp_cert_file' => '/etc/httpd/mellon/mellon.cer',
-    'mellon_sp_metadata_file' => '/etc/httpd/mellon/mellon_metadata.xml',
-    'mellon_idp_metadata_file' => '/etc/httpd/mellon/idp_metadata.xml',
+    'mellon_sp_privatekey_file' => "${apache::params::httpd_dir}/mellon/mellon.key",
+    'mellon_sp_cert_file' => "${apache::params::httpd_dir}/mellon/mellon.cer",
+    'mellon_sp_metadata_file' => "${apache::params::httpd_dir}/mellon/mellon_metadata.xml",
+    'mellon_idp_metadata_file' => "${apache::params::httpd_dir}/mellon/idp_metadata.xml",
     'mellon_enable' => 'auth',
     'mellon_endpoint_path' => '/mellon',
   }
