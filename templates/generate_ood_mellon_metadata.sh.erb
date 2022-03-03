@@ -12,9 +12,9 @@ export mellon_endpoint="https://<%= scope['openondemand::servername'] %><%= scop
 <% end -%>
 <%= scope['apache::params::httpd_root'] %>/usr/libexec/mod_auth_mellon/mellon_create_metadata.sh "${mellon_endpoint}/metadata" "${mellon_endpoint}"
 
-mv *.cert ./mellon.cert
-mv *.key ./mellon.key
-mv *.xml ./mellon_metadata.xml
+mv *mellon_metadata.cert ./mellon.cert
+mv *mellon_metadata.key ./mellon.key
+mv *mellon_metadata.xml ./mellon_metadata.xml
 
 openssl pkcs12 -export -inkey ./mellon.key -in ./mellon.cert -out ./mellon.pfx -passout pass:
 
