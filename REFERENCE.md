@@ -58,6 +58,7 @@ The following parameters are available in the `openondemand` class:
 * [`repo_baseurl_prefix`](#repo_baseurl_prefix)
 * [`repo_gpgkey`](#repo_gpgkey)
 * [`repo_priority`](#repo_priority)
+* [`repo_exclude`](#repo_exclude)
 * [`manage_dependency_repos`](#manage_dependency_repos)
 * [`repo_nightly`](#repo_nightly)
 * [`selinux`](#selinux)
@@ -191,6 +192,14 @@ Data type: `Integer[1,99]`
 The priority of the OnDemand repo
 
 Default value: `99`
+
+##### <a name="repo_exclude"></a>`repo_exclude`
+
+Data type: `String`
+
+Exclusion for OnDemand repo
+
+Default value: `'absent'`
 
 ##### <a name="manage_dependency_repos"></a>`manage_dependency_repos`
 
