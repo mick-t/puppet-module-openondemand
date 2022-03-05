@@ -1,4 +1,4 @@
-<Location />
+<Location ~ "^/(?!public)">>
 <% scope['openondemand::auth'].each do |k| -%>
   <%= k %>
 <% end %>
