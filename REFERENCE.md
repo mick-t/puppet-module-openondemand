@@ -1157,6 +1157,9 @@ Manage Open OnDemand cluster definition
 The following parameters are available in the `openondemand::cluster` defined type:
 
 * [`cluster_title`](#cluster_title)
+* [`owner`](#owner)
+* [`group`](#group)
+* [`mode`](#mode)
 * [`url`](#url)
 * [`hidden`](#hidden)
 * [`acls`](#acls)
@@ -1224,6 +1227,30 @@ Data type: `String`
 
 
 Default value: `$name`
+
+##### <a name="owner"></a>`owner`
+
+Data type: `String`
+
+Owner of the cluster YAML file
+
+Default value: `'root'`
+
+##### <a name="group"></a>`group`
+
+Data type: `String`
+
+Group of the cluster YAML file
+
+Default value: `'root'`
+
+##### <a name="mode"></a>`mode`
+
+Data type: `Stdlib::Filemode`
+
+Ownership mode of the cluster YAML file
+
+Default value: `'0644'`
 
 ##### <a name="url"></a>`url`
 
