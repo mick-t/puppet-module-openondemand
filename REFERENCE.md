@@ -1815,6 +1815,8 @@ The following parameters are available in the `openondemand::install::app` defin
 * [`ensure`](#ensure)
 * [`package`](#package)
 * [`manage_package`](#manage_package)
+* [`git_repo`](#git_repo)
+* [`git_revision`](#git_revision)
 * [`path`](#path)
 * [`owner`](#owner)
 * [`group`](#group)
@@ -1843,6 +1845,23 @@ Data type: `Boolean`
 Should package be managed
 
 Default value: ``true``
+
+##### <a name="git_repo"></a>`git_repo`
+
+Data type: `Optional[String]`
+
+The git repo to use to install the app
+If defined, no package will be installed
+
+Default value: ``undef``
+
+##### <a name="git_revision"></a>`git_revision`
+
+Data type: `Optional[String]`
+
+The git revision to checkout
+
+Default value: ``undef``
 
 ##### <a name="path"></a>`path`
 
