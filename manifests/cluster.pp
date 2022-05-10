@@ -2,6 +2,12 @@
 #
 #
 # @param cluster_title
+# @param owner
+#   Owner of the cluster YAML file
+# @param group
+#   Group of the cluster YAML file
+# @param mode
+#   Ownership mode of the cluster YAML file
 # @param url
 # @param hidden
 # @param acls
@@ -34,6 +40,7 @@
 # @param job_username_prefix
 # @param job_namespace_prefix
 # @param job_all_namespaces
+# @param job_auto_supplemental_groups
 # @param job_server
 # @param job_mounts
 # @param job_auth
@@ -58,10 +65,15 @@
 # @param grafana_labels
 # @param grafana_cluster_override
 # @param xdmod_resource_id
+# @param custom_config
+#   Custom Hash passed to `v2.custom` in cluster YAML
 # @param batch_connect
 #
 define openondemand::cluster (
   String $cluster_title = $name,
+  String $owner = 'root',
+  String $group = 'root',
+  Stdlib::Filemode $mode = '0644',
   Optional[Variant[Stdlib::HTTPSUrl, Stdlib::HTTPUrl] ]$url = undef,
   Boolean $hidden = false,
   Array[Openondemand::Acl] $acls = [],
@@ -95,6 +107,7 @@ define openondemand::cluster (
   Optional[String] $job_username_prefix = undef,
   Optional[String] $job_namespace_prefix = undef,
   Boolean $job_all_namespaces = false,
+  Boolean $job_auto_supplemental_groups = false,
   Optional[Openondemand::K8_server] $job_server = undef,
   Array[Openondemand::K8_mount] $job_mounts = [],
   Optional[Openondemand::K8_auth] $job_auth = undef,
@@ -127,8 +140,10 @@ define openondemand::cluster (
   }]] $grafana_labels = undef,
   Optional[String] $grafana_cluster_override = undef,
   Optional[Integer] $xdmod_resource_id = undef,
-  Hash[String, Openondemand::Batch_connect] $batch_connect = {},
+  Hash $custom_config = {},
+  Openondemand::Batch_connect $batch_connect = {},
 ) {
+  include openondemand
 
   if $grafana_host {
     if $grafana_dashboard_name == undef or $grafana_dashboard_uid == undef or $grafana_dashboard_panels == undef or $grafana_labels == undef {
@@ -140,15 +155,17 @@ define openondemand::cluster (
     if !$job_server {
       fail('Must define job_server when job_adapter is kubernetes')
     }
+    $_job_bin = pick($job_bin, $openondemand::kubectl_path)
+  } else {
+    $_job_bin = $job_bin
   }
 
-  include openondemand
 
   file { "/etc/ood/config/clusters.d/${name}.yml":
     ensure  => 'file',
-    owner   => 'root',
-    group   => 'root',
-    mode    => '0644',
+    owner   => $owner,
+    group   => $group,
+    mode    => $mode,
     content => template('openondemand/cluster/main.yml.erb'),
     notify  => Class['openondemand::service'],
   }

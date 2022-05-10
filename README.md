@@ -245,6 +245,19 @@ openondemand::install_apps:
     mode: '0700'
 ```
 
+Install additional apps from Git repos:
+
+```yaml
+openondemand::install_apps:
+  bc_osc_rstudio_server:
+    ensure: latest
+    git_repo: https://github.com/OSC/bc_osc_rstudio_server.git
+  bc_osc_jupyter:
+    ensure: present
+    git_repo: https://github.com/OSC/bc_osc_jupyter
+    git_revision: v0.20.0
+```
+
 Add usr apps with a default group
 
 ```yaml
@@ -264,6 +277,45 @@ Add dev app users
 openondemand::dev_app_users:
   - user1
   - user2
+```
+
+Define some pinned apps and dashboard layout:
+
+```yaml
+openondemand::pinned_apps:
+  - 'usr/*'
+  - 'sys/jupyter'
+  - type: dev
+    category: system
+openondemand::pinned_apps_menu_length: 10
+openondemand::pinned_apps_group_by: category
+openondemand::dashboard_layout:
+  rows:
+    - columns:
+      - width: 8
+        widgets:
+          - pinned_apps
+          - motd
+      - width: 4
+        widgets:
+          - xdmod_widget_job_efficiency
+          - xdmod_widget_jobs
+```
+
+Define some configurations for `/etc/ood/config/ondemand.d`.
+This will generate `/etc/ood/config/ondemand.d/pinned_apps.yml.erb` based on the source file as well as
+`/etc/ood/config/ondemand.d/dashboard_layout.yml` from a template file.  The example for `foobar` will generate the YAML file using data defined in Hiera.
+
+```yaml
+openondemand::confs:
+  pinned_apps:
+    source: 'puppet:///modules/profile/openondemand/pinned_apps.yml.erb'
+    template: true
+  dashboard_layout:
+    content_template: 'profile/openondemand/dashboard_layout.yml.erb'
+  foobar:
+    data:
+      ...hash of configuration data here...
 ```
 
 ## Reference

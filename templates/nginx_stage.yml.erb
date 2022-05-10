@@ -97,6 +97,34 @@ pun_custom_env:
 #
 #passenger_python: '/opt/ood/nginx_stage/bin/python'
 
+# The maximum number of seconds that an application process may be idle.
+# Set to `false` if you don't want this specified in the nginx config
+#
+#passenger_pool_idle_time: 300
+passenger_pool_idle_time: <%= scope['openondemand::nginx_stage_passenger_pool_idle_time'] %>
+
+# Hash of Passenger configuration options
+# Keys without passenger_ prefix will be ignored
+#
+#passenger_options: {}
+<% unless scope['openondemand::nginx_stage_passenger_options'].empty? -%>
+passenger_options:
+<% scope['openondemand::nginx_stage_passenger_options'].each_pair do |key, value| -%>
+  <%- if value.is_a?(String) -%>
+  <%= key %>: "<%= value %>"
+  <%- else -%>
+  <%= key %>: <%= value %>
+  <%- end -%>
+<% end -%>
+<% end -%>
+
+# Max file upload size in bytes (e.g., 10737420000)
+#
+#nginx_file_upload_max: '10737420000'
+<%- if scope['openondemand::nginx_stage_nginx_file_upload_max'] %>
+nginx_file_upload_max: '<%= scope['openondemand::nginx_stage_nginx_file_upload_max'] %>'
+<%- end -%>
+
 # Root location of per-user NGINX configs
 #
 #pun_config_path: '/var/lib/nginx/config/puns/%{user}.conf'
@@ -212,3 +240,12 @@ min_uid: <%= scope['openondemand::nginx_stage_min_uid'] -%>
 #     the PUN using other commands (e.g., `nginx`, `nginx_clean`, ...)
 #
 #disabled_shell: '/access/denied'
+
+# Set BUNDLE_USER_CONFIG to /dev/null in the PUN environment
+# NB: This prevents a user's ~/.bundle/config from affecting OnDemand applications
+#
+#disable_bundle_user_config: true
+
+<%- unless scope['openondemand::nginx_stage_configs'].empty? -%>
+<%= scope['openondemand::nginx_stage_configs'].to_yaml.gsub("---\n", '') %>
+<%- end -%>

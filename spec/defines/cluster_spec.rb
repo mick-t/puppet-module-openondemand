@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'openondemand::cluster' do
-  on_supported_os.each do |os, facts|
+  on_supported_os(supported_os: [{ 'operatingsystem' => 'RedHat', 'operatingsystemrelease' => ['8'] }]).each do |os, facts|
     context "on #{os}" do
       let(:facts) do
         facts
@@ -28,19 +28,10 @@ describe 'openondemand::cluster' do
             },
           ],
           login_host: 'login.test',
-          job_adapter: 'torque',
-          job_host: 'batch.test',
-          job_lib: '/opt/torque/lib64',
-          job_bin: '/opt/torque/bin',
-          job_version: '6.0.2',
-          scheduler_type: 'moab',
-          scheduler_host: 'batch.test',
-          scheduler_bin: '/opt/moab/bin',
-          scheduler_version: '9.0.1',
-          scheduler_params: {
-            'moabhomedir' => '/var/spool/moab',
+          batch_connect: {
+            'basic' => { 'script_wrapper' => 'module restore\n%s' },
+            'vnc'   => { 'script_wrapper' => 'module restore\nmodule load ondemand-vnc\n%s' },
           },
-          ganglia_host: 'ganglia.test',
         }
       end
 
@@ -56,6 +47,8 @@ describe 'openondemand::cluster' do
       it do
         content = catalogue.resource('file', '/etc/ood/config/clusters.d/test.yml').send(:parameters)[:content]
         puts content
+        data = YAML.safe_load(content)
+        expect(data['v2']['custom']).to be_nil
       end
 
       context 'kubernetes' do
@@ -70,6 +63,7 @@ describe 'openondemand::cluster' do
               { 'name' => 'home', 'destination_path' => '/home', 'path' => '/home', 'host_type' => 'Directory', 'type' => 'host' },
             ],
             job_auth: { 'type' => 'oidc' },
+            batch_connect: { 'ssh_allow' => false },
           }
         end
 
@@ -80,6 +74,31 @@ describe 'openondemand::cluster' do
           puts content
           data = YAML.safe_load(content)
           expect(data['v2']['job']['bin']).to eq('/usr/bin/kubectl')
+          expect(data['v2']['job']['auto_supplemental_groups']).to eq(false)
+        end
+      end
+
+      context 'custom configs' do
+        let :params do
+          default_params.merge!(
+            custom_config: {
+              foo_string: 'bar',
+              foo_bool: false,
+              foo_array: ['1', '2', 3],
+              foo_hash: { 'foo' => 'bar', 'bar' => 'baz', 'baz' => false },
+            },
+          )
+        end
+
+        it { is_expected.to compile.with_all_deps }
+
+        it 'hash valid custom config' do
+          content = catalogue.resource('file', '/etc/ood/config/clusters.d/test.yml').send(:parameters)[:content]
+          data = YAML.safe_load(content)
+          expect(data['v2']['custom']['foo_string']).to eq('bar')
+          expect(data['v2']['custom']['foo_bool']).to eq(false)
+          expect(data['v2']['custom']['foo_array']).to eq(['1', '2', 3])
+          expect(data['v2']['custom']['foo_hash']).to eq('foo' => 'bar', 'bar' => 'baz', 'baz' => false)
         end
       end
 

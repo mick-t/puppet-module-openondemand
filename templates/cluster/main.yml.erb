@@ -38,8 +38,8 @@ v2:
   <%- if @job_libdir -%>
     libdir: "<%= @job_libdir %>"
   <%- end -%>
-  <%- if @job_bin -%>
-    bin: "<%= @job_bin %>"
+  <%- if @_job_bin -%>
+    bin: "<%= @_job_bin %>"
   <%- end -%>
   <%- if @job_bindir -%>
     bindir: "<%= @job_bindir %>"
@@ -110,6 +110,7 @@ v2:
     namespace_prefix: "<%= @job_namespace_prefix %>"
   <%- end -%>
     all_namespaces: <%= @job_all_namespaces %>
+    auto_supplemental_groups: <%= @job_auto_supplemental_groups %>
   <%- if @job_server -%>
     server:
     <%- @job_server.each_pair do |key, value| -%>
@@ -140,7 +141,7 @@ v2:
     <%- end -%>
   <%- end -%>
 <% end -%>
-<% if @job_adapter == "torque" || @scheduler_type || @ganglia_host || @grafana_host || @xdmod_resource_id -%>
+<% if @job_adapter == "torque" || @scheduler_type || @ganglia_host || @grafana_host || @xdmod_resource_id || !@custom_config.empty? -%>
   custom:
   <%- if @job_adapter == "torque" -%>
     pbs:
@@ -223,13 +224,33 @@ v2:
     xdmod:
       resource_id: <%= @xdmod_resource_id %>
   <%- end -%>
+  <%- @custom_config.each_pair do |key, value| -%>
+    <%- if value.is_a?(Hash) -%>
+    <%= key %>:
+    <%- value.each_pair do |k,v| -%>
+      <%= k %>: <% if v.is_a?(String) %>"<%= v %>"<% else %><%= v %><% end %>
+    <%- end # end value.each_pair -%>
+    <%- elsif value.is_a?(Array) -%>
+    <%= key %>:
+    <%- value.each do |v| -%>
+      - <% if v.is_a?(String) %>"<%= v %>"<% else %><%= v %><% end %>
+    <%- end # end value.each -%>
+    <%- else -%>
+    <%= key %>: <% if value.is_a?(String) %>"<%= value %>"<% else %><%= value %><% end %>
+    <%- end -%>
+  <%- end -%>
 <% end -%>
 <% if ! @batch_connect.empty? -%>
   batch_connect:
-    <%- @batch_connect.each do |script_type, options| -%>
-      <%= script_type %>:
-      <%- options.each do |option, value| -%>
-        <%= option %>: "<%= value %>"
-      <%- end -%>
-    <%- end -%>
+  <%- if @batch_connect.key?('basic') -%>
+    basic:
+      script_wrapper: "<%= @batch_connect['basic']['script_wrapper'] %>"
+  <%- end -%>
+  <%- if @batch_connect.key?('vnc') -%>
+    vnc:
+      script_wrapper: "<%= @batch_connect['vnc']['script_wrapper'] %>"
+  <%- end -%>
+  <%- if @batch_connect.key?('ssh_allow') -%>
+    ssh_allow: <%= @batch_connect['ssh_allow'] %>
+  <%- end -%>
 <% end -%>

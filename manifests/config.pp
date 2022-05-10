@@ -101,6 +101,38 @@ class openondemand::config {
     mode   => '0755',
   }
 
+  file { '/etc/ood/config/ondemand.d':
+    ensure  => 'directory',
+    owner   => 'root',
+    group   => 'root',
+    mode    => '0755',
+    recurse => $openondemand::config_dir_purge,
+    force   => $openondemand::config_dir_purge,
+    purge   => $openondemand::config_dir_purge,
+    notify  => Class['openondemand::service'],
+  }
+
+  if ! empty($openondemand::ondemand_config) {
+    if $openondemand::config_source !~ Undef {
+      $config_source = $openondemand::config_source
+      $config_content = undef
+      $config_data = undef
+    } elsif $openondemand::config_content !~ Undef {
+      $config_source = undef
+      $config_content = $openondemand::config_content
+      $config_data = undef
+    } else {
+      $config_source = undef
+      $config_content = undef
+      $config_data = $openondemand::ondemand_config
+    }
+    openondemand::conf { 'ondemand':
+      source  => $config_source,
+      content => $config_content,
+      data    => $config_data,
+    }
+  }
+
   if $openondemand::apps_config_repo {
     vcsrepo { '/opt/ood-apps-config':
       ensure   => 'latest',
@@ -185,17 +217,25 @@ class openondemand::config {
     }
   }
 
+  $generate = '/opt/ood/ood-portal-generator/bin/generate -o /etc/ood/config/ood-portal.conf -d /etc/ood/dex/config.yaml'
   exec { 'ood-portal-generator-generate':
-    command     => "/opt/ood/ood-portal-generator/bin/generate -o /etc/ood/config/ood-portal.conf -d /etc/ood/dex/config.yaml",
+    path        => '/usr/bin:/bin:/usr/sbin:/sbin',
+    command     => $generate,
     refreshonly => true,
     before      => ::Apache::Custom_config['ood-portal'],
+  }
+  exec { 'ood-portal-generator-generate-refresh':
+    path    => '/usr/bin:/bin:/usr/sbin:/sbin',
+    command => $generate,
+    creates => '/etc/ood/config/ood-portal.conf',
+    before  => ::Apache::Custom_config['ood-portal'],
   }
 
   include ::apache::params
   ::apache::custom_config { 'ood-portal':
     source         => '/etc/ood/config/ood-portal.conf',
     filename       => 'ood-portal.conf',
-    verify_command => $::apache::params::verify_command,
+    verify_command => "${apache::params::verify_command} || { /bin/rm -f /etc/ood/config/ood-portal.conf; exit 1; }",
     show_diff      => false,
     owner          => 'root',
     group          => $apache::params::group,
@@ -218,6 +258,25 @@ class openondemand::config {
     group   => 'root',
     mode    => '0644',
     content => template('openondemand/nginx_stage.yml.erb'),
+  }
+
+  if $openondemand::hook_env and $openondemand::pun_pre_hook_root_cmd {
+    $hook_env_default = {
+      'CLIENT_ID' => $openondemand::oidc_client_id,
+      'CLIENT_SECRET' => $openondemand::oidc_client_secret,
+    }.filter |$key,$value| { $value =~ NotUndef }
+    $hook_env_config = $hook_env_default + $openondemand::hook_env_config
+    $hook_env = $hook_env_config.map |$key,$value| { "${key}=\"${value}\"" }
+    $hook_env_content = join($hook_env, "\n")
+
+    file { $openondemand::hook_env_path:
+      ensure    => 'file',
+      owner     => 'root',
+      group     => 'root',
+      mode      => '0600',
+      show_diff => false,
+      content   => $hook_env_content,
+    }
   }
 
   file { '/etc/ood/profile':
