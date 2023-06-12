@@ -301,7 +301,7 @@ class openondemand::config {
   }
 
   if $openondemand::manage_logrotate {
-    logrotate::rule { 'ood':
+    logrotate::rule { 'ood-logrotate':
       path         => ['/var/log/ondemand-nginx/*/access.log', '/var/log/ondemand-nginx/*/error.log'],
       compress     => true,
       missingok    => true,
